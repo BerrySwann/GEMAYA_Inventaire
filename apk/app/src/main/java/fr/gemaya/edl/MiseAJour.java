@@ -37,7 +37,13 @@ final class MiseAJour {
 
     static String verifier(String urlManifeste) {
         try {
-            String corps = lire(urlManifeste);
+            /* GitHub garde ses fichiers 5 minutes en cache : ce parametre force
+               une lecture fraiche, sinon l'application annonce une version perimee. */
+            String adresse = urlManifeste;
+            if (!adresse.contains("?")) {
+                adresse = adresse + "?t=" + System.currentTimeMillis();
+            }
+            String corps = lire(adresse);
             JSONObject o = new JSONObject(corps);
             JSONObject reponse = new JSONObject();
             reponse.put("ok", true);
@@ -161,6 +167,8 @@ final class MiseAJour {
         HttpURLConnection lien = (HttpURLConnection) new URL(adresse).openConnection();
         lien.setConnectTimeout(15000);
         lien.setReadTimeout(20000);
+        lien.setRequestProperty("Cache-Control", "no-cache");
+        lien.setRequestProperty("Pragma", "no-cache");
         lien.setInstanceFollowRedirects(true);
         int code = lien.getResponseCode();
         if (code < 200 || code >= 300) {
