@@ -201,7 +201,7 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public String enregistrer(String nom, String contenu) {
-            return MainActivity.this.enregistrerFichier(nom, contenu);
+            return MainActivity.this.enregistrerDansTelechargements(nom, contenu);
         }
 
         @JavascriptInterface
@@ -212,6 +212,46 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public String partager(String nom, String contenu) {
             return MainActivity.this.partagerFichier(nom, contenu);
+        }
+    }
+
+    /** Ecrit le CSV directement dans Telechargements/gemaya, sans passer par un dialogue. */
+    String enregistrerDansTelechargements(String nom, String contenu) {
+        try {
+            String propre = (nom == null || nom.isEmpty()) ? "releve.csv" : nom.replaceAll("[^A-Za-z0-9._-]", "_");
+            byte[] octets = ("\ufeff" + (contenu == null ? "" : contenu)).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                android.content.ContentValues valeurs = new android.content.ContentValues();
+                valeurs.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, propre);
+                valeurs.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "text/csv");
+                valeurs.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
+                        android.os.Environment.DIRECTORY_DOWNLOADS + "/gemaya");
+                android.net.Uri cible = getContentResolver().insert(
+                        android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, valeurs);
+                if (cible == null) {
+                    return "erreur emplacement refuse";
+                }
+                java.io.OutputStream sortie = getContentResolver().openOutputStream(cible);
+                sortie.write(octets);
+                sortie.flush();
+                sortie.close();
+                return "ok|Telechargements/gemaya/" + propre;
+            }
+
+            /* Android 8 et 9 : le dossier public demande une autorisation, on passe par le dialogue */
+            contenuAEnregistrer = contenu == null ? "" : contenu;
+            final String fichier = propre;
+            runOnUiThread(() -> {
+                Intent demande = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                demande.addCategory(Intent.CATEGORY_OPENABLE);
+                demande.setType("text/csv");
+                demande.putExtra(Intent.EXTRA_TITLE, fichier);
+                startActivityForResult(demande, DEMANDE_ENREGISTRER);
+            });
+            return "ok|dialogue";
+        } catch (Exception e) {
+            return "erreur " + e.getMessage();
         }
     }
 

@@ -676,8 +676,14 @@ function enregistrerCSV() {
   }
   const f = contenuCSV();
   if (PONT && PONT.enregistrer) {
-    PONT.enregistrer(f.nom, f.contenu);
-    toast(f.nbLignes + ' equipement(s) : choisis ou enregistrer le fichier');
+    const reponse = PONT.enregistrer(f.nom, f.contenu) || '';
+    if (reponse.indexOf('ok|dialogue') === 0) {
+      toast(f.nbLignes + ' equipement(s) : choisis le dossier');
+    } else if (reponse.indexOf('ok|') === 0) {
+      toast(f.nbLignes + ' equipement(s) ecrits dans ' + reponse.substring(3));
+    } else {
+      toast('Enregistrement impossible : ' + reponse);
+    }
     return;
   }
   telechargerDansNavigateur(f.contenu, f.nom);
