@@ -71,11 +71,10 @@ Ajouter ou supprimer un contrat demande un code a 4 chiffres : **1234**.
 Les autres listes (secteurs, localisations, etages, familles, equipements)
 restent libres.
 
-Le code se change sans reconstruire l'application : il est lu dans la
-configuration enregistree (`config.code`). Pour le modifier, il suffit d'ecrire
-la nouvelle valeur en base (`update config set valeur='0000' where cle='ia'`
-n'est pas la bonne route : voir `config.code`), ou de demander une version qui
-expose un champ dans Configuration.
+Le code est ecrit dans `assets/app.js` (constante `CODE_CONTRATS`), et une
+valeur enregistree dans la configuration (`config.code`) le remplace si elle
+existe. Pour le changer aujourd'hui : me le demander, ou modifier la constante
+et reconstruire l'APK. Un champ dedie dans l'ecran Configuration reste a faire.
 
 ## Mettre a jour l'application depuis le telephone
 
