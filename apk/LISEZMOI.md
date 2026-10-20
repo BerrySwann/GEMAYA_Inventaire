@@ -1,4 +1,4 @@
-# APK EDL GEMAYA - version 0.7
+# APK EDL GEMAYA - version 0.8
 
 ## Ce que c'est
 
@@ -27,8 +27,9 @@ Ce qui marche :
 - **mise a jour depuis le telephone** : Configuration > Mises a jour, une
   adresse de fichier `update.json`, l'application compare les versions,
   telecharge l'APK et lance l'installation ;
-- **dix-huit familles** proposees (CFO, CFA, CVC, GAZ, ECL, SSI, SUR, SAN, FRO,
-  CUI, ASC, MEN, AGT, NET, EXT, SON, SPO, DIVERS) ;
+- **dix-huit familles** proposees, chacune avec son libelle court (CFO - Courant
+  fort, CFA - Courant faible, SSI - Securite incendie...) et des exemples
+  concrets affiches sous le selecteur et dans la configuration ;
 - fiche de saisie : **tous les champs visibles**, ceux de la famille choisie
   encadres, et retour automatique en haut de la section apres creation.
 
@@ -166,7 +167,7 @@ build-tools 34.0.0.
 | | |
 |---|---|
 | Package | `fr.gemaya.edl` |
-| Version | 0.7 (versionCode 7) |
+| Version | 0.8 (versionCode 8) |
 | Android minimum | 7.0 (API 24) |
 | Cible | Android 14 (API 34) |
 | Taille | 2,4 Mo |

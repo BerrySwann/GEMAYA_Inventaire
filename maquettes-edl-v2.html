@@ -503,7 +503,7 @@ tbody tr:hover{background:var(--bleu-050)}
                 <div class="champ" style="margin:0 0 12px">
                   <label>Famille et nombre d'equipements a renseigner</label>
                   <div class="creation">
-                    <select id="famille-nouvel-equipement">
+                    <select id="famille-nouvel-equipement" onchange="majAideFamille()">
                       <option value="CVC">CVC</option>
                       <option value="ECL">ECL</option>
                       <option value="CFO">CFO</option>
@@ -513,6 +513,7 @@ tbody tr:hover{background:var(--bleu-050)}
                     <input type="text" id="nombre-nouvel-equipement" inputmode="numeric" placeholder="Nombre">
                     <button type="button" class="bouton-corriger" onclick="ouvrirCorrection('familles')">corriger</button>
                   </div>
+                  <p class="aide" id="aide-famille"></p>
                 </div>
                 <div class="correction cache" id="correction-familles">
                   <input type="text" id="renommer-familles" placeholder="Corriger le nom du lot">
@@ -1880,6 +1881,34 @@ function copierFichier(){
 let contrats = ['PALAIS NIKAÏA', 'NIKAIA', 'SCITIAM', 'URSAFF TOULON', 'GEMAYA - LESQUIN', 'HOPITAL SAINT-LOUIS', 'MINDEF - BATIMENT C'];
 let contratChoisi = 'PALAIS NIKAÏA';
 let familles = ['CVC', 'ECL', 'CFO', 'SSI', 'DIVERS'];
+/* Les familles : code court, ce que ca couvre, et des exemples concrets.
+   Le troisieme element sert d'aide a la saisie et d'aide-memoire dans la configuration. */
+const TAXONOMIE = [
+  ['CFO', 'Courant fort', 'Tableaux, armoires, disjoncteurs, alimentation des machines'],
+  ['CFA', 'Courant faible, informatique', 'Cablage reseau, telephone, interphonie, TV, baies de brassage'],
+  ['CVC', 'Chauffage, ventilation, climatisation', 'Chaudiere, pompe a chaleur, ventilo-convecteur, split, VMC'],
+  ['GAZ', 'Gaz et chaufferie', 'Compteur gaz, detendeur, chaudiere gaz, securite gaz'],
+  ['ECL', 'Eclairage', 'Dalle LED, projecteur, hublot, eclairage de securite, enseigne'],
+  ['SSI', 'Securite incendie', 'Centrale incendie, detecteur, declencheur manuel, desenfumage'],
+  ['SUR', 'Surete et videosurveillance', 'Camera, lecteur de badge, alarme intrusion, portail'],
+  ['SAN', 'Plomberie et sanitaires', 'WC, lavabo, robinetterie, ballon d eau chaude, pompe de relevage'],
+  ['FRO', 'Froid alimentaire', 'Chambre froide, vitrine refrigeree, groupe froid'],
+  ['CUI', 'Cuisine professionnelle', 'Four, plaque, friteuse, hotte, lave-vaisselle professionnel'],
+  ['ASC', 'Ascenseurs', 'Cabine, machinerie, portes palieres, monte-charge'],
+  ['MEN', 'Menuiserie et fermetures', 'Porte, fenetre, serrure, rideau metallique, portail'],
+  ['AGT', 'Agencement et mobilier', 'Mobilier, cloison, sol souple, peinture, faux plafond'],
+  ['NET', 'Nettoyage', 'Materiel de nettoyage, produits, distributeurs'],
+  ['EXT', 'Exterieur et espaces verts', 'Pelouse, haie, cloture, voirie, assainissement'],
+  ['SON', 'Sono et audiovisuel', 'Enceintes, ampli, ecran, videoprojecteur'],
+  ['SPO', 'Sport et scene', 'Agres, tapis, gradins, rideau de scene'],
+  ['DIVERS', 'Divers, non classe', 'Ce qui ne rentre dans aucune autre famille']
+];
+
+function descriptionFamille(code){
+  const ligne = TAXONOMIE.find(t => t[0] === code);
+  return ligne ? {libelle: ligne[1], exemples: ligne[2]} : {libelle: '', exemples: ''};
+}
+
 let editionConfig = null;
 
 const REFERENTIELS = [
@@ -1975,6 +2004,7 @@ function ligneConfig(cle, id, i){
   return '<div class="conf-ligne"><div>' +
     '<span class="nom">' + texteDe(cle, id) + '</span>' + (estDoublon(cle, id) ? ' <span class="badge doublon">doublon</span>' : '') +
     '<span class="usage">' + usageTexte(cle, id) + (lotDe(cle, id) ? ' - lot ' + lotDe(cle, id) : '') + '</span>' +
+    (cle === 'familles' ? '<span class="usage">' + descriptionFamille(id).libelle + '. ' + descriptionFamille(id).exemples + '.</span>' : '') +
     '</div><div class="conf-actions">' +
     (estDoublon(cle, id) ? '<button onclick="fusionnerRef(\'' + cle + '\',' + i + ')">fusionner</button>' : '') +
     '<button onclick="editerRef(\'' + cle + '\',' + i + ')">renommer</button>' +

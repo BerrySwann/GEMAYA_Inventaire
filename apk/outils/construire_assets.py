@@ -10,6 +10,7 @@ import pathlib
 import re
 import json
 import os
+import sys
 
 RACINE = pathlib.Path(__file__).resolve().parents[1]
 MAQUETTE = RACINE.parent / "maquettes-edl-v2.html"
@@ -84,7 +85,8 @@ def main():
     html = html.replace("</body>", SCRIPT_MOBILE + "</body>", 1)
 
     # 4. la couche application (base, photos, lecture de plaque), apres la maquette
-    cle = cle_api()
+    # --sans-cle : pour l'APK publie sur un hebergement public, la cle ne doit pas y etre
+    cle = "" if "--sans-cle" in sys.argv else cle_api()
     if cle:
         html = html.replace("</body>",
                             "<script>window.CLE_DEFAUT = " + json.dumps(cle) + ";</script>\n</body>", 1)

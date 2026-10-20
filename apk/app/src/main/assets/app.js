@@ -16,28 +16,9 @@
 const PONT = window.Gemaya || null;          /* ponts natifs, absents au navigateur */
 const LS = 'gemaya.edl.v1';
 
-/* ------------------------------------------------------------------ taxonomie */
+/* la taxonomie vit dans la maquette (maquettes-edl-v2.html) : un seul endroit */
 /* Proposee par metier, a valider : codes courts, un libelle lisible. */
-const TAXONOMIE = [
-  ['CFO', 'Courants forts, distribution, armoires'],
-  ['CFA', 'Courants faibles, VDI, reseaux'],
-  ['CVC', 'Chauffage, ventilation, climatisation'],
-  ['GAZ', 'Gaz, chaufferie, production de chaleur'],
-  ['ECL', 'Eclairage interieur et exterieur'],
-  ['SSI', 'Securite incendie, desenfumage'],
-  ['SUR', 'Surete, controle d acces, videosurveillance'],
-  ['SAN', 'Plomberie, sanitaires, eau chaude sanitaire'],
-  ['FRO', 'Froid alimentaire et climatisation de confort'],
-  ['CUI', 'Cuisine professionnelle'],
-  ['ASC', 'Ascenseurs, monte-charges, escaliers mecaniques'],
-  ['MEN', 'Menuiserie, serrurerie, fermetures'],
-  ['AGT', 'Agencement, mobilier, revetements'],
-  ['NET', 'Nettoyage, hygiene, consommables'],
-  ['EXT', 'Espaces verts, voirie, exterieur'],
-  ['SON', 'Sonorisation, affichage, audiovisuel'],
-  ['SPO', 'Equipements sportifs et sceniques'],
-  ['DIVERS', 'Divers, non classe']
-];
+
 
 /* --------------------------------------------------------------- etat en memoire */
 let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: '', code: '1234'};
@@ -162,6 +143,16 @@ function construireFamilles() {
       .join('');
     if (garde) { sel.value = garde; }
   }
+  majAideFamille();
+}
+
+/* le rappel sous le selecteur : a quoi sert la famille choisie */
+function majAideFamille() {
+  const sel = document.getElementById('famille-nouvel-equipement');
+  const aide = document.getElementById('aide-famille');
+  if (!sel || !aide) { return; }
+  const d = (typeof descriptionFamille === 'function') ? descriptionFamille(sel.value) : {libelle: '', exemples: ''};
+  aide.textContent = d.libelle ? d.libelle + ' : ' + d.exemples : '';
 }
 
 /* ----------------------------------------------------------------- contrats */
@@ -392,6 +383,7 @@ function creerEquipement() {
   const quantite = document.getElementById('champ-quantite');
   if (quantite && nombre) { quantite.value = nombre; }
   document.getElementById('nombre-nouvel-equipement').value = '';
+  majAideFamille();
   listesSales = true;
   sauvegarder();
   hautDeSection();                       /* on remonte au debut de la section */
