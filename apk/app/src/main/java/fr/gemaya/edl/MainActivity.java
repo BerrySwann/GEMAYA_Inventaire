@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -93,6 +94,22 @@ public class MainActivity extends Activity {
                 new AlertDialog.Builder(MainActivity.this)
                         .setMessage(message)
                         .setPositiveButton("OK", (dialogue, bouton) -> resultat.confirm())
+                        .show();
+                return true;
+            }
+
+            @Override
+            public boolean onJsPrompt(WebView webView, String url, String message,
+                                      String valeurParDefaut, final JsPromptResult resultat) {
+                final android.widget.EditText champ = new android.widget.EditText(MainActivity.this);
+                champ.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+                champ.setText(valeurParDefaut == null ? "" : valeurParDefaut);
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(message)
+                        .setView(champ)
+                        .setPositiveButton("Valider", (dialogue, bouton) -> resultat.confirm(champ.getText().toString()))
+                        .setNegativeButton("Annuler", (dialogue, bouton) -> resultat.cancel())
+                        .setOnCancelListener(dialogue -> resultat.cancel())
                         .show();
                 return true;
             }

@@ -40,7 +40,7 @@ const TAXONOMIE = [
 ];
 
 /* --------------------------------------------------------------- etat en memoire */
-let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: ''};
+let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: '', code: '1234'};
 let photosFiche = {plaque: null, ensemble: null, detail: null};   /* {chemin,dataUrl,sha256...} */
 let idFiche = '';                                                 /* fiche en cours d'edition */
 
@@ -123,7 +123,7 @@ function chargerEtat() {
   const c = d.config || {};
   if (c.contrat) { contratChoisi = c.contrat; }
   if (c.mode) { modeVisite = c.mode; }
-  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: '', majUrl: ''}, c.ia); }
+  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: '', majUrl: '', code: '1234'}, c.ia); }
   if (!configIA.cle && window.CLE_DEFAUT) { configIA.cle = window.CLE_DEFAUT; }
   const der = c.derniers || {};
   dernierSecteur = der.secteur || dernierSecteur;
@@ -794,7 +794,49 @@ function surveillerListes() {
   });
 }
 
+/* le code qui protege l'ajout et la suppression d'un contrat.
+   Modifiable sans reconstruire : config > la cle "code" en base. */
+const CODE_CONTRATS = '1234';
+
+function codeContrats() {
+  return (configIA && configIA.code) ? String(configIA.code) : CODE_CONTRATS;
+}
+
+function demanderCodeContrats(action) {
+  const saisi = window.prompt('Contrat : ' + action + '\nCode a 4 chiffres :', '');
+  if (saisi === null) { return false; }
+  if (String(saisi).trim() !== codeContrats()) {
+    toast('Code refuse : le contrat n\'a pas ete modifie');
+    return false;
+  }
+  return true;
+}
+
+/* ajouter ou supprimer un contrat demande le code ; le reste des listes est libre */
+function protegerContrats() {
+  const ajout = window.ajouterRef;
+  if (typeof ajout === 'function' && !ajout._protege) {
+    const enveloppe = function (cle) {
+      if (cle === 'contrats' && !demanderCodeContrats('ajouter')) { return; }
+      return ajout.apply(this, arguments);
+    };
+    enveloppe._protege = true;
+    window.ajouterRef = enveloppe;
+    try { eval('ajouterRef = enveloppe'); } catch (e) { /* portee globale atteinte par window */ }
+  }
+  const suppression = window.supprimerRef;
+  if (typeof suppression === 'function' && !suppression._protege) {
+    const enveloppe = function (cle) {
+      if (cle === 'contrats' && !demanderCodeContrats('supprimer')) { return; }
+      return suppression.apply(this, arguments);
+    };
+    enveloppe._protege = true;
+    window.supprimerRef = enveloppe;
+    try { eval('supprimerRef = enveloppe'); } catch (e) { /* idem */ }
+  }
+}
+
 /* ------------------------------------------------------------------ amorcage */
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => { demarrer(); surveillerListes(); }, 60);
+  setTimeout(() => { demarrer(); protegerContrats(); surveillerListes(); }, 60);
 });

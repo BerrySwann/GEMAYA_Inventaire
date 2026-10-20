@@ -1,4 +1,4 @@
-# APK EDL GEMAYA - version 0.6
+# APK EDL GEMAYA - version 0.7
 
 ## Ce que c'est
 
@@ -64,6 +64,18 @@ lue dans `~/.hermes/.env` par `outils/construire_assets.py` et ecrite dans
 `assets/index.html` (`window.CLE_DEFAUT`), jamais dans le code source. Consequence
 a connaître : quiconque possede le fichier APK peut en extraire la cle. Garder
 l'APK pour soi, et changer la cle si le fichier circule un jour.
+
+## Les contrats, proteges par un code
+
+Ajouter ou supprimer un contrat demande un code a 4 chiffres : **1234**.
+Les autres listes (secteurs, localisations, etages, familles, equipements)
+restent libres.
+
+Le code se change sans reconstruire l'application : il est lu dans la
+configuration enregistree (`config.code`). Pour le modifier, il suffit d'ecrire
+la nouvelle valeur en base (`update config set valeur='0000' where cle='ia'`
+n'est pas la bonne route : voir `config.code`), ou de demander une version qui
+expose un champ dans Configuration.
 
 ## Mettre a jour l'application depuis le telephone
 
@@ -155,7 +167,7 @@ build-tools 34.0.0.
 | | |
 |---|---|
 | Package | `fr.gemaya.edl` |
-| Version | 0.6 (versionCode 6) |
+| Version | 0.7 (versionCode 7) |
 | Android minimum | 7.0 (API 24) |
 | Cible | Android 14 (API 34) |
 | Taille | 2,4 Mo |
