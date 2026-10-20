@@ -603,6 +603,12 @@ function remplirConfigApp() {
   poser('maj-url', configIA.majUrl || '');
   const etatMaj = document.getElementById('maj-etat');
   if (etatMaj) { etatMaj.textContent = 'Version installee : ' + versionInstallee().nom; }
+  const etatCle = document.getElementById('etat-cle');
+  if (etatCle) {
+    etatCle.textContent = configIA.cle
+      ? 'Cle presente (' + String(configIA.cle).slice(0, 6) + '...' + String(configIA.cle).slice(-4) + ', ' + String(configIA.cle).length + ' caracteres)'
+      : 'Aucune cle : la lecture de plaque ne peut pas fonctionner';
+  }
   const info = document.getElementById('info-donnees');
   if (info) {
     let texte = equipements.length + ' equipement(s) enregistre(s) sur ce telephone.';
