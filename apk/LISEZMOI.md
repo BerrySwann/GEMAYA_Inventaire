@@ -1,4 +1,4 @@
-# APK EDL GEMAYA - version 0.8
+# APK EDL GEMAYA - version 0.9
 
 ## Ce que c'est
 
@@ -65,6 +65,26 @@ lue dans `~/.hermes/.env` par `outils/construire_assets.py` et ecrite dans
 `assets/index.html` (`window.CLE_DEFAUT`), jamais dans le code source. Consequence
 a connaître : quiconque possede le fichier APK peut en extraire la cle. Garder
 l'APK pour soi, et changer la cle si le fichier circule un jour.
+
+## Le correcteur et la famille proposee
+
+Pendant la saisie d'un nom d'equipement, d'un secteur, d'une localisation ou
+d'un etage, l'application propose deux choses, sans jamais rien imposer :
+
+- **une correction** quand le mot ressemble a un mot connu : « cofret » donne
+  « Voulais-tu dire coffret ? Oui / Non ». Un mot inconnu ne declenche rien ;
+- **la famille**, deduite du nom : « ventilo-convecteur » met la famille CVC et
+  la ligne d'aide l'annonce (« Famille proposee d'apres le nom »). Des que tu
+  changes la famille a la main, la mention disparait.
+
+Le dictionnaire est dans `assets/lexique.js` : 80 mots du metier, a completer
+librement. Il apprend aussi les noms deja enregistres dans la base.
+
+## La dictee vocale
+
+Le micro du clavier Android (Gboard, Samsung) fonctionne dans tous les champs :
+aucun reglage, aucune autorisation. Pour une phrase longue, le champ commentaire
+reste a passer en multi-lignes.
 
 ## Les contrats, proteges par un code
 
@@ -167,7 +187,7 @@ build-tools 34.0.0.
 | | |
 |---|---|
 | Package | `fr.gemaya.edl` |
-| Version | 0.8 (versionCode 8) |
+| Version | 0.9 (versionCode 9) |
 | Android minimum | 7.0 (API 24) |
 | Cible | Android 14 (API 34) |
 | Taille | 2,4 Mo |

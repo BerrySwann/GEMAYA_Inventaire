@@ -38,7 +38,7 @@ L'APK sort dans `apk/app/build/outputs/apk/release/app-release.apk`.
 
 ## Etat au dernier commit
 
-Version 0.7 : base SQLite locale (photos comprises), lecture de plaque par
+Version 0.9 : base SQLite locale (photos comprises), lecture de plaque par
 service de vision avec confiance par champ, export CSV (mail ou fichier),
 sous-localisation facultative, mise a jour de l'APK depuis le telephone,
 dix-huit familles et contrats modifiables.

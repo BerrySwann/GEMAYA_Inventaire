@@ -38,6 +38,12 @@ body{padding:0}
                        background:rgba(11,37,69,.7);padding:1px 5px;border-radius:4px}
 .bloc-champ.de-la-famille{border-left:3px solid var(--bleu-500);padding-left:8px;margin-left:-8px}
 .etat-ia.faible{background:var(--ambre-fond);color:var(--ambre);border:1px solid var(--ambre)}
+
+/* ---------- correction proposee sous un champ ---------- */
+.suggestion{font-size:12.5px;color:var(--bleu-700);background:var(--bleu-050);border:1px solid var(--bleu-100);
+            border-radius:8px;padding:8px 10px;margin:-2px 0 10px;line-height:1.5}
+.suggestion .lien{font:inherit;font-size:12.5px;font-weight:600;color:var(--bleu-700);background:var(--blanc);
+                  border:1px solid var(--bleu-500);border-radius:6px;padding:4px 10px;margin-left:6px;cursor:pointer}
 """
 
 SCRIPT_MOBILE = """
@@ -90,7 +96,7 @@ def main():
     if cle:
         html = html.replace("</body>",
                             "<script>window.CLE_DEFAUT = " + json.dumps(cle) + ";</script>\n</body>", 1)
-    html = html.replace("</body>", '<script src="app.js"></script>\n</body>', 1)
+    html = html.replace("</body>", '<script src="lexique.js"></script>\n<script src="app.js"></script>\n</body>', 1)
 
     SORTIE.parent.mkdir(parents=True, exist_ok=True)
     SORTIE.write_text(html, encoding="utf-8")

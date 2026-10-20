@@ -152,7 +152,8 @@ function majAideFamille() {
   const aide = document.getElementById('aide-famille');
   if (!sel || !aide) { return; }
   const d = (typeof descriptionFamille === 'function') ? descriptionFamille(sel.value) : {libelle: '', exemples: ''};
-  aide.textContent = d.libelle ? d.libelle + ' : ' + d.exemples : '';
+  const prefixe = familleProposee ? 'Famille proposee d\'apres le nom - ' : '';
+  aide.textContent = d.libelle ? prefixe + d.libelle + ' : ' + d.exemples : '';
 }
 
 /* ----------------------------------------------------------------- contrats */
@@ -564,6 +565,7 @@ function nouvelEquipement(niveau, secteur, localisation) {
   document.querySelectorAll('.etat-bouton').forEach(b => b.setAttribute('aria-pressed', 'false'));
   etatChoisi = '';
   majBadgeEtat();
+  familleProposee = false;
   indexEdition = -1;
   idFiche = '';
   document.getElementById('titre-fiche').textContent = 'Nouvel equipement';
@@ -828,7 +830,72 @@ function protegerContrats() {
   }
 }
 
+
+/* ------------------------------------------- correction et famille proposee */
+let familleProposee = false;
+
+const CHAMPS_A_CORRIGER = [
+  {id: 'nom-nouvel-equipement', famille: true, connus: () => designations.map(d => d.libelle)},
+  {id: 'nouveau-secteur', famille: false, connus: () => secteurs},
+  {id: 'nouveau-loc', famille: false, connus: () => localisations},
+  {id: 'nouveau-niveau', famille: false, connus: () => niveaux}
+];
+
+function brancherCorrections() {
+  CHAMPS_A_CORRIGER.forEach(c => {
+    const champ = document.getElementById(c.id);
+    if (!champ || champ._branche) { return; }
+    champ._branche = true;
+    const boite = document.createElement('p');
+    boite.className = 'suggestion cache';
+    champ.insertAdjacentElement('afterend', boite);
+    let minuteur = null;
+    champ.addEventListener('input', () => {
+      clearTimeout(minuteur);
+      minuteur = setTimeout(() => examinerSaisie(champ, boite, c), 550);
+    });
+  });
+}
+
+function examinerSaisie(champ, boite, c) {
+  const valeur = champ.value.trim();
+  boite.classList.add('cache');
+  boite.innerHTML = '';
+  if (valeur.length < 4) { return; }
+
+  /* 1. la famille, deduite du nom : "ventilo-convecteur" -> CVC */
+  if (c.famille) {
+    const famille = famillePour(valeur);
+    const sel = document.getElementById('famille-nouvel-equipement');
+    if (famille && sel && sel.value !== famille) {
+      sel.value = famille;
+      familleProposee = true;
+      majAideFamille();
+    }
+  }
+
+  /* 2. la faute de frappe, sur le dictionnaire du metier et les valeurs connues */
+  const correction = correctionPour(valeur, c.connus ? c.connus() : []);
+  if (correction && normaliser(correction.propose) !== normaliser(valeur)) {
+    boite.innerHTML = 'Voulais-tu dire <b>' + correction.propose + '</b> ?'
+      + ' <button class="lien" data-oui>Oui</button>'
+      + ' <button class="lien" data-non>Non</button>';
+    boite.classList.remove('cache');
+    boite.querySelector('[data-oui]').onclick = () => {
+      champ.value = correction.propose;
+      boite.classList.add('cache');
+      if (c.famille) { examinerSaisie(champ, boite, c); }
+    };
+    boite.querySelector('[data-non]').onclick = () => boite.classList.add('cache');
+  }
+}
+
+function changerFamille() {
+  familleProposee = false;
+  majAideFamille();
+}
+
 /* ------------------------------------------------------------------ amorcage */
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => { demarrer(); protegerContrats(); surveillerListes(); }, 60);
+  setTimeout(() => { demarrer(); protegerContrats(); surveillerListes(); brancherCorrections(); }, 60);
 });
