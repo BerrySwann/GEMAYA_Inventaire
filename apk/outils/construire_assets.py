@@ -90,6 +90,12 @@ def main():
     # 3. le bouton retour
     html = html.replace("</body>", SCRIPT_MOBILE + "</body>", 1)
 
+    # 3 ter. l'adresse de mise a jour, pour que « Verifier » marche sans configuration
+    html = html.replace("</body>",
+                        "<script>window.MAJ_URL_DEFAUT = "
+                        + json.dumps("https://raw.githubusercontent.com/BerrySwann/gemaya-maj/main/update.json")
+                        + ";</script>\n</body>", 1)
+
     # 3 bis. l'inventaire de depart, embarque pour la premiere ouverture
     graine = ASSETS / "inventaire-initial.csv"
     if graine.exists():

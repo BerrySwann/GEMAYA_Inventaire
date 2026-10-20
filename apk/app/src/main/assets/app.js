@@ -21,7 +21,7 @@ const LS = 'gemaya.edl.v1';
 
 
 /* --------------------------------------------------------------- etat en memoire */
-let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: '', code: '1234', inventaireImporte: false};
+let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: (window.MAJ_URL_DEFAUT || ''), code: '1234', inventaireImporte: false};
 let photosFiche = {plaque: null, ensemble: null, detail: null};   /* {chemin,dataUrl,sha256...} */
 let idFiche = '';                                                 /* fiche en cours d'edition */
 
@@ -104,8 +104,9 @@ function chargerEtat() {
   const c = d.config || {};
   if (c.contrat) { contratChoisi = c.contrat; }
   if (c.mode) { modeVisite = c.mode; }
-  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: '', majUrl: '', code: '1234', inventaireImporte: false}, c.ia); }
+  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: '', majUrl: (window.MAJ_URL_DEFAUT || ''), code: '1234', inventaireImporte: false}, c.ia); }
   if (!configIA.cle && window.CLE_DEFAUT) { configIA.cle = window.CLE_DEFAUT; }
+  if (!configIA.majUrl && window.MAJ_URL_DEFAUT) { configIA.majUrl = window.MAJ_URL_DEFAUT; }
   const der = c.derniers || {};
   dernierSecteur = der.secteur || dernierSecteur;
   derniereLoc = der.localisation || derniereLoc;
@@ -733,8 +734,13 @@ function verifierMAJ() {
 window.majVerifierRecue = function (json) {
   let r;
   try { r = JSON.parse(json); } catch (e) { toast('Reponse de mise a jour illisible'); return; }
-  if (!r.ok) { toast(r.erreur || 'Verification impossible'); return; }
   const actuelle = versionInstallee();
+  if (!r.ok) {
+    const etatErr = document.getElementById('maj-etat');
+    if (etatErr) { etatErr.textContent = 'Echec de la verification : ' + (r.erreur || 'raison inconnue'); }
+    toast(r.erreur || 'Verification impossible');
+    return;
+  }
   const etat = document.getElementById('maj-etat');
   if (etat) { etat.textContent = 'Version installee : ' + actuelle.nom + ' | derniere : ' + r.versionName; }
   if (r.versionCode <= actuelle.code) {
@@ -751,7 +757,12 @@ window.majVerifierRecue = function (json) {
 window.majTelechargee = function (json) {
   let r;
   try { r = JSON.parse(json); } catch (e) { toast('Telechargement illisible'); return; }
-  if (!r.ok) { toast(r.erreur || 'Telechargement impossible'); return; }
+  if (!r.ok) {
+    const etatErr = document.getElementById('maj-etat');
+    if (etatErr) { etatErr.textContent = 'Echec du telechargement : ' + (r.erreur || 'raison inconnue'); }
+    toast(r.erreur || 'Telechargement impossible');
+    return;
+  }
   toast('Telecharge (' + (Math.round(r.octets / 1024 / 102.4) / 10) + ' Mo), installation...');
   PONT.majInstaller(r.chemin);
 };
@@ -1083,14 +1094,46 @@ let configAutorisee = false;
 
 function ouvrirConfig() {
   if (configAutorisee) { ecran('config'); return; }
-  const saisi = window.prompt('Configuration\nCode a 4 chiffres :', '');
-  if (saisi === null) { return; }
-  if (String(saisi).trim() !== codeContrats()) {
-    toast('Code refuse');
+  const voile = document.getElementById('voile-code');
+  const champ = document.getElementById('champ-code');
+  if (!voile || !champ) { return; }
+  champ.value = '';
+  majPointsCode();
+  if (!champ.dataset.pret) {
+    champ.dataset.pret = 'oui';
+    champ.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); validerCode(); }
+    });
+    champ.addEventListener('input', majPointsCode);
+  }
+  voile.classList.add('ouvert');
+  setTimeout(() => { try { champ.focus(); } catch (e) {} }, 60);
+}
+
+/* Six points allumes en permanence : ni les chiffres ni leur nombre ne se devoilent. */
+function majPointsCode() {
+  document.querySelectorAll('#points-code i').forEach(point => point.classList.add('plein'));
+}
+
+function fermerCode() {
+  const voile = document.getElementById('voile-code');
+  if (voile) { voile.classList.remove('ouvert'); }
+  const champ = document.getElementById('champ-code');
+  if (champ) { champ.value = ''; }
+}
+
+function validerCode() {
+  const champ = document.getElementById('champ-code');
+  if (!champ) { return; }
+  if (String(champ.value || '').trim() === codeContrats()) {
+    configAutorisee = true;
+    fermerCode();
+    ecran('config');
     return;
   }
-  configAutorisee = true;
-  ecran('config');
+  champ.value = '';
+  majPointsCode();
+  toast('Code refuse');
 }
 
 /* ------------------------------------------------------------------ amorcage */

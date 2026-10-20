@@ -175,6 +175,18 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);col
 .file .etat{font-size:11px;color:var(--ambre)}
 .bandeau-lecture{background:var(--violet-fond);border:1px solid var(--violet);color:var(--violet);border-radius:9px;padding:10px 12px;font-size:12px;margin-bottom:12px;display:none}
 .bandeau-lecture.actif{display:block}
+.voile-code{position:absolute;inset:0;background:rgba(11,37,69,.55);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.voile-code.ouvert{display:flex}
+.boite-code{background:var(--blanc);border-radius:14px;padding:20px 18px 16px;width:100%;max-width:290px;box-shadow:0 18px 40px rgba(11,37,69,.28);text-align:center}
+.boite-code h4{font-size:14px;color:var(--bleu-900);margin-bottom:4px}
+.boite-code .sous{font-size:11.5px;color:var(--gris);margin-bottom:14px}
+.points-code{display:flex;justify-content:center;gap:7px;margin-bottom:12px}
+.points-code i{width:9px;height:9px;border-radius:50%;background:var(--bord-fort);display:block;transition:background .15s}
+.points-code i.plein{background:var(--bleu-700)}
+#champ-code{width:100%;text-align:center;font-size:18px;letter-spacing:8px;padding:11px 8px;border:1px solid var(--bord-fort);border-radius:9px;font-family:inherit;color:transparent;caret-color:transparent;background:#fbfcfd;-webkit-text-security:disc}
+.boite-code .pied-code{display:flex;gap:8px;margin-top:14px}
+.boite-code .pied-code button{flex:1;font:inherit;font-size:13px;font-weight:600;padding:10px;border-radius:8px;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--bleu-700);cursor:pointer}
+.boite-code .pied-code button.plein{background:var(--bleu-700);color:#fff;border-color:var(--bleu-700)}
 .toast{position:absolute;left:16px;right:16px;bottom:74px;background:var(--bleu-900);color:#fff;font-size:12.5px;padding:12px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:5}
 .toast.actif{opacity:1;transform:none}
 .fenetre{border:1px solid var(--bord-fort);border-radius:12px;overflow:hidden;background:var(--blanc);box-shadow:0 18px 44px rgba(11,37,69,.14)}
@@ -806,7 +818,19 @@ tbody tr:hover{background:var(--bleu-050)}
           </div>
         </div>
 
-        <div class="toast" id="toast"></div>
+        <div class="voile-code" id="voile-code">
+    <div class="boite-code">
+      <h4>Configuration</h4>
+      <p class="sous">Code d'acces a 4 chiffres</p>
+      <div class="points-code" id="points-code"><i class="plein"></i><i class="plein"></i><i class="plein"></i><i class="plein"></i><i class="plein"></i><i class="plein"></i></div>
+      <input id="champ-code" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off">
+      <div class="pied-code">
+        <button onclick="fermerCode()">Annuler</button>
+        <button class="plein" onclick="validerCode()">Valider</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
       </div>
     </div>
   </section>
