@@ -181,9 +181,13 @@ Le nom des photos est construit automatiquement : `SITE_Secteur_Localisation_Equ
 
 ---
 
-## 7. Les photos : stockage objet, pas dans la base
+## 7. Les photos : dans la base locale du telephone (phase actuelle)
 
-Tu voulais les photos dans la base. Techniquement c'est possible, PostgreSQL sait stocker des binaires. Je te le deconseille, pour trois raisons concretes :
+Decision du 20 octobre : tant que tout vit sur le telephone, les photos sont **dans la base**, table `photos` (binaire + vignette de 320 px). Mesure faite sur l'emulateur Android 14 : une image de 1600 x 1200 pese 1,37 Mo en binaire, s'ecrit en 140 ms et se relit instantanement. A raison de trois photos de 400 Ko par equipement, cela fait 1,2 Mo par fiche : 1 000 fiches = 1,2 Go, 5 000 = 6 Go, 40 000 fiches = 48 Go.
+
+Deux regles rendent cela tenable, et elles sont dans le code : la liste des fiches ne charge **jamais** les images (seulement les roles, puis la vignette a l'ouverture d'une fiche), et un enregistrement n'ecrit **qu'une fiche a la fois** au lieu de reecrire la base. Mesure a 20 000 fiches : 5 ms par enregistrement, contre 5 000 ms avant.
+
+Le jour ou un serveur arrivera, les images repartiront vers un stockage objet et la base ne gardera que le chemin, l'empreinte et la vignette. Les raisons de ce retour, valables des que l'on depasse quelques gigaoctets :
 
 1. **Le volume.** 45 000 photos a 3 Mo = environ 135 Go. Ta base devient un mammouth : chaque sauvegarde, chaque restauration, chaque migration transporte ces 135 Go. Une restauration qui prenait deux minutes en prend deux heures.
 2. **Les performances.** La base doit decompresser et transferer des binaires a chaque consultation d'une fiche, alors qu'un stockage de fichiers sert les images directement, avec miniatures et mise en cache.

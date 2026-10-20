@@ -89,6 +89,36 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public String sauverListes(String charge) {
+            return pont.sauverListes(charge);
+        }
+
+        @JavascriptInterface
+        public String sauverFiche(String fiche) {
+            return pont.sauverFiche(fiche);
+        }
+
+        @JavascriptInterface
+        public String supprimerFiche(String id) {
+            return pont.supprimerFiche(id);
+        }
+
+        @JavascriptInterface
+        public String sauverPhoto(String photo) {
+            return pont.sauverPhoto(photo);
+        }
+
+        @JavascriptInterface
+        public String photosDeFiche(String ficheId) {
+            return pont.photosDeFiche(ficheId);
+        }
+
+        @JavascriptInterface
+        public String lirePhoto(String ficheId, String role) {
+            return pont.lirePhoto(ficheId, role);
+        }
+
+        @JavascriptInterface
         public String info() {
             return pont.info();
         }

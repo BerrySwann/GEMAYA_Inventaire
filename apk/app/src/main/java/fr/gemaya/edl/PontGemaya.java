@@ -44,6 +44,56 @@ public class PontGemaya {
     }
 
     @JavascriptInterface
+    public String sauverListes(String charge) {
+        try {
+            base.sauverListes(charge);
+            return "ok";
+        } catch (Exception e) {
+            return "erreur " + e.getMessage();
+        }
+    }
+
+    @JavascriptInterface
+    public String sauverFiche(String fiche) {
+        try {
+            base.sauverFiche(fiche);
+            return "ok";
+        } catch (Exception e) {
+            return "erreur " + e.getMessage();
+        }
+    }
+
+    @JavascriptInterface
+    public String supprimerFiche(String id) {
+        try {
+            base.supprimerFiche(id);
+            return "ok";
+        } catch (Exception e) {
+            return "erreur " + e.getMessage();
+        }
+    }
+
+    @JavascriptInterface
+    public String sauverPhoto(String photo) {
+        try {
+            base.sauverPhoto(photo);
+            return "ok";
+        } catch (Exception e) {
+            return "erreur " + e.getMessage();
+        }
+    }
+
+    @JavascriptInterface
+    public String photosDeFiche(String ficheId) {
+        return base.photosDeFiche(ficheId);
+    }
+
+    @JavascriptInterface
+    public String lirePhoto(String ficheId, String role) {
+        return base.lirePhoto(ficheId, role);
+    }
+
+    @JavascriptInterface
     public String info() {
         try {
             return base.info(activite);

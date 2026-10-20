@@ -1271,6 +1271,11 @@ function majArbre(){
   const vide = document.getElementById('arbre-vide');
   const select = document.getElementById('select-equipement');
   if(!contenu || !vide) return;
+  /* avec des milliers de fiches, on n'affiche que le debut de chaque zone et
+     on plafonne la liste de choix : le reste s'ouvre a la demande. */
+  const LIMITE_LISTE = 60, LIMITE_SELECT = 400;
+  window.zonesOuvertes = window.zonesOuvertes || {};
+  const zonesOuvertes = window.zonesOuvertes;
 
   if(select){
     if(!equipements.length){
@@ -1282,12 +1287,19 @@ function majArbre(){
         if(!groupes[cle]){ groupes[cle] = []; ordre.push(cle); }
         groupes[cle].push({e: e, i: i});
       });
+      const toutes = ordre.reduce((t, cle) => t.concat(groupes[cle].map(x => ({cle: cle, x: x}))), []);
+      const gardees = toutes.slice(0, LIMITE_SELECT);
+      const parCle = {};
+      gardees.forEach(o => { if(!parCle[o.cle]) parCle[o.cle] = []; parCle[o.cle].push(o.x); });
       select.innerHTML = '<option value="">Choisir un equipement (' + equipements.length + ')</option>' +
-        ordre.map(cle =>
+        ordre.filter(cle => parCle[cle]).map(cle =>
           '<optgroup label="' + cle + '">' +
-            groupes[cle].map(x => '<option value="' + x.i + '">' + libelleEquipement(x.e) + ' - ' + x.e.niveau + '</option>').join('') +
+            parCle[cle].map(x => '<option value="' + x.i + '">' + libelleEquipement(x.e) + ' - ' + x.e.niveau + '</option>').join('') +
           '</optgroup>'
-        ).join('');
+        ).join('') +
+        (toutes.length > gardees.length
+          ? '<option value="" disabled>... et ' + (toutes.length - gardees.length) + ' autres : utilise la liste de la visite</option>'
+          : '');
     }
   }
 
@@ -1311,10 +1323,11 @@ function majArbre(){
       parLoc[x.e.loc].push(x);
     });
     return '<div class="zone-bloc"><h5>Secteur ' + sc + '</h5>' + ordreLocs.map(loc => {
-      const items = parLoc[loc];
+      const tout = parLoc[loc];
+      const items = zonesOuvertes[sc + '|' + loc] ? tout : tout.slice(0, LIMITE_LISTE);
       const etages = [];
       items.forEach(x => { if(etages.indexOf(x.e.niveau) < 0) etages.push(x.e.niveau); });
-      return '<div class="paire-tete"><b>' + loc + '</b><span class="num">' + items.length + (items.length > 1 ? ' equipements' : ' equipement') + '</span></div>' +
+      return '<div class="paire-tete"><b>' + loc + '</b><span class="num">' + tout.length + (tout.length > 1 ? ' equipements' : ' equipement') + '</span></div>' +
         '<p class="aide" style="margin:-2px 0 8px">' + etages.join(' / ') + '</p>' +
         items.map(x =>
           '<button class="equip-ligne" onclick="ouvreEquipement(' + x.i + ')">' +
@@ -1322,6 +1335,7 @@ function majArbre(){
             '<span class="meta">' + (x.e.marque || 'marque non renseignee') + (x.e.anomalie ? ' - anomalie ' + x.e.anomalie : ' - aucune anomalie') + '</span>' +
           '</button>'
         ).join('') +
+        (tout.length > items.length ? '<button class="mini" onclick="afficherZone(' + attribut(sc) + ',' + attribut(loc) + ')">... et ' + (tout.length - items.length) + ' autres equipements de cette piece</button>' : '') +
         '<button class="mini" onclick="nouvelEquipement(' + attribut(items[0].e.niveau) + ',' + attribut(sc) + ',' + attribut(loc) + ')">+ Ajouter un equipement ici</button>';
     }).join('') + '</div>';
   }).join('');

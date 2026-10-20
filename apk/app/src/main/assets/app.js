@@ -45,6 +45,11 @@ let photosFiche = {plaque: null, ensemble: null, detail: null};   /* {chemin,dat
 let idFiche = '';                                                 /* fiche en cours d'edition */
 
 /* --------------------------------------------------------------------- stockage */
+/* ce qui reste a ecrire : on ne reecrit plus toute la base a chaque geste */
+let listesSales = false;
+const fichesModifiees = new Set();
+const photosAecrire = [];
+
 function instantane() {
   return {
     contrats: contrats,
@@ -63,11 +68,30 @@ function instantane() {
   };
 }
 
+/* les listes seules : quelques dizaines de lignes, pas les milliers de fiches */
+function instantaneListes() {
+  const tout = instantane();
+  delete tout.fiches;
+  return tout;
+}
+
 function sauvegarder() {
-  const charge = JSON.stringify(instantane());
   try {
-    if (PONT && PONT.sauver) { PONT.sauver(charge); }
-    else { localStorage.setItem(LS, charge); }
+    if (!PONT || !PONT.sauverFiche) {
+      localStorage.setItem(LS, JSON.stringify(instantane()));
+      return;
+    }
+    if (listesSales) {
+      PONT.sauverListes(JSON.stringify(instantaneListes()));
+      listesSales = false;
+    }
+    photosAecrire.splice(0).forEach(p => PONT.sauverPhoto(JSON.stringify(p)));
+    fichesModifiees.forEach(id => {
+      const fiche = equipements.find(e => e.id === id);
+      if (fiche) { PONT.sauverFiche(JSON.stringify(fiche)); }
+      else { PONT.supprimerFiche(id); }
+    });
+    fichesModifiees.clear();
   } catch (e) {
     toast('Enregistrement impossible : ' + e);
   }
@@ -111,6 +135,9 @@ function chargerEtat() {
 /* ---------------------------------------------------------------- demarrage */
 function demarrer() {
   const deja = chargerEtat();
+  fichesModifiees.clear();
+  photosAecrire.length = 0;
+  listesSales = false;
   const selContrat = document.getElementById('select-contrat');
   if (selContrat) { remplirContrats(); }
   construireFamilles();
@@ -182,6 +209,9 @@ window.photoRecue = function (role, json) {
   let r;
   try { r = JSON.parse(json); } catch (e) { toast('Photo illisible'); return; }
   if (!r.ok) { toast(r.message || 'Photo annulee'); return; }
+  /* l'image reste en memoire pour l'apercu ; c'est le binaire qui part en base */
+  if (r.dataUrl) { r.base64 = r.dataUrl.substring(r.dataUrl.indexOf(',') + 1); }
+  if (r.vignette) { r.vignetteB64 = r.vignette.substring(r.vignette.indexOf(',') + 1); }
   if (role === 'plaque') {
     photoPlaque = true;
     photosFiche.plaque = r;
@@ -362,6 +392,7 @@ function creerEquipement() {
   const quantite = document.getElementById('champ-quantite');
   if (quantite && nombre) { quantite.value = nombre; }
   document.getElementById('nombre-nouvel-equipement').value = '';
+  listesSales = true;
   sauvegarder();
   hautDeSection();                       /* on remonte au debut de la section */
   toast(existait ? nom + ' existait deja : il est pris en charge' : nom + ' pris en charge : renseigne ses champs');
@@ -394,23 +425,6 @@ function enregistrerReleve() {
   const quantite = valeurs[INDEX_QUANTITE] || '';
   const ancienne = indexEdition >= 0 ? equipements[indexEdition] : null;
 
-  /* le fichier complet reste sur le disque : la base ne garde que le chemin,
-     l'empreinte et la vignette, jamais le base64 de la photo entiere */
-  const fichiers = {};
-  ['plaque', 'ensemble', 'detail'].forEach(role => {
-    const p = photosFiche[role];
-    if (!p) { return; }
-    fichiers[role] = {
-      chemin: p.chemin || '',
-      fichier: p.fichier || '',
-      sha256: p.sha256 || '',
-      octets: p.octets || 0,
-      largeur: p.largeur || 0,
-      hauteur: p.hauteur || 0,
-      vignette: p.vignette || ''
-    };
-  });
-
   const fiche = {
     id: ancienne && ancienne.id ? ancienne.id : 'F' + Date.now() + '-' + Math.floor(Math.random() * 1000),
     secteur: s,
@@ -427,12 +441,31 @@ function enregistrerReleve() {
     photos: {
       plaque: photoPlaque, ensemble: photosAutres.ensemble, detail: photosAutres.detail
     },
-    fichiers: fichiers,
+    fichiers: {},
     visite: modeVisite,
     contrat: contratChoisi,
     modifie_le: maintenant,
     cree_le: ancienne && ancienne.cree_le ? ancienne.cree_le : maintenant
   };
+
+  /* les photos de cette fiche partent en base au meme moment */
+  ['plaque', 'ensemble', 'detail'].forEach(role => {
+    const p = photosFiche[role];
+    if (!p || !p.base64) { return; }
+    photosAecrire.push({
+      fiche_id: fiche.id,
+      role: role,
+      base64: p.base64,
+      mime: 'image/jpeg',
+      octets: p.octets || 0,
+      sha256: p.sha256 || '',
+      largeur: p.largeur || 0,
+      hauteur: p.hauteur || 0,
+      prise_le: new Date().toISOString(),
+      vignette: p.vignetteB64 || ''
+    });
+  });
+  fichesModifiees.add(fiche.id);
 
   let message;
   if (indexEdition >= 0) {
@@ -479,11 +512,19 @@ function ouvreEquipement(i) {
   const quantite = document.getElementById('champ-quantite');
   if (quantite) { quantite.value = e.quantite || (e.valeurs ? e.valeurs[INDEX_QUANTITE] || '' : ''); }
 
-  photoPlaque = !!e.photoPlaque;
+  photoPlaque = !!(e.photos && e.photos.plaque);
   photosAutres = {ensemble: !!(e.photos && e.photos.ensemble), detail: !!(e.photos && e.photos.detail)};
   photosFiche = {plaque: null, ensemble: null, detail: null};
-  if (e.fichiers) {
-    ['plaque', 'ensemble', 'detail'].forEach(r => { photosFiche[r] = e.fichiers[r] || null; });
+  /* les images vivent en base : on ne charge que les vignettes de cette fiche */
+  if (PONT && PONT.photosDeFiche && e.id) {
+    try {
+      const recu = JSON.parse(PONT.photosDeFiche(e.id));
+      if (recu && recu.photos) {
+        ['plaque', 'ensemble', 'detail'].forEach(role => {
+          if (recu.photos[role]) { photosFiche[role] = recu.photos[role]; }
+        });
+      }
+    } catch (err) { /* fiche sans photo : elle s'ouvre quand meme */ }
   }
   majSlots();
 
@@ -628,13 +669,41 @@ function exporterCSV() {
 function viderDonnees() {
   if (!confirm('Effacer tous les equipements enregistres sur ce telephone ?')) { return; }
   equipements.length = 0;
+  fichesModifiees.clear();
+  photosAecrire.length = 0;
   majCompteurs();
   majArbre();
-  sauvegarder();
+  listesSales = true;
+  if (PONT && PONT.sauver) { PONT.sauver(JSON.stringify(instantane())); }
+  else { sauvegarder(); }
   toast('Donnees effacees');
+}
+
+function afficherZone(secteur, localisation) {
+  window.zonesOuvertes = window.zonesOuvertes || {};
+  window.zonesOuvertes[secteur + '|' + localisation] = true;
+  majArbre();
+}
+
+/* toute modification des listes doit partir en base, meme sans fiche en cours */
+function surveillerListes() {
+  ['renommerRef', 'supprimerRef', 'fusionnerRef', 'ajouterRef', 'creerSecteur', 'creerNiveau',
+   'creerLoc', 'ajouterContrat', 'ajouterDesignation', 'construireFamilles'].forEach(nom => {
+    const original = window[nom];
+    if (typeof original !== 'function' || original._surveille) { return; }
+    const enveloppe = function () {
+      const resultat = original.apply(this, arguments);
+      listesSales = true;
+      sauvegarder();
+      return resultat;
+    };
+    enveloppe._surveille = true;
+    window[nom] = enveloppe;
+    try { eval(nom + ' = enveloppe'); } catch (e) { /* portee locale : tant pis */ }
+  });
 }
 
 /* ------------------------------------------------------------------ amorcage */
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(demarrer, 60);
+  setTimeout(() => { demarrer(); surveillerListes(); }, 60);
 });
