@@ -313,7 +313,7 @@ tbody tr:hover{background:var(--bleu-050)}
               <img src="logo-gemaya.png" alt="GEMAYA" class="logo-connexion">
               <div style="font-size:12px;color:var(--muet);margin-top:10px">Etats des lieux - version terrain</div>
             </div>
-            <div class="champ"><label>Adresse e-mail</label><input type="text" value="prenom.nom@gemaya.fr"></div>
+            <div class="champ"><label>Courriel (e-mail)</label><input type="text" value="prenom.nom@gemaya.fr"></div>
             <div class="champ"><label>Mot de passe</label><input type="password" value="motdepasse"></div>
             <button class="bouton principal" onclick="ecran('visites')">Se connecter</button>
             <p class="aide" style="text-align:center;margin-top:14px">Session conservee 30 jours : on ne retape pas le mot de passe devant un coffret.</p>
@@ -361,7 +361,7 @@ tbody tr:hover{background:var(--bleu-050)}
             <button aria-current="true" onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
             <button onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
             <button onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
-            <button onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+            <button onclick="ouvrirConfig()"><span class="pict">&#9881;</span>Config</button>
           </div>
         </div>
 
@@ -398,7 +398,7 @@ tbody tr:hover{background:var(--bleu-050)}
             <button onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
             <button aria-current="true" onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
             <button onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
-            <button onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+            <button onclick="ouvrirConfig()"><span class="pict">&#9881;</span>Config</button>
           </div>
         </div>
 
@@ -724,7 +724,7 @@ tbody tr:hover{background:var(--bleu-050)}
             <button onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
             <button onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
             <button aria-current="true" onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
-            <button onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+            <button onclick="ouvrirConfig()"><span class="pict">&#9881;</span>Config</button>
           </div>
         </div>
 
@@ -801,7 +801,7 @@ tbody tr:hover{background:var(--bleu-050)}
             <button onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
             <button onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
             <button onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
-            <button aria-current="true" onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+            <button aria-current="true" onclick="ouvrirConfig()"><span class="pict">&#9881;</span>Config</button>
           </div>
         </div>
 

@@ -90,6 +90,13 @@ def main():
     # 3. le bouton retour
     html = html.replace("</body>", SCRIPT_MOBILE + "</body>", 1)
 
+    # 3 bis. l'inventaire de depart, embarque pour la premiere ouverture
+    graine = ASSETS / "inventaire-initial.csv"
+    if graine.exists():
+        concours = graine.read_text(encoding="utf-8-sig")
+        html = html.replace("</body>",
+                            "<script>window.INVENTAIRE_INITIAL = " + json.dumps(concours) + ";</script>\n</body>", 1)
+
     # 4. la couche application (base, photos, lecture de plaque), apres la maquette
     # --sans-cle : pour l'APK publie sur un hebergement public, la cle ne doit pas y etre
     cle = "" if "--sans-cle" in sys.argv else cle_api()

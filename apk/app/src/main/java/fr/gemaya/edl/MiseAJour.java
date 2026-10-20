@@ -83,9 +83,13 @@ final class MiseAJour {
             sortie.close();
             entree.close();
             lien.disconnect();
+            /* une copie visible dans Telechargements/gemaya : si l'installation
+               automatique echoue, l'utilisateur retrouve le fichier et le touche */
+            copierVersTelechargements(contexte, propre, fichier);
             JSONObject r = new JSONObject();
             r.put("ok", true);
             r.put("chemin", fichier.getAbsolutePath());
+            r.put("visible", "Telechargements/gemaya/" + propre);
             r.put("octets", total);
             return r.toString();
         } catch (Exception e) {
@@ -118,6 +122,38 @@ final class MiseAJour {
             return "{\"ok\":true}";
         } catch (Exception e) {
             return "{\"ok\":false,\"erreur\":\"" + echapper("Installation impossible : " + e.getMessage()) + "\"}";
+        }
+    }
+
+    /** Copie l'APK telecharge dans le dossier public Telechargements/gemaya. */
+    private static void copierVersTelechargements(Context contexte, String nom, File source) {
+        if (android.os.Build.VERSION.SDK_INT < 29) {
+            return;      /* avant Android 10 il faut une autorisation de stockage */
+        }
+        try {
+            android.content.ContentValues valeurs = new android.content.ContentValues();
+            valeurs.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, nom);
+            valeurs.put(android.provider.MediaStore.MediaColumns.MIME_TYPE,
+                    "application/vnd.android.package-archive");
+            valeurs.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
+                    android.os.Environment.DIRECTORY_DOWNLOADS + "/gemaya");
+            android.net.Uri cible = contexte.getContentResolver().insert(
+                    android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, valeurs);
+            if (cible == null) {
+                return;
+            }
+            java.io.OutputStream sortie = contexte.getContentResolver().openOutputStream(cible);
+            java.io.InputStream entree = new java.io.FileInputStream(source);
+            byte[] tampon = new byte[65536];
+            int lus;
+            while ((lus = entree.read(tampon)) > 0) {
+                sortie.write(tampon, 0, lus);
+            }
+            sortie.flush();
+            sortie.close();
+            entree.close();
+        } catch (Exception ignore) {
+            /* la copie visible est un secours : son echec ne bloque pas l'installation */
         }
     }
 

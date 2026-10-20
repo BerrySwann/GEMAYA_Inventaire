@@ -21,7 +21,7 @@ const LS = 'gemaya.edl.v1';
 
 
 /* --------------------------------------------------------------- etat en memoire */
-let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: '', code: '1234'};
+let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: '', code: '1234', inventaireImporte: false};
 let photosFiche = {plaque: null, ensemble: null, detail: null};   /* {chemin,dataUrl,sha256...} */
 let idFiche = '';                                                 /* fiche en cours d'edition */
 
@@ -104,7 +104,7 @@ function chargerEtat() {
   const c = d.config || {};
   if (c.contrat) { contratChoisi = c.contrat; }
   if (c.mode) { modeVisite = c.mode; }
-  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: '', majUrl: '', code: '1234'}, c.ia); }
+  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: '', majUrl: '', code: '1234', inventaireImporte: false}, c.ia); }
   if (!configIA.cle && window.CLE_DEFAUT) { configIA.cle = window.CLE_DEFAUT; }
   const der = c.derniers || {};
   dernierSecteur = der.secteur || dernierSecteur;
@@ -128,6 +128,15 @@ function demarrer() {
   majCompteurs();
   remplirConfigApp();
   if (deja) { toast('Donnees locales rechargees : ' + equipements.length + ' equipement(s)'); }
+
+  /* premiere ouverture : l'inventaire de depart est deja dedans */
+  if (!deja && !configIA.inventaireImporte && window.INVENTAIRE_INITIAL) {
+    window.importRecu(window.INVENTAIRE_INITIAL, true);
+    configIA.inventaireImporte = true;
+    listesSales = true;
+    sauvegarder();
+    toast(equipements.length + ' equipements de l\'inventaire initial charges');
+  }
 }
 
 /* ----------------------------------------------------------------- familles */
@@ -964,7 +973,7 @@ function ajouterSiAbsent(liste, valeur) {
   if (valeur && liste.indexOf(valeur) < 0) { liste.push(valeur); }
 }
 
-window.importRecu = function (texte) {
+window.importRecu = function (texte, silencieux) {
   if (!texte || texte.length < 10) { toast('Fichier vide ou illisible'); return; }
   const lignes = texte.split(/\r?\n/).filter(l => l.trim() !== '');
   if (lignes.length < 2) { toast('Aucune ligne a importer'); return; }
@@ -1056,8 +1065,27 @@ window.importRecu = function (texte) {
   construireDesignations();
   majCompteurs();
   majArbre();
-  toast(ajoutees + ' equipement(s) importe(s)' + (ignorees ? ', ' + ignorees + ' ligne(s) sans nom' : ''));
+  if (!silencieux) {
+    toast(ajoutees + ' equipement(s) importe(s)' + (ignorees ? ', ' + ignorees + ' ligne(s) sans nom' : ''));
+  }
 };
+
+
+
+/* ------------------------------------------------- la configuration demande le code */
+let configAutorisee = false;
+
+function ouvrirConfig() {
+  if (configAutorisee) { ecran('config'); return; }
+  const saisi = window.prompt('Configuration\nCode a 4 chiffres :', '');
+  if (saisi === null) { return; }
+  if (String(saisi).trim() !== codeContrats()) {
+    toast('Code refuse');
+    return;
+  }
+  configAutorisee = true;
+  ecran('config');
+}
 
 /* ------------------------------------------------------------------ amorcage */
 document.addEventListener('DOMContentLoaded', () => {
