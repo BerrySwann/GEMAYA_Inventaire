@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
     private static final int DEMANDE_PHOTO = 11;
     private static final int DEMANDE_GALERIE = 12;
     private static final int DEMANDE_ENREGISTRER = 13;
+    private static final int DEMANDE_FICHIER = 14;
 
     private String contenuAEnregistrer = "";
 
@@ -204,6 +205,11 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public void choisirFichier() {
+            MainActivity.this.choisirFichier();
+        }
+
+        @JavascriptInterface
         public String partager(String nom, String contenu) {
             return MainActivity.this.partagerFichier(nom, contenu);
         }
@@ -246,6 +252,51 @@ public class MainActivity extends Activity {
             Toast.makeText(this, "Releve enregistre", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "Ecriture impossible : " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /* ------------------------------------------------------- import d'un fichier */
+
+    /** Ouvre le selecteur de fichiers d'Android et rend le texte du CSV a la page. */
+    void choisirFichier() {
+        Intent demande = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        demande.addCategory(Intent.CATEGORY_OPENABLE);
+        demande.setType("*/*");
+        demande.putExtra(Intent.EXTRA_MIME_TYPES,
+                new String[]{"text/csv", "text/comma-separated-values", "text/plain", "application/csv"});
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startActivityForResult(demande, DEMANDE_FICHIER);
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this, "Aucun selecteur de fichiers", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void lireFichierChoisi(Uri uri) {
+        try {
+            InputStream entree = getContentResolver().openInputStream(uri);
+            if (entree == null) {
+                rappeler("importRecu", "");
+                return;
+            }
+            java.io.ByteArrayOutputStream tampon = new java.io.ByteArrayOutputStream();
+            byte[] bloc = new byte[65536];
+            int lus;
+            while ((lus = entree.read(bloc)) > 0) {
+                tampon.write(bloc, 0, lus);
+            }
+            entree.close();
+            String texte = new String(tampon.toByteArray(), java.nio.charset.StandardCharsets.UTF_8);
+            if (texte.startsWith("\ufeff")) {
+                texte = texte.substring(1);
+            }
+            rappeler("importRecu", texte);
+        } catch (Exception e) {
+            rappeler("importRecu", "");
         }
     }
 
@@ -329,6 +380,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int demande, int resultat, Intent donnees) {
         super.onActivityResult(demande, resultat, donnees);
+        if (demande == DEMANDE_FICHIER) {
+            if (resultat == RESULT_OK && donnees != null && donnees.getData() != null) {
+                lireFichierChoisi(donnees.getData());
+            }
+            return;
+        }
         if (demande == DEMANDE_ENREGISTRER) {
             if (resultat == RESULT_OK && donnees != null && donnees.getData() != null) {
                 ecrireDans(donnees.getData());

@@ -7,7 +7,9 @@
  *
  * Usage : node outils/cdp.mjs "<expression javascript>"
  */
-const expression = (process.argv[2] || "").replace(/%%CLE_API%%/g, process.env.CLE_API || "");
+import { readFileSync } from "node:fs";
+let expression = (process.argv[2] || "").replace(/%%CLE_API%%/g, process.env.CLE_API || "");
+if (expression.startsWith("@")) { expression = readFileSync(expression.slice(1), "utf8"); }
 if (!expression) {
   console.error("usage: node outils/cdp.mjs \"<expression>\"");
   process.exit(2);

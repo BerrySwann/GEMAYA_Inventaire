@@ -895,6 +895,164 @@ function changerFamille() {
   majAideFamille();
 }
 
+
+/* Correspondance des familles des inventaires clients vers les notres.
+   Regle du 20/10 : tout ce qui touche a la plomberie va dans SAN. */
+const CORRESPONDANCE_FAMILLES = {
+  'ELEC': 'CFO', 'ELECTRICITE': 'CFO', 'ELECTRIQUE': 'CFO', 'CFO': 'CFO',
+  'ELC': 'ECL', 'ECLAIRAGE': 'ECL', 'ECL': 'ECL',
+  'PB': 'SAN', 'PBL': 'SAN', 'PLOMBERIE': 'SAN', 'SANITAIRE': 'SAN', 'SAN': 'SAN',
+  'AMENAGEMENT INTERIEUR': 'AGT', 'AMENAGEMENT': 'AGT', 'AGT': 'AGT',
+  'A DEFINIR': 'DIVERS', 'DIVERS': 'DIVERS', 'DIVER': 'DIVERS',
+  'CVC': 'CVC', 'SSI': 'SSI', 'GAZ': 'GAZ', 'CFA': 'CFA', 'SUR': 'SUR',
+  'FRO': 'FRO', 'CUI': 'CUI', 'ASC': 'ASC', 'MEN': 'MEN', 'NET': 'NET',
+  'EXT': 'EXT', 'SON': 'SON', 'SPO': 'SPO'
+};
+
+function familleNormalisee(brut) {
+  const cle = normaliser(brut).toUpperCase();
+  if (!cle) { return 'DIVERS'; }
+  return CORRESPONDANCE_FAMILLES[cle] || cle;
+}
+
+/* ------------------------------------------------------------ import d'un inventaire */
+/* Format attendu : CSV point-virgule, UTF-8, une ligne d'en-tete avec les noms de
+   colonnes (contrat, secteur, sous-localisation, localisation, etage, famille,
+   quantite, equipement, marque, modele, reference, numero de serie, puissance
+   electrique, puissance thermique, debit, type, etat, urgence, commentaire). */
+
+function importerInventaire() {
+  if (PONT && PONT.choisirFichier) { PONT.choisirFichier(); return; }
+  const champ = document.createElement('input');
+  champ.type = 'file';
+  champ.accept = '.csv,text/csv';
+  champ.onchange = () => {
+    const fichier = champ.files && champ.files[0];
+    if (!fichier) { return; }
+    const lecteur = new FileReader();
+    lecteur.onload = () => window.importRecu(lecteur.result);
+    lecteur.readAsText(fichier, 'utf-8');
+  };
+  champ.click();
+}
+
+function decouperCSV(ligne) {
+  const champs = [];
+  let courant = '';
+  let guillemets = false;
+  for (let i = 0; i < ligne.length; i++) {
+    const c = ligne[i];
+    if (guillemets) {
+      if (c === '"') {
+        if (ligne[i + 1] === '"') { courant += '"'; i++; } else { guillemets = false; }
+      } else { courant += c; }
+    } else if (c === '"') { guillemets = true; }
+    else if (c === ';' || c === ',') { champs.push(courant); courant = ''; }
+    else { courant += c; }
+  }
+  champs.push(courant);
+  return champs;
+}
+
+function ajouterSiAbsent(liste, valeur) {
+  if (valeur && liste.indexOf(valeur) < 0) { liste.push(valeur); }
+}
+
+window.importRecu = function (texte) {
+  if (!texte || texte.length < 10) { toast('Fichier vide ou illisible'); return; }
+  const lignes = texte.split(/\r?\n/).filter(l => l.trim() !== '');
+  if (lignes.length < 2) { toast('Aucune ligne a importer'); return; }
+
+  const entetes = decouperCSV(lignes[0]).map(e => normaliser(e));
+  const index = (nom) => entetes.indexOf(nom);
+  const col = {
+    contrat: index('contrat'), secteur: index('secteur'), sousloc: index('sous-localisation'),
+    loc: index('localisation'), etage: index('etage'), famille: index('famille'),
+    quantite: index('quantite'), equipement: index('equipement'), marque: index('marque'),
+    modele: index('modele'), serie: index('numero de serie'),
+    puissanceElectrique: index('puissance electrique'), puissanceThermique: index('puissance thermique'),
+    debit: index('debit'), type: index('type'), etat: index('etat'),
+    urgence: index('urgence'), commentaire: index('commentaire')
+  };
+  if (col.equipement < 0) {
+    toast("Colonne « equipement » absente : ce fichier n'est pas au bon format");
+    return;
+  }
+
+  const maintenant = new Date().toISOString();
+  let ajoutees = 0;
+  let ignorees = 0;
+
+  for (let n = 1; n < lignes.length; n++) {
+    const champs = decouperCSV(lignes[n]);
+    const valeur = (i) => (i >= 0 && champs[i] !== undefined) ? String(champs[i]).trim() : '';
+    const equipement = valeur(col.equipement);
+    if (!equipement) { ignorees++; continue; }
+
+    const contrat = valeur(col.contrat) || contratChoisi || 'CONTRAT';
+    const secteur = valeur(col.secteur) || 'A DEFINIR';
+    const sousloc = valeur(col.sousloc);
+    const loc = valeur(col.loc) || 'A DEFINIR';
+    const niveau = valeur(col.etage) || 'A DEFINIR';
+    const famille = familleNormalisee(valeur(col.famille));
+    const quantite = valeur(col.quantite);
+    const etat = valeur(col.etat).toLowerCase();
+    const urgence = valeur(col.urgence).toUpperCase();
+
+    ajouterSiAbsent(contrats, contrat);
+    ajouterSiAbsent(secteurs, secteur);
+    ajouterSiAbsent(localisations, loc);
+    ajouterSiAbsent(niveaux, niveau);
+    ajouterSiAbsent(familles, famille);
+    if (!designations.some(d => d.famille === famille && d.libelle.toLowerCase() === equipement.toLowerCase())) {
+      designations.push({famille: famille, libelle: equipement});
+    }
+
+    const valeurs = new Array(17).fill('');
+    valeurs[0] = valeur(col.marque);
+    valeurs[1] = valeur(col.modele);
+    valeurs[2] = valeur(col.serie);
+    valeurs[3] = valeur(col.puissanceThermique);
+    valeurs[4] = valeur(col.puissanceElectrique);
+    valeurs[5] = valeur(col.debit);
+    valeurs[7] = valeur(col.type);
+    valeurs[14] = quantite;
+    valeurs[16] = valeur(col.commentaire);
+
+    equipements.push({
+      id: 'I' + Date.now() + '-' + n,
+      contrat: contrat,
+      visite: modeVisite,
+      secteur: secteur,
+      loc: loc,
+      sousloc: sousloc,
+      niveau: niveau,
+      famille: famille,
+      designation: equipement,
+      marque: valeur(col.marque),
+      quantite: quantite,
+      etat: etat,
+      anomalie: ['A', 'B', 'C'].indexOf(urgence) >= 0 ? urgence : '',
+      valeurs: valeurs,
+      photos: {},
+      fichiers: {},
+      cree_le: maintenant,
+      modifie_le: maintenant
+    });
+    ajoutees++;
+  }
+
+  fichesModifiees.clear();
+  listesSales = true;
+  if (PONT && PONT.sauver) { PONT.sauver(JSON.stringify(instantane())); }
+  else { sauvegarder(); }
+  construireSelects();
+  construireDesignations();
+  majCompteurs();
+  majArbre();
+  toast(ajoutees + ' equipement(s) importe(s)' + (ignorees ? ', ' + ignorees + ' ligne(s) sans nom' : ''));
+};
+
 /* ------------------------------------------------------------------ amorcage */
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => { demarrer(); protegerContrats(); surveillerListes(); brancherCorrections(); }, 60);
