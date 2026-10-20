@@ -1,4 +1,4 @@
-# APK EDL GEMAYA - version 0.5.1
+# APK EDL GEMAYA - version 0.6
 
 ## Ce que c'est
 
@@ -20,8 +20,13 @@ Ce qui marche :
   numero de serie, gaz, puissances, avec un pourcentage de confiance par champ ;
 - **configuration** : contrat, secteurs, localisations, etages, familles,
   equipements, plus la cle API et l'adresse du service ;
-- **export CSV** : un bouton dans Configuration ecrit la visite en CSV et ouvre
-  le partage Android, donc Mail, Drive, ou n'importe quelle application ;
+- **export CSV** : deux boutons dans Configuration, l'un ouvre le partage
+  Android (Mail, Drive), l'autre ouvre l'ecran "enregistrer sous" du telephone.
+  Point-virgule, UTF-8 avec BOM, une ligne par equipement. La colonne
+  **Sous-localisation** n'apparait que si au moins une fiche la remplit ;
+- **mise a jour depuis le telephone** : Configuration > Mises a jour, une
+  adresse de fichier `update.json`, l'application compare les versions,
+  telecharge l'APK et lance l'installation ;
 - **dix-huit familles** proposees (CFO, CFA, CVC, GAZ, ECL, SSI, SUR, SAN, FRO,
   CUI, ASC, MEN, AGT, NET, EXT, SON, SPO, DIVERS) ;
 - fiche de saisie : **tous les champs visibles**, ceux de la famille choisie
@@ -59,6 +64,24 @@ lue dans `~/.hermes/.env` par `outils/construire_assets.py` et ecrite dans
 `assets/index.html` (`window.CLE_DEFAUT`), jamais dans le code source. Consequence
 a connaître : quiconque possede le fichier APK peut en extraire la cle. Garder
 l'APK pour soi, et changer la cle si le fichier circule un jour.
+
+## Mettre a jour l'application depuis le telephone
+
+1. Deposer sur un hebergement accessible deux fichiers : l'APK et un
+   `update.json` de cette forme :
+   ```json
+   {"versionCode": 7, "versionName": "0.7",
+    "apk": "https://.../EDL-GEMAYA-0.7.apk", "notes": "ce qui change"}
+   ```
+2. Dans l'application : Configuration > **Mises a jour**, coller l'adresse du
+   `update.json`, *Enregistrer l'adresse*.
+3. *Verifier et installer* : l'application compare sa version avec celle du
+   fichier, propose le telechargement, puis Android installe l'APK.
+4. La premiere fois, Android demande d'autoriser GEMAYA a installer des
+   applications ; l'application ouvre elle-meme l'ecran de reglage.
+
+Le `versionCode` doit augmenter a chaque build (7, 8, ...), sinon la mise a jour
+n'est pas proposee.
 
 ## Exporter le releve et l'envoyer par mail
 
@@ -132,11 +155,11 @@ build-tools 34.0.0.
 | | |
 |---|---|
 | Package | `fr.gemaya.edl` |
-| Version | 0.4 (versionCode 4) |
+| Version | 0.6 (versionCode 6) |
 | Android minimum | 7.0 (API 24) |
 | Cible | Android 14 (API 34) |
 | Taille | 2,4 Mo |
-| Permissions | INTERNET seulement |
+| Permissions | INTERNET et installer des applications (mise a jour) |
 | Signature | certificat autosigne CN=GEMAYA, RSA 4096, 30 ans |
 
 ## Les donnees

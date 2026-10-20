@@ -448,6 +448,12 @@ tbody tr:hover{background:var(--bleu-050)}
               </div>
             </div>
             <div class="champ">
+              <label>Sous-localisation <span class="badge attente">facultatif</span></label>
+              <input type="text" id="champ-sousloc" placeholder="Ex. sanitaires, salle de bain">
+              <p class="aide">A remplir seulement quand la piece contient plusieurs sous-espaces (les sanitaires dans la loge). Laisse vide sinon : la colonne disparait du CSV.</p>
+            </div>
+
+            <div class="champ">
               <label>Etage ou niveau <span class="badge attente" id="etat-niveau">a creer</span></label>
               <div class="ligne-select">
                 <select id="sel-niveau" onchange="changerPaire()"></select>
@@ -770,7 +776,22 @@ tbody tr:hover{background:var(--bleu-050)}
               <p class="aide" id="info-donnees">Base locale SQLite.</p>
               <div class="correction-actions">
                 <button onclick="exporterCSV()">Exporter en CSV (mail)</button>
+                <button class="annuler" onclick="enregistrerCSV()">Enregistrer le fichier</button>
                 <button class="danger" onclick="viderDonnees()">Effacer les equipements</button>
+              </div>
+            </div>
+
+            <div class="conf-bloc">
+              <h5>Mises a jour de l'application</h5>
+              <p class="aide" style="margin-bottom:10px">L'application compare sa version avec le fichier d'une adresse, telecharge l'APK et lance l'installation. Plus besoin de transfert par mail.</p>
+              <div class="champ">
+                <label>Adresse du fichier update.json</label>
+                <input type="text" id="maj-url" placeholder="https://.../update.json" autocomplete="off">
+              </div>
+              <p class="aide" id="maj-etat">Version installee : -</p>
+              <div class="correction-actions">
+                <button onclick="enregistrerMajUrl()">Enregistrer l'adresse</button>
+                <button class="annuler" onclick="verifierMAJ()">Verifier et installer</button>
               </div>
             </div>
           </div>
@@ -1750,12 +1771,21 @@ function echapperCSV(v){
 function ligneCSV(valeurs){ return valeurs.map(echapperCSV).join(';'); }
 
 function inventaireCSV(){
-  const entetes = ['Secteur','Localisation','Etage ou niveau','Famille','Equipement','Marque','Modele / reference','Numero de serie','Quantite','Annee','Autres caracteristiques','Etat du materiel',"Degre d'urgence",'Delai contractuel','Commentaire','Photos','Releve le','Releve par'];
+  /* la sous-localisation n'apparait que si elle sert quelque part */
+  const avecSousLoc = equipements.some(e => String(e.sousloc || '').trim() !== '');
+  const entetes = ['Secteur', 'Localisation'];
+  if(avecSousLoc) entetes.push('Sous-localisation');
+  entetes.push('Etage ou niveau', 'Famille', 'Equipement', 'Marque', 'Modele / reference',
+               'Numero de serie', 'Quantite', 'Annee', 'Autres caracteristiques',
+               'Etat du materiel', "Degre d'urgence", 'Delai contractuel', 'Commentaire',
+               'Photos', 'Releve le', 'Releve par');
   const lignes = [ligneCSV(entetes)];
   equipements.forEach(e => {
     const autres = CHAMPS_DETAIL.filter(c => valeurChamp(e, c.index)).map(c => c.nom + ': ' + valeurChamp(e, c.index)).join(' | ');
-    lignes.push(ligneCSV([
-      e.secteur, e.loc, e.niveau, e.famille, e.designation,
+    const ligne = [e.secteur, e.loc];
+    if(avecSousLoc) ligne.push(e.sousloc || '');
+    ligne.push(
+      e.niveau, e.famille, e.designation,
       valeurChamp(e, 0), valeurChamp(e, 1), valeurChamp(e, 2),
       valeurChamp(e, INDEX_QUANTITE) || '1',
       valeurChamp(e, INDEX_ANNEE),
@@ -1767,7 +1797,8 @@ function inventaireCSV(){
       nomsPhotos(e),
       DATE_RELEVE,
       RELEVE_PAR
-    ]));
+    );
+    lignes.push(ligneCSV(ligne));
   });
   return lignes.join('\r\n');
 }
@@ -1846,7 +1877,7 @@ function copierFichier(){
 }
 
 /* --- Configuration : contrat et listes de reference (renommer, supprimer, fusionner) --- */
-let contrats = ['PALAIS NIKAÏA', 'GEMAYA - LESQUIN', 'HOPITAL SAINT-LOUIS', 'MINDEF - BATIMENT C'];
+let contrats = ['PALAIS NIKAÏA', 'NIKAIA', 'SCITIAM', 'URSAFF TOULON', 'GEMAYA - LESQUIN', 'HOPITAL SAINT-LOUIS', 'MINDEF - BATIMENT C'];
 let contratChoisi = 'PALAIS NIKAÏA';
 let familles = ['CVC', 'ECL', 'CFO', 'SSI', 'DIVERS'];
 let editionConfig = null;

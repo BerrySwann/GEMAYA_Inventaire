@@ -28,7 +28,7 @@ import java.util.Iterator;
 public class BaseDb extends SQLiteOpenHelper {
 
     private static final String NOM = "gemaya-edl.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     public BaseDb(Context contexte) {
         super(contexte, NOM, null, VERSION);
@@ -44,7 +44,7 @@ public class BaseDb extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE equipements_catalogue(id INTEGER PRIMARY KEY, famille TEXT, libelle TEXT)");
         db.execSQL("CREATE TABLE fiches("
                 + "id TEXT PRIMARY KEY, contrat TEXT, visite TEXT, secteur TEXT, localisation TEXT,"
-                + "niveau TEXT, famille TEXT, designation TEXT, marque TEXT, quantite TEXT,"
+                + "sous_localisation TEXT, niveau TEXT, famille TEXT, designation TEXT, marque TEXT, quantite TEXT,"
                 + "etat TEXT, urgence TEXT, commentaire TEXT, valeurs TEXT, photos TEXT,"
                 + "fichiers TEXT, cree_le TEXT, modifie_le TEXT)");
         db.execSQL("CREATE TABLE config(cle TEXT PRIMARY KEY, valeur TEXT)");
@@ -66,6 +66,14 @@ public class BaseDb extends SQLiteOpenHelper {
                     + "blob BLOB, octets INTEGER, sha256 TEXT, largeur INTEGER, hauteur INTEGER,"
                     + "prise_le TEXT, vignette BLOB)");
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_photos_fiche ON photos(fiche_id)");
+        }
+        if (ancienne < 3) {
+            /* la sous-localisation : une piece dans une piece (les sanitaires dans la loge) */
+            try {
+                db.execSQL("ALTER TABLE fiches ADD COLUMN sous_localisation TEXT");
+            } catch (Exception ignore) {
+                /* colonne deja presente */
+            }
         }
     }
 
@@ -128,8 +136,8 @@ public class BaseDb extends SQLiteOpenHelper {
         }
         p.close();
 
-        Cursor c = db.rawQuery("SELECT id, contrat, visite, secteur, localisation, niveau, famille,"
-                + " designation, marque, quantite, etat, urgence, commentaire, valeurs,"
+        Cursor c = db.rawQuery("SELECT id, contrat, visite, secteur, localisation, sous_localisation,"
+                + " niveau, famille, designation, marque, quantite, etat, urgence, commentaire, valeurs,"
                 + " cree_le, modifie_le FROM fiches ORDER BY cree_le", null);
         while (c.moveToNext()) {
             JSONObject o = new JSONObject();
@@ -138,19 +146,20 @@ public class BaseDb extends SQLiteOpenHelper {
             o.put("visite", texte(c, 2));
             o.put("secteur", texte(c, 3));
             o.put("loc", texte(c, 4));
-            o.put("niveau", texte(c, 5));
-            o.put("famille", texte(c, 6));
-            o.put("designation", texte(c, 7));
-            o.put("marque", texte(c, 8));
-            o.put("quantite", texte(c, 9));
-            o.put("etat", texte(c, 10));
-            o.put("anomalie", texte(c, 11));
-            o.put("commentaire", texte(c, 12));
-            o.put("valeurs", jsonOuVide(texte(c, 13), new JSONArray()));
+            o.put("sousloc", texte(c, 5));
+            o.put("niveau", texte(c, 6));
+            o.put("famille", texte(c, 7));
+            o.put("designation", texte(c, 8));
+            o.put("marque", texte(c, 9));
+            o.put("quantite", texte(c, 10));
+            o.put("etat", texte(c, 11));
+            o.put("anomalie", texte(c, 12));
+            o.put("commentaire", texte(c, 13));
+            o.put("valeurs", jsonOuVide(texte(c, 14), new JSONArray()));
             o.put("photos", parFiche.optJSONObject(c.getString(0)) == null
                     ? new JSONObject() : parFiche.optJSONObject(c.getString(0)));
-            o.put("cree_le", texte(c, 14));
-            o.put("modifie_le", texte(c, 15));
+            o.put("cree_le", texte(c, 15));
+            o.put("modifie_le", texte(c, 16));
             liste.put(o);
         }
         c.close();
@@ -274,6 +283,7 @@ public class BaseDb extends SQLiteOpenHelper {
         cv.put("visite", f.optString("visite", ""));
         cv.put("secteur", f.optString("secteur", ""));
         cv.put("localisation", f.optString("loc", ""));
+        cv.put("sous_localisation", f.optString("sousloc", ""));
         cv.put("niveau", f.optString("niveau", ""));
         cv.put("famille", f.optString("famille", ""));
         cv.put("designation", f.optString("designation", ""));

@@ -2,5 +2,6 @@
 <paths>
     <cache-path name="prises" path="prises/" />
     <cache-path name="export" path="export/" />
+    <cache-path name="maj" path="maj/" />
     <files-path name="photos" path="photos/" />
 </paths>

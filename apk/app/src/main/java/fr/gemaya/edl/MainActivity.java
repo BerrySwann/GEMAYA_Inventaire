@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -36,6 +38,9 @@ public class MainActivity extends Activity {
 
     private static final int DEMANDE_PHOTO = 11;
     private static final int DEMANDE_GALERIE = 12;
+    private static final int DEMANDE_ENREGISTRER = 13;
+
+    private String contenuAEnregistrer = "";
 
     private WebView vue;
     private BaseDb base;
@@ -69,6 +74,29 @@ public class MainActivity extends Activity {
         reglages.setTextZoom(100);
         vue.addJavascriptInterface(new PontPage(), "Gemaya");
         vue.setWebViewClient(new WebViewClient());
+        /* sans ceci, les fenetres "confirm" du JavaScript n'apparaissent pas et
+           repondent toujours non (suppression, mise a jour) */
+        vue.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsConfirm(WebView webView, String url, String message, final JsResult resultat) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(message)
+                        .setPositiveButton("Oui", (dialogue, bouton) -> resultat.confirm())
+                        .setNegativeButton("Annuler", (dialogue, bouton) -> resultat.cancel())
+                        .setOnCancelListener(dialogue -> resultat.cancel())
+                        .show();
+                return true;
+            }
+
+            @Override
+            public boolean onJsAlert(WebView webView, String url, String message, final JsResult resultat) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(message)
+                        .setPositiveButton("OK", (dialogue, bouton) -> resultat.confirm())
+                        .show();
+                return true;
+            }
+        });
         vue.setBackgroundColor(0xFFFFFFFF);
         vue.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
@@ -124,6 +152,11 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public String version() {
+            return pont.version();
+        }
+
+        @JavascriptInterface
         public void photo(String role) {
             pont.photo(role);
         }
@@ -134,12 +167,70 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public void majVerifier(String url) {
+            pont.majVerifier(url);
+        }
+
+        @JavascriptInterface
+        public void majTelecharger(String url, String nom) {
+            pont.majTelecharger(url, nom);
+        }
+
+        @JavascriptInterface
+        public void majInstaller(String chemin) {
+            pont.majInstaller(chemin);
+        }
+
+        @JavascriptInterface
+        public String enregistrer(String nom, String contenu) {
+            return MainActivity.this.enregistrerFichier(nom, contenu);
+        }
+
+        @JavascriptInterface
         public String partager(String nom, String contenu) {
             return MainActivity.this.partagerFichier(nom, contenu);
         }
     }
 
     /* --------------------------------------------------------- export par mail */
+
+    /** Ouvre l'ecran "enregistrer sous" d'Android : le fichier va dans Documents ou Telechargements. */
+    String enregistrerFichier(String nom, String contenu) {
+        try {
+            contenuAEnregistrer = contenu == null ? "" : contenu;
+            String propre = (nom == null || nom.isEmpty()) ? "releve.csv" : nom.replaceAll("[^A-Za-z0-9._-]", "_");
+            Intent demande = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            demande.addCategory(Intent.CATEGORY_OPENABLE);
+            demande.setType("text/csv");
+            demande.putExtra(Intent.EXTRA_TITLE, propre);
+            final Intent choix = demande;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActivityForResult(choix, DEMANDE_ENREGISTRER);
+                }
+            });
+            return "ok";
+        } catch (Exception e) {
+            return "erreur " + e.getMessage();
+        }
+    }
+
+    private void ecrireDans(Uri uri) {
+        try {
+            java.io.OutputStream sortie = getContentResolver().openOutputStream(uri);
+            if (sortie == null) {
+                Toast.makeText(this, "Fichier non ouvrable", Toast.LENGTH_LONG).show();
+                return;
+            }
+            sortie.write(("\ufeff" + contenuAEnregistrer).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            sortie.flush();
+            sortie.close();
+            Toast.makeText(this, "Releve enregistre", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Ecriture impossible : " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
 
     String partagerFichier(String nom, String contenu) {
         try {
@@ -221,6 +312,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int demande, int resultat, Intent donnees) {
         super.onActivityResult(demande, resultat, donnees);
+        if (demande == DEMANDE_ENREGISTRER) {
+            if (resultat == RESULT_OK && donnees != null && donnees.getData() != null) {
+                ecrireDans(donnees.getData());
+            } else {
+                Toast.makeText(this, "Enregistrement annule", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
         if (resultat != RESULT_OK) {
             rappelerPhoto("{\"ok\":false,\"message\":\"Photo annulee\"}");
             return;

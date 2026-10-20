@@ -103,6 +103,20 @@ public class PontGemaya {
     }
 
     @JavascriptInterface
+    public String version() {
+        try {
+            android.content.pm.PackageInfo info =
+                    activite.getPackageManager().getPackageInfo(activite.getPackageName(), 0);
+            return new org.json.JSONObject()
+                    .put("code", info.versionCode)
+                    .put("nom", info.versionName)
+                    .toString();
+        } catch (Exception e) {
+            return "{}";
+        }
+    }
+
+    @JavascriptInterface
     public void photo(final String role) {
         activite.runOnUiThread(new Runnable() {
             @Override
@@ -119,6 +133,37 @@ public class PontGemaya {
             public void run() {
                 String reponse = Modele.appeler(demande);
                 activite.rappeler("lectureRecue", reponse);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void majVerifier(final String url) {
+        arrierePlan.execute(new Runnable() {
+            @Override
+            public void run() {
+                activite.rappeler("majVerifierRecue", MiseAJour.verifier(url));
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void majTelecharger(final String url, final String nom) {
+        arrierePlan.execute(new Runnable() {
+            @Override
+            public void run() {
+                String reponse = MiseAJour.telecharger(activite, url, nom);
+                activite.rappeler("majTelechargee", reponse);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void majInstaller(final String chemin) {
+        arrierePlan.execute(new Runnable() {
+            @Override
+            public void run() {
+                activite.rappeler("majInstallee", MiseAJour.installer(activite, chemin));
             }
         });
     }

@@ -40,7 +40,7 @@ const TAXONOMIE = [
 ];
 
 /* --------------------------------------------------------------- etat en memoire */
-let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || '')};
+let configIA = {fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: (window.CLE_DEFAUT || ''), majUrl: ''};
 let photosFiche = {plaque: null, ensemble: null, detail: null};   /* {chemin,dataUrl,sha256...} */
 let idFiche = '';                                                 /* fiche en cours d'edition */
 
@@ -123,7 +123,7 @@ function chargerEtat() {
   const c = d.config || {};
   if (c.contrat) { contratChoisi = c.contrat; }
   if (c.mode) { modeVisite = c.mode; }
-  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: ''}, c.ia); }
+  if (c.ia) { configIA = Object.assign({fournisseur: 'deepseek', modele: 'deepseek-chat', base: '', cle: '', majUrl: ''}, c.ia); }
   if (!configIA.cle && window.CLE_DEFAUT) { configIA.cle = window.CLE_DEFAUT; }
   const der = c.derniers || {};
   dernierSecteur = der.secteur || dernierSecteur;
@@ -430,6 +430,7 @@ function enregistrerReleve() {
     secteur: s,
     niveau: n,
     loc: l,
+    sousloc: (document.getElementById('champ-sousloc') || {}).value || '',
     famille: familleChoisie,
     designation: designation,
     etat: etatChoisi,
@@ -499,6 +500,8 @@ function ouvreEquipement(i) {
   document.getElementById('sel-secteur').value = e.secteur;
   document.getElementById('sel-niveau').value = e.niveau;
   document.getElementById('sel-loc').value = e.loc;
+  const sousLoc = document.getElementById('champ-sousloc');
+  if (sousLoc) { sousLoc.value = e.sousloc || ''; }
   majBadgesPaire();
   const cleEquipement = ajouterDesignation(e.famille || 'DIVERS', e.designation || '');
   construireDesignations();
@@ -556,6 +559,8 @@ function nouvelEquipement(niveau, secteur, localisation) {
   bouton.disabled = true;
   bouton.style.opacity = '.45';
   document.querySelectorAll('#champs-dynamiques .saisie').forEach(c => { c.value = ''; });
+  const sousLocNeuve = document.getElementById('champ-sousloc');
+  if (sousLocNeuve) { sousLocNeuve.value = ''; }
   const nomNouvel = document.getElementById('nom-nouvel-equipement');
   if (nomNouvel) { nomNouvel.value = ''; }
   const nombreNouvel = document.getElementById('nombre-nouvel-equipement');
@@ -592,6 +597,9 @@ function remplirConfigApp() {
   poser('ia-modele', configIA.modele);
   poser('ia-base', configIA.base);
   poser('ia-cle', configIA.cle);
+  poser('maj-url', configIA.majUrl || '');
+  const etatMaj = document.getElementById('maj-etat');
+  if (etatMaj) { etatMaj.textContent = 'Version installee : ' + versionInstallee().nom; }
   const info = document.getElementById('info-donnees');
   if (info) {
     let texte = equipements.length + ' equipement(s) enregistre(s) sur ce telephone.';
@@ -637,27 +645,110 @@ function testerLecture() {
 }
 
 /* ---------------------------------------------------------- export CSV + mail */
+function nomFichierCSV() {
+  const jour = new Date().toISOString().slice(0, 10);
+  const contrat = (contratChoisi || 'VISITE').replace(/[^A-Za-z0-9]+/g, '-');
+  return 'EDL_GEMAYA_' + contrat + '_' + jour + '.csv';
+}
+
+function contenuCSV() {
+  const contenu = inventaireCSV();
+  const nbLignes = equipements.length;
+  return {contenu: contenu, nbLignes: nbLignes, octets: contenu.length, nom: nomFichierCSV()};
+}
+
 function exporterCSV() {
   if (!equipements.length) {
     toast('Aucun equipement a exporter');
     return;
   }
-  const contenu = inventaireCSV();
-  const jour = new Date().toISOString().slice(0, 10);
-  const contrat = (contratChoisi || 'VISITE').replace(/[^A-Za-z0-9]+/g, '-');
-  const nom = 'EDL_GEMAYA_' + contrat + '_' + jour + '.csv';
-
+  const f = contenuCSV();
   if (PONT && PONT.partager) {
-    const reponse = PONT.partager(nom, contenu);
+    const reponse = PONT.partager(f.nom, f.contenu);
     if (reponse && reponse.indexOf('ok') === 0) {
-      toast('Fichier pret : choisis Mail pour l\'envoyer');
+      toast(f.nbLignes + ' equipement(s), ' + Math.round(f.octets / 1024) + ' Ko : choisis Mail');
     } else {
       toast('Export impossible : ' + reponse);
     }
     return;
   }
+  telechargerDansNavigateur(f.contenu, f.nom);
+}
 
-  /* au navigateur : telechargement direct */
+function enregistrerCSV() {
+  if (!equipements.length) {
+    toast('Aucun equipement a exporter');
+    return;
+  }
+  const f = contenuCSV();
+  if (PONT && PONT.enregistrer) {
+    PONT.enregistrer(f.nom, f.contenu);
+    toast(f.nbLignes + ' equipement(s) : choisis ou enregistrer le fichier');
+    return;
+  }
+  telechargerDansNavigateur(f.contenu, f.nom);
+}
+
+/* ------------------------------------------------------------- mise a jour */
+function versionInstallee() {
+  if (PONT && PONT.version) {
+    try {
+      const v = JSON.parse(PONT.version());
+      return {code: v.code || 0, nom: v.nom || 'inconnue'};
+    } catch (e) { /* on continue avec les valeurs par defaut */ }
+  }
+  return {code: 0, nom: 'inconnue'};
+}
+
+function enregistrerMajUrl() {
+  configIA.majUrl = (document.getElementById('maj-url').value || '').trim();
+  sauvegarder();
+  remplirConfigApp();
+  toast(configIA.majUrl ? 'Adresse enregistree' : 'Adresse effacee');
+}
+
+function verifierMAJ() {
+  const url = (document.getElementById('maj-url').value || '').trim() || configIA.majUrl || '';
+  if (!url) { toast("Renseigne l'adresse du fichier update.json"); return; }
+  if (!PONT || !PONT.majVerifier) { toast('La mise a jour se fait dans l\'application Android'); return; }
+  toast('Verification en cours...');
+  PONT.majVerifier(url);
+}
+
+window.majVerifierRecue = function (json) {
+  let r;
+  try { r = JSON.parse(json); } catch (e) { toast('Reponse de mise a jour illisible'); return; }
+  if (!r.ok) { toast(r.erreur || 'Verification impossible'); return; }
+  const actuelle = versionInstallee();
+  const etat = document.getElementById('maj-etat');
+  if (etat) { etat.textContent = 'Version installee : ' + actuelle.nom + ' | derniere : ' + r.versionName; }
+  if (r.versionCode <= actuelle.code) {
+    toast('Deja a jour (' + actuelle.nom + ')');
+    return;
+  }
+  const suite = confirm('Version ' + r.versionName + ' disponible (tu as ' + actuelle.nom + ').'
+    + (r.notes ? '\n\n' + r.notes : '') + '\n\nTelecharger et installer ?');
+  if (!suite) { return; }
+  toast('Telechargement de la version ' + r.versionName + '...');
+  PONT.majTelecharger(r.apk, 'gemaya-' + r.versionName + '.apk');
+};
+
+window.majTelechargee = function (json) {
+  let r;
+  try { r = JSON.parse(json); } catch (e) { toast('Telechargement illisible'); return; }
+  if (!r.ok) { toast(r.erreur || 'Telechargement impossible'); return; }
+  toast('Telecharge (' + (Math.round(r.octets / 1024 / 102.4) / 10) + ' Mo), installation...');
+  PONT.majInstaller(r.chemin);
+};
+
+window.majInstallee = function (json) {
+  let r;
+  try { r = JSON.parse(json); } catch (e) { return; }
+  if (r && r.ok) { return; }
+  toast((r && r.erreur) || 'Installation impossible');
+};
+
+function telechargerDansNavigateur(contenu, nom) {
   const blob = new Blob(['\ufeff' + contenu], {type: 'text/csv;charset=utf-8'});
   const lien = document.createElement('a');
   lien.href = URL.createObjectURL(blob);
