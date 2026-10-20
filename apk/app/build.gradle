@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.application'
+}
+
+def signature = new Properties()
+file("../keystore/keystore.properties").withInputStream { signature.load(it) }
+
+android {
+    namespace 'fr.gemaya.edl'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "fr.gemaya.edl"
+        minSdk 24
+        targetSdk 34
+        versionCode 4
+        versionName "0.4"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../" + signature['storeFile'])
+            storePassword signature['storePassword']
+            keyAlias signature['keyAlias']
+            keyPassword signature['keyPassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.13.1'
+}

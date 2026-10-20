@@ -1,0 +1,19 @@
+# sorties de compilation
+apk/app/build/
+apk/.gradle/
+apk/local.properties
+
+# page generee : elle contient la cle API, elle ne va jamais dans le depot
+apk/app/src/main/assets/index.html
+
+# secrets : la cle de signature ne va JAMAIS dans un depot
+apk/keystore/
+
+# binaires produits et copies d'APK
+*.apk
+*.aab
+*.xls
+
+# divers
+*.log
+.DS_Store

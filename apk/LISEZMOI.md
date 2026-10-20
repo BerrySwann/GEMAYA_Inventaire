@@ -1,0 +1,158 @@
+# APK EDL GEMAYA - version 0.3
+
+## Ce que c'est
+
+L'application de terrain, telle qu'elle se comporte aujourd'hui, installee en
+APK sur un telephone Android. Ce n'est plus une maquette : la saisie est
+conservee dans une base locale, les photos sont reelles, la plaque est lue par
+un service de vision.
+
+Ce qui marche :
+
+- les huit ecrans du parcours, le bouton retour Android ;
+- **base SQLite locale** : un equipement cree, une quantite corrigee, une liste
+  modifiee survivent a la fermeture de l'application ;
+- **photos reelles** : appareil photo du telephone ou import depuis la galerie,
+  photo reduite a 1600 px, empreinte SHA-256 calculee, fichier garde dans
+  l'application, vignette seule en base ;
+- **lecture de plaque** : appelle un service de vision (DeepSeek verifie,
+  Gemini, OpenAI, Mistral ou compatible) et remplit marque, modele, reference,
+  numero de serie, gaz, puissances, avec un pourcentage de confiance par champ ;
+- **configuration** : contrat, secteurs, localisations, etages, familles,
+  equipements, plus la cle API et l'adresse du service ;
+- **export CSV** : un bouton dans Configuration ecrit la visite en CSV et ouvre
+  le partage Android, donc Mail, Drive, ou n'importe quelle application ;
+- **dix-huit familles** proposees (CFO, CFA, CVC, GAZ, ECL, SSI, SUR, SAN, FRO,
+  CUI, ASC, MEN, AGT, NET, EXT, SON, SPO, DIVERS) ;
+- fiche de saisie : **tous les champs visibles**, ceux de la famille choisie
+  encadres, et retour automatique en haut de la section apres creation.
+
+Ce qui n'existe pas encore : aucune synchronisation avec un serveur, aucun
+compte multi-utilisateur, aucun rapport PDF, aucune comparaison annuelle. Le
+bureau n'est pas encore branche sur cette base.
+
+## Installation sur le telephone
+
+1. Envoyer `EDL-GEMAYA-0.2.apk` sur le telephone (cable USB, Drive, mail).
+2. Toucher le fichier, accepter l'installation.
+3. Si Android refuse, autoriser les applications inconnues pour l'application
+   source (Fichiers, Chrome, Drive).
+4. L'icone **EDL GEMAYA** (l'embleme du logotype) apparait dans la liste.
+
+L'APK demande une seule autorisation : **INTERNET**, pour la lecture de plaque.
+Sans reseau, tout le reste fonctionne : saisie, photos, base locale.
+
+## La lecture de plaque
+
+1. Ouvrir la fiche d'un equipement, toucher la case **plaque**.
+2. Choisir *Prendre une photo* ou *Choisir dans le telephone*.
+3. Toucher **Lire la photo (reconnaissance)**.
+4. Chaque champ rempli porte un badge `IA 95 %` ; une confiance sous 60 pour
+   cent s'affiche en ambre : a verifier sur la plaque.
+
+La cle API se saisit une fois dans **Configuration > Intelligence artificielle**.
+Elle reste sur le telephone, ne passe pas par la page web. Reglage par defaut :
+DeepSeek, modele `deepseek-chat`, qui accepte les images et a ete essaye.
+
+La cle est aussi **embarquee dans l'APK** au moment de la fabrication : elle est
+lue dans `~/.hermes/.env` par `outils/construire_assets.py` et ecrite dans
+`assets/index.html` (`window.CLE_DEFAUT`), jamais dans le code source. Consequence
+a connaître : quiconque possede le fichier APK peut en extraire la cle. Garder
+l'APK pour soi, et changer la cle si le fichier circule un jour.
+
+## Exporter le releve et l'envoyer par mail
+
+Configuration > **Donnees de ce telephone** > *Exporter en CSV (mail)*.
+
+L'application ecrit `EDL_GEMAYA_<contrat>_<date>.csv` (point-virgule, UTF-8 avec
+BOM, donc les accents sont corrects a l'ouverture dans Excel) et ouvre le
+partage Android : toucher Mail, Drive ou Fichiers pour l'envoyer. Une ligne
+d'en-tete, puis une ligne par equipement. Les photos ne sont pas dans le CSV :
+il cite leur nom de fichier, les images restent sur le telephone.
+
+## Mise a jour
+
+Un APK installe ne se met pas a jour tout seul. Pour installer une nouvelle
+version, il faut **le meme keystore** : voir ci-dessous.
+
+## Le keystore : le point a ne jamais perdre
+
+- fichier : `keystore/gemaya-edl.jks`
+- alias : `gemaya`
+- mots de passe : dans `keystore/keystore.properties`
+- empreinte SHA-256 du certificat :
+  `d4918237964c7a7c258c6e9b4c03d685736b137b28775db6de83e27fe79486d6`
+
+Si ce fichier est perdu, plus aucune mise a jour de l'application ne sera
+possible sur les telephones deja installes : il faudra desinstaller, et les
+donnees locales seront perdues. Copier ces deux fichiers dans un coffre, hors
+du poste de developpement.
+
+La 0.1, la 0.2 et la 0.3 portent la meme signature : chaque version s'installe
+par-dessus la precedente sans desinstallation, et les donnees restent.
+
+## Reconstruire l'APK
+
+```bash
+export JAVA_HOME=/home/home/tools/jdk-17.0.20.1+1
+export ANDROID_HOME=/home/home/Android/Sdk
+cd "/home/home/Documents/SEMERU/EDL/apk"
+python3 outils/construire_assets.py      # maquette + app.js -> app/src/main/assets/index.html
+/home/home/tools/gradle-8.9/bin/gradle assembleRelease
+cp app/build/outputs/apk/release/app-release.apk EDL-GEMAYA-0.3.apk
+```
+
+`construire_assets.py` reprend `../maquettes-edl-v2.html` : une correction de
+maquette se fait dans ce fichier, puis on relance le script. Il remplace le lien
+Google Fonts par les polices locales de `assets/polices`, retire la presentation
+bureau, ajoute la fonction de retour Android et charge `assets/app.js`.
+
+`assets/app.js` est la couche application : base, photos, lecture de plaque,
+familles, comportement de la fiche. Le code Java est dans
+`app/src/main/java/fr/gemaya/edl/` : `MainActivity` (WebView, appareil photo),
+`PontGemaya` (ponts exposes a la page), `BaseDb` (SQLite), `Photos`
+(redimensionnement), `Modele` (appel du service de vision).
+
+Tests sur emulateur, avec l'APK de debug (la page est alors inspectable) :
+
+```bash
+adb shell am start -n fr.gemaya.edl/.MainActivity
+PID=$(adb shell pidof fr.gemaya.edl)
+adb forward tcp:9222 localabstract:webview_devtools_remote_$PID
+node outils/cdp.mjs "JSON.stringify({fiches: equipements.length})"
+adb shell run-as fr.gemaya.edl sqlite3 databases/gemaya-edl.db 'select * from fiches'
+```
+
+Chaine installee : JDK 17 (`/home/home/tools/jdk-17.0.20.1+1`), Gradle 8.9
+(`/home/home/tools/gradle-8.9`), SDK Android 34 (`/home/home/Android/Sdk`),
+build-tools 34.0.0.
+
+## Identite de l'application
+
+| | |
+|---|---|
+| Package | `fr.gemaya.edl` |
+| Version | 0.4 (versionCode 4) |
+| Android minimum | 7.0 (API 24) |
+| Cible | Android 14 (API 34) |
+| Taille | 2,4 Mo |
+| Permissions | INTERNET seulement |
+| Signature | certificat autosigne CN=GEMAYA, RSA 4096, 30 ans |
+
+## Les donnees
+
+Base : `databases/gemaya-edl.db`, tables `contrats`, `secteurs`,
+`localisations`, `niveaux`, `familles`, `equipements_catalogue`, `fiches`,
+`config`. Photos : `files/photos/*.jpg`, une par prise de vue.
+
+Aujourd'hui, chaque enregistrement reecrit les tables concernees dans une
+transaction : c'est sans consequence a l'echelle d'une visite (quelques
+centaines de lignes), et cela evite les etats intermediaires incoherents. Le
+modele definitif passera a des ecritures incrementales, sans changer la forme
+des donnees.
+
+## Quand la vraie application arrivera
+
+La coquille WebView sera remplacee par le code SvelteKit compile et emballe par
+Capacitor, avec le **meme identifiant de package** et le **meme keystore** :
+l'installation remplacera cette version sur les telephones, sans desinstallation.

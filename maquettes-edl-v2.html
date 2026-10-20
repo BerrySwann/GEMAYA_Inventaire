@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDL v2 - maquettes cliquables</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bleu-900:#0b2545; --bleu-700:#1b3a6b; --bleu-500:#2f6fb2;
+  --bleu-100:#e8eff8; --bleu-050:#f4f8fd;
+  --encre:#111827; --texte:#374151; --muet:#6b7280;
+  --bord:#d5dbe4; --bord-fort:#b6c0cd; --fond:#eef1f5; --blanc:#ffffff;
+  --rouge:#b42318; --rouge-fond:#fef3f2;
+  --ambre:#b54708; --ambre-fond:#fffaeb;
+  --vert:#067647; --vert-fond:#ecfdf3;
+  --violet:#5925dc; --violet-fond:#f4f3ff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);color:var(--texte);padding:28px 20px 60px;-webkit-font-smoothing:antialiased}
+.num{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+.page{max-width:1360px;margin:0 auto}
+.entete{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:22px}
+.entete h1{font-size:22px;font-weight:600;color:var(--bleu-900);letter-spacing:-0.01em}
+.entete p{font-size:13px;color:var(--muet);margin-top:4px}
+.onglets{display:flex;gap:6px;background:var(--blanc);border:1px solid var(--bord);border-radius:10px;padding:4px}
+.onglet{font:inherit;font-size:13px;font-weight:500;padding:8px 16px;border:0;border-radius:7px;background:transparent;color:var(--texte);cursor:pointer}
+.onglet[aria-selected="true"]{background:var(--bleu-700);color:#fff}
+.onglet:hover:not([aria-selected="true"]){background:var(--bleu-050)}
+.avis{font-size:12px;color:var(--muet);background:var(--blanc);border:1px solid var(--bord);border-left:3px solid var(--bleu-500);border-radius:6px;padding:10px 14px;margin-bottom:24px}
+.avis b{color:var(--texte)}
+.etage{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap}
+.gauche{flex:1 1 260px;min-width:240px}
+.gauche h2{font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muet);font-weight:600;margin-bottom:14px}
+.chips{display:flex;flex-direction:column;gap:6px}
+.chip{font:inherit;font-size:13px;text-align:left;padding:10px 12px;border:1px solid var(--bord);border-radius:8px;background:var(--blanc);color:var(--texte);cursor:pointer;display:flex;gap:10px;align-items:center}
+.chip .pas{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muet);min-width:16px}
+.chip[aria-current="true"]{border-color:var(--bleu-500);background:var(--bleu-050);color:var(--bleu-900);font-weight:500}
+.note-bas{font-size:12px;color:var(--muet);line-height:1.6;margin-top:18px;border-top:1px solid var(--bord);padding-top:14px}
+.note-bas b{color:var(--texte);font-weight:600}
+.telephone{width:390px;flex:0 0 auto;background:#1c1f24;border-radius:38px;padding:12px;box-shadow:0 24px 60px rgba(11,37,69,.28), inset 0 0 0 2px #32363d}
+.ecran{background:var(--blanc);border-radius:28px;overflow:hidden;height:770px;display:flex;flex-direction:column;position:relative}
+.ecran > .ecran-vue{flex:1 1 auto;min-height:0;overflow:hidden}
+.ecran-vue .app-corps{min-height:0}
+.ligne-select{display:flex;gap:6px;align-items:stretch}
+.ligne-select select{flex:1}
+.bouton-corriger{font:inherit;font-size:10.5px;font-weight:600;color:var(--bleu-700);background:var(--blanc);border:1px dashed var(--bord-fort);border-radius:9px;padding:0 9px;cursor:pointer;white-space:nowrap}
+.bouton-corriger:hover{border-color:var(--bleu-500);background:var(--bleu-050)}
+.correction{background:var(--bleu-050);border:1px solid var(--bleu-100);border-radius:10px;padding:10px;margin:-6px 0 12px}
+.correction input{width:100%;font:inherit;font-size:13px;padding:10px;border:1px solid var(--bord-fort);border-radius:9px;min-height:42px;margin-bottom:8px}
+.correction-actions{display:flex;gap:6px;flex-wrap:wrap}
+.correction-actions button{font:inherit;font-size:11.5px;font-weight:600;padding:8px 12px;border-radius:8px;border:1px solid var(--bleu-700);background:var(--bleu-700);color:#fff;cursor:pointer}
+.correction-actions button.danger{background:var(--blanc);color:var(--rouge);border-color:var(--rouge)}
+.correction-actions button.annuler{background:var(--blanc);color:var(--bleu-700);border-color:var(--bord-fort)}
+.conf-bloc{background:var(--blanc);border:1px solid var(--bord);border-radius:10px;padding:12px;margin-bottom:12px}
+.conf-bloc h5{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--bleu-700);font-weight:600;margin-bottom:9px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.conf-ligne{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--fond)}
+.conf-ligne:last-of-type{border-bottom:0}
+.conf-ligne .nom{font-size:13px;color:var(--encre)}
+.conf-ligne .usage{font-size:10.5px;color:var(--muet);display:block}
+.conf-actions{display:flex;gap:5px;flex-shrink:0}
+.conf-actions button{font:inherit;font-size:10.5px;font-weight:600;padding:6px 9px;border-radius:7px;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--bleu-700);cursor:pointer}
+.conf-actions button.danger{color:var(--rouge);border-color:var(--rouge)}
+.conf-ligne input.edition{flex:1;font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--bleu-500);border-radius:8px;min-height:38px}
+.conf-ajout{display:flex;gap:6px;margin-top:10px}
+.conf-ajout input{flex:1;font:inherit;font-size:13px;padding:9px 11px;border:1px solid var(--bord-fort);border-radius:9px;min-height:40px}
+.conf-ajout button{font:inherit;font-size:12px;font-weight:600;padding:9px 12px;border-radius:9px;border:1px solid var(--bleu-700);background:var(--bleu-700);color:#fff;cursor:pointer}
+.badge.doublon{background:var(--ambre-fond);color:var(--ambre)}
+.badge.usage{background:var(--fond);color:var(--muet)}
+.creation .bouton-corriger{background:var(--blanc);color:var(--bleu-700);border:1px dashed var(--bord-fort);font-size:10.5px;padding:0 8px}
+
+.barre-etat{display:flex;justify-content:space-between;align-items:center;padding:8px 20px;font-size:11px;color:var(--muet);font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--bord)}
+.app-entete{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--bord);background:var(--bleu-700);color:#fff}
+.app-entete h3{font-size:15px;font-weight:600;flex:1}
+.retour{font:inherit;font-size:20px;line-height:1;background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:8px;width:34px;height:34px;cursor:pointer}
+.app-corps{flex:1;overflow-y:auto;padding:16px;background:#fbfcfd}
+.app-pied{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));border-top:1px solid var(--bord);background:var(--blanc)}
+.app-pied button{font:inherit;font-size:11px;background:transparent;border:0;padding:12px 4px;color:var(--muet);cursor:pointer;display:flex;flex-direction:column;gap:4px;align-items:center}
+.app-pied button[aria-current="true"]{color:var(--bleu-700);font-weight:600;box-shadow:inset 0 2px 0 var(--bleu-700)}
+.app-pied .pict{font-size:17px}
+.reseau{display:flex;align-items:center;gap:8px;font-size:12px;border-radius:8px;padding:9px 12px;margin-bottom:14px}
+.reseau.en-ligne{background:var(--vert-fond);color:var(--vert)}
+.reseau.hors-ligne{background:var(--ambre-fond);color:var(--ambre)}
+.reseau b{font-weight:600}
+.explique{background:var(--bleu-050);border:1px solid var(--bleu-100);border-radius:10px;padding:11px 13px;font-size:12px;line-height:1.55;color:var(--texte);margin-bottom:14px}
+.explique b{color:var(--bleu-900)}
+.carte{background:var(--blanc);border:1px solid var(--bord);border-radius:12px;padding:14px;margin-bottom:12px}
+.carte h4{font-size:14px;font-weight:600;color:var(--encre);margin-bottom:3px}
+.carte .sous{font-size:12px;color:var(--muet)}
+.ligne-info{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-top:1px solid var(--fond)}
+.ligne-info:first-of-type{border-top:0}
+.ligne-info span:first-child{color:var(--muet)}
+.ligne-info span:last-child{color:var(--encre);font-weight:500}
+.bouton{font:inherit;font-size:14px;font-weight:600;border-radius:10px;padding:14px;width:100%;border:1px solid transparent;cursor:pointer;min-height:48px}
+.bouton.principal{background:var(--bleu-700);color:#fff}
+.bouton.principal:hover{background:var(--bleu-900)}
+.bouton.secondaire{background:var(--blanc);color:var(--bleu-700);border-color:var(--bord-fort)}
+.bouton.discret{background:transparent;color:var(--muet);font-weight:500}
+.bouton.reconnaissance{background:var(--violet);color:#fff}
+.bouton+.bouton{margin-top:8px}
+.champ{margin-bottom:12px}
+.champ label{display:block;font-size:12px;font-weight:600;color:var(--encre);margin-bottom:5px}
+.champ input,.champ select{width:100%;font:inherit;font-size:14px;padding:11px 12px;border:1px solid var(--bord-fort);border-radius:9px;background:var(--blanc);color:var(--encre);min-height:44px}
+.champ input:focus,.champ select:focus{outline:2px solid var(--bleu-500);outline-offset:1px;border-color:var(--bleu-500)}
+.aide{font-size:11px;color:var(--muet);margin-top:4px}
+.creation{display:flex;gap:8px;margin:0}
+.creation input{flex:0 0 104px;font:inherit;font-size:13px;padding:10px 12px;border:1px solid var(--bord-fort);border-radius:9px;min-height:42px;text-align:center}
+.creation select{flex:1;font:inherit;font-size:13px;padding:10px 8px;border:1px solid var(--bord-fort);border-radius:9px;background:var(--blanc);min-height:42px}
+.bloc-creation{background:var(--bleu-050);border:1px solid var(--bleu-100);border-radius:10px;padding:12px}
+.bloc-creation .creation{margin:0}
+.bloc-creation .champ label{font-size:11.5px}
+.sous-titre{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--bleu-700);font-weight:600;margin-bottom:9px}
+.creation button{font:inherit;font-size:12.5px;font-weight:600;border:1px solid var(--bleu-700);background:var(--bleu-700);color:#fff;border-radius:9px;padding:10px 14px;cursor:pointer;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;padding:3px 7px;border-radius:5px}
+.badge.ia{background:var(--violet-fond);color:var(--violet)}
+.badge.humain{background:var(--bleu-100);color:var(--bleu-700)}
+.badge.attente{background:var(--ambre-fond);color:var(--ambre)}
+.badge.ok{background:var(--vert-fond);color:var(--vert)}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.photo-slot{aspect-ratio:1;border:1.5px dashed var(--bord-fort);border-radius:10px;background:var(--bleu-050);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;color:var(--muet);cursor:pointer;text-align:center;padding:4px}
+.photo-slot.prise{border-style:solid;border-color:var(--vert);background:linear-gradient(145deg,#dfe9df,#c9d8c9)}
+.photo-slot .pict{font-size:20px;color:var(--bleu-500)}
+.photo-slot.prise .pict{color:var(--vert)}
+.zone-bloc{background:var(--blanc);border:1px solid var(--bord);border-radius:12px;padding:14px;margin-bottom:14px}
+.zone-bloc h5{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muet);font-weight:600;margin-bottom:10px}
+.anomalies{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.anomalie{font:inherit;font-size:12px;font-weight:600;border-radius:10px;padding:14px 6px;border:1.5px solid var(--bord-fort);background:var(--blanc);cursor:pointer;color:var(--texte);min-height:52px}
+.anomalie small{display:block;font-weight:400;font-size:10px;color:var(--muet);margin-top:2px}
+.anomalie[aria-pressed="true"][data-niv="A"]{border-color:var(--rouge);background:var(--rouge-fond);color:var(--rouge)}
+.anomalie[aria-pressed="true"][data-niv="B"]{border-color:var(--ambre);background:var(--ambre-fond);color:var(--ambre)}
+.anomalie[aria-pressed="true"][data-niv="C"]{border-color:var(--vert);background:var(--vert-fond);color:var(--vert)}
+.etats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.etat-bouton{font:inherit;font-size:12px;font-weight:600;text-align:left;border-radius:10px;padding:12px 10px;border:1.5px solid var(--bord-fort);background:var(--blanc);cursor:pointer;color:var(--texte);min-height:46px}
+.etat-bouton[aria-pressed="true"][data-etat="bon"]{border-color:var(--vert);background:var(--vert-fond);color:var(--vert)}
+.etat-bouton[aria-pressed="true"][data-etat="correct"]{border-color:var(--bleu-500);background:var(--bleu-050);color:var(--bleu-700)}
+.etat-bouton[aria-pressed="true"][data-etat="vetuste"]{border-color:var(--ambre);background:var(--ambre-fond);color:var(--ambre)}
+.etat-bouton[aria-pressed="true"][data-etat="hors"]{border-color:var(--rouge);background:var(--rouge-fond);color:var(--rouge)}
+.etat-bouton[aria-pressed="true"][data-etat="nonteste"]{border-color:var(--violet);background:var(--violet-fond);color:var(--violet)}
+.etat-bouton[aria-pressed="true"][data-etat="neuf"]{border-color:var(--vert);background:var(--vert-fond);color:var(--vert)}
+.etat-bouton[aria-pressed="true"][data-etat="saison"]{border-color:var(--ambre);background:var(--ambre-fond);color:var(--ambre)}
+.etat-bouton[aria-pressed="true"][data-etat="travaux"]{border-color:var(--violet);background:var(--violet-fond);color:var(--violet)}
+.badge.rouge{background:var(--rouge-fond);color:var(--rouge)}
+.avancement{height:6px;background:var(--fond);border-radius:4px;overflow:hidden;margin-top:8px}
+.avancement i{display:block;height:100%;background:var(--bleu-500);border-radius:4px}
+.zone-liste{background:var(--blanc);border:1px solid var(--bord);border-radius:11px;padding:14px;margin-bottom:10px;cursor:pointer;text-align:left;width:100%;font:inherit}
+.zone-liste:hover{border-color:var(--bleu-500);background:var(--bleu-050)}
+.zone-liste .haut{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.zone-liste .haut b{font-size:13px;color:var(--encre)}
+.zone-liste .haut span{font-size:12px;color:var(--muet)}
+.zone-liste .bas{font-size:11.5px;color:var(--muet);margin-top:3px}
+.paire-tete{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:9px 2px 6px;border-bottom:1px solid var(--bord);margin-bottom:8px}
+.paire-tete b{font-size:13px;color:var(--encre)}
+.paire-tete span{font-size:11.5px;color:var(--muet)}
+.equip-ligne{display:block;width:100%;text-align:left;font:inherit;font-size:12.5px;padding:10px;border:1px solid var(--bord);border-radius:9px;background:var(--blanc);cursor:pointer;margin-bottom:6px}
+.equip-ligne:hover{border-color:var(--bleu-500);background:var(--bleu-050)}
+.equip-ligne .haut{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.equip-ligne .haut b{color:var(--encre);font-weight:600}
+.equip-ligne .meta{font-size:11px;color:var(--muet);margin-top:2px;display:block}
+.mini{font:inherit;font-size:11.5px;font-weight:600;color:var(--bleu-700);background:transparent;border:1px dashed var(--bord-fort);border-radius:8px;padding:9px 10px;width:100%;cursor:pointer}
+.mini:hover{border-color:var(--bleu-500);background:var(--bleu-050)}
+.mode-bloc{margin-top:12px;padding-top:10px;border-top:1px solid var(--fond)}
+.segments{display:flex;gap:4px;background:var(--fond);border-radius:9px;padding:3px;margin-bottom:6px}
+.mode-bouton{flex:1;font:inherit;font-size:11.5px;font-weight:600;padding:9px 6px;border:0;border-radius:7px;background:transparent;color:var(--muet);cursor:pointer}
+.mode-bouton[aria-selected="true"]{background:var(--bleu-700);color:#fff}
+.voile{position:fixed;inset:0;background:rgba(11,37,69,.55);display:flex;align-items:center;justify-content:center;padding:24px;z-index:60}
+.modale{background:var(--blanc);border-radius:12px;max-width:800px;width:100%;max-height:82vh;display:flex;flex-direction:column;overflow:hidden}
+.modale .tete{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--bord)}
+.modale .tete h4{font-size:15px;color:var(--bleu-900);font-weight:600}
+.modale pre{margin:0;padding:16px 18px;overflow:auto;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.55;white-space:pre;color:var(--encre);background:#fbfcfd;flex:1}
+.modale .pied{display:flex;gap:8px;align-items:center;padding:14px 18px;border-top:1px solid var(--bord);flex-wrap:wrap}
+.modale .pied button{font:inherit;font-size:13px;font-weight:600;border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--bleu-700)}
+.modale .pied button.plein{background:var(--bleu-700);color:#fff;border-color:var(--bleu-700)}
+.file{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--fond);font-size:12.5px}
+.file:last-child{border-bottom:0}
+.file .etat{font-size:11px;color:var(--ambre)}
+.bandeau-lecture{background:var(--violet-fond);border:1px solid var(--violet);color:var(--violet);border-radius:9px;padding:10px 12px;font-size:12px;margin-bottom:12px;display:none}
+.bandeau-lecture.actif{display:block}
+.toast{position:absolute;left:16px;right:16px;bottom:74px;background:var(--bleu-900);color:#fff;font-size:12.5px;padding:12px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:5}
+.toast.actif{opacity:1;transform:none}
+.fenetre{border:1px solid var(--bord-fort);border-radius:12px;overflow:hidden;background:var(--blanc);box-shadow:0 18px 44px rgba(11,37,69,.14)}
+.chrome{background:#dfe3e9;border-bottom:1px solid var(--bord-fort);padding:9px 12px;display:flex;align-items:center;gap:8px}
+.chrome .pastille{width:11px;height:11px;border-radius:50%;background:#c4cad3}
+.chrome .url{margin-left:8px;flex:1;background:var(--blanc);border-radius:6px;padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muet)}
+.bureau{display:grid;grid-template-columns:216px 1fr;min-height:660px}
+.bureau-nav{background:var(--bleu-900);color:#c9d6e8;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+.bureau-nav .marque{color:#fff;font-weight:600;font-size:14px;padding:6px 10px 16px}
+.bureau-nav button{font:inherit;font-size:13px;text-align:left;background:transparent;border:0;color:#c9d6e8;padding:10px 10px;border-radius:7px;cursor:pointer}
+.bureau-nav button[aria-current="true"]{background:rgba(255,255,255,.12);color:#fff;font-weight:600}
+.bureau-nav button:hover:not([aria-current="true"]){background:rgba(255,255,255,.07)}
+.bureau-nav .bas{margin-top:auto;font-size:11.5px;color:#8fa5c4;padding:10px;border-top:1px solid rgba(255,255,255,.12)}
+.bureau-corps{padding:22px 24px;background:#fbfcfd}
+.bureau-titre{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.bureau-titre h3{font-size:17px;font-weight:600;color:var(--bleu-900)}
+.bureau-titre p{font-size:12.5px;color:var(--muet);margin-top:3px}
+.cartes-synth{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.synth{background:var(--blanc);border:1px solid var(--bord);border-radius:10px;padding:13px 14px}
+.synth .val{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:var(--bleu-900);line-height:1.1}
+.synth .lib{font-size:11.5px;color:var(--muet);margin-top:3px}
+.synth.rouge{border-left:3px solid var(--rouge)}
+.synth.ambre{border-left:3px solid var(--ambre)}
+.synth.vert{border-left:3px solid var(--vert)}
+table{width:100%;border-collapse:collapse;background:var(--blanc);border:1px solid var(--bord);border-radius:10px;overflow:hidden}
+th,td{text-align:left;font-size:12.5px;padding:10px 12px;border-bottom:1px solid var(--fond)}
+th{background:var(--bleu-050);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muet);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--bleu-050)}
+.tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;display:inline-block}
+.tag.a{background:var(--rouge-fond);color:var(--rouge)}
+.tag.b{background:var(--ambre-fond);color:var(--ambre)}
+.tag.c{background:var(--vert-fond);color:var(--vert)}
+.tag.neutre{background:var(--fond);color:var(--texte)}
+.revue{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.liste-lignes{background:var(--blanc);border:1px solid var(--bord);border-radius:10px;overflow:hidden}
+.liste-lignes .tete{padding:11px 13px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muet);font-weight:600;border-bottom:1px solid var(--bord)}
+.ligned{display:block;width:100%;text-align:left;font:inherit;font-size:12.5px;padding:11px 13px;border:0;border-bottom:1px solid var(--fond);background:var(--blanc);cursor:pointer}
+.ligned .zone{color:var(--encre);font-weight:500}
+.ligned .meta{color:var(--muet);font-size:11.5px;margin-top:2px;display:block}
+.ligned[aria-current="true"]{background:var(--bleu-050);box-shadow:inset 3px 0 0 var(--bleu-500)}
+.detail{background:var(--blanc);border:1px solid var(--bord);border-radius:10px;padding:18px}
+.detail h4{font-size:15px;color:var(--bleu-900);font-weight:600}
+.grille-detail{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.photos-bureau{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.photos-bureau .vignette{aspect-ratio:4/3;border-radius:8px;background:linear-gradient(150deg,#dbe3ec,#c3cfdc);display:flex;align-items:flex-end;padding:6px;font-size:10px;color:#41506a;font-weight:500}
+.champ-bloc{border:1px solid var(--bord);border-radius:9px;padding:12px;margin-bottom:10px}
+.champ-bloc .nom{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muet);font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.champ-bloc .val{font-size:14px;color:var(--encre);font-weight:500}
+.compare{font-size:12px;color:var(--muet);margin-top:6px;border-top:1px dashed var(--bord);padding-top:6px}
+.compare b{color:var(--encre);font-weight:600}
+.proposition{border:1px solid var(--violet);background:var(--violet-fond);border-radius:9px;padding:12px;margin-bottom:10px}
+.proposition .tete{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.actions-proposition{display:flex;gap:6px;margin-top:10px}
+.actions-proposition button{font:inherit;font-size:12px;font-weight:600;border-radius:7px;padding:8px 12px;cursor:pointer;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--texte)}
+.actions-proposition button[data-act="accepter"]{background:var(--vert);border-color:var(--vert);color:#fff}
+.actions-proposition button[data-act="rejeter"]{color:var(--rouge);border-color:#f0c2bd}
+.rapport-page{background:#fff;border:1px solid var(--bord-fort);border-radius:4px;padding:34px 38px;box-shadow:0 8px 22px rgba(11,37,69,.12);max-width:760px}
+.rapport-page header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--bleu-700);padding-bottom:12px;margin-bottom:18px}
+.rapport-page h4{font-size:16px;color:var(--bleu-900);font-weight:700}
+.rapport-page .ref{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muet)}
+.rapport-page h5{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--bleu-700);margin:18px 0 8px}
+.rapport-page table{border:1px solid var(--bord)}
+.rapport-page th,.rapport-page td{font-size:11.5px;padding:7px 9px}
+.rapport-page .pied{margin-top:22px;border-top:1px solid var(--bord);padding-top:10px;font-size:10.5px;color:var(--muet);display:flex;justify-content:space-between}
+.barre-outils{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.barre-outils button{font:inherit;font-size:13px;font-weight:600;border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--bleu-700)}
+.barre-outils button.plein{background:var(--bleu-700);color:#fff;border-color:var(--bleu-700)}
+.cache{display:none !important}
+.urgence-boutons{display:flex;gap:6px;margin:10px 0 8px;flex-wrap:wrap}
+.urgence-b{font:inherit;font-size:12px;font-weight:600;padding:7px 13px;border:1px solid var(--bord-fort);border-radius:8px;background:var(--blanc);color:var(--bleu-700);cursor:pointer}
+.urgence-b small{display:block;font-size:9.5px;font-weight:500;color:var(--muet)}
+.urgence-b[aria-pressed="true"]{background:var(--bleu-700);color:#fff;border-color:var(--bleu-700)}
+.urgence-b[aria-pressed="true"] small{color:rgba(255,255,255,.75)}
+.export-bureau{background:var(--blanc);border:1px solid var(--bord);border-radius:10px;padding:16px;margin-top:18px}
+.export-bureau h5{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muet);font-weight:600;margin-bottom:6px}
+.export-boutons{display:flex;gap:8px;margin:10px 0 8px;flex-wrap:wrap}
+.export-boutons button{font:inherit;font-size:13px;font-weight:600;border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--bleu-700)}
+.export-boutons button.plein{background:var(--bleu-700);color:#fff;border-color:var(--bleu-700)}
+@media (max-width:1100px){.bureau{grid-template-columns:1fr}.bureau-nav{flex-direction:row;flex-wrap:wrap}.bureau-nav .bas{display:none}.revue,.grille-detail{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+.logo-connexion{display:block;width:56%;max-width:205px;height:auto;margin:0 auto}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="entete">
+    <div>
+      <h1>EDL v2 - maquettes cliquables</h1>
+      <p>Prise en charge a partir de zero sur Android, exploitation des releves sur PC</p>
+    </div>
+    <div class="onglets" role="tablist">
+      <button class="onglet" role="tab" aria-selected="true" onclick="choisirOnglet('terrain', this)">Terrain - Android</button>
+      <button class="onglet" role="tab" aria-selected="false" onclick="choisirOnglet('bureau', this)">Bureau - PC</button>
+    </div>
+  </div>
+
+  <div class="avis">Maquette de demonstration. La navigation, la prise de photo, la lecture automatique de la plaque, l'apparition des champs selon le type d'equipement et l'envoi hors ligne sont cliquables. <b>Principe : aucune liste preetablie, la fiche part vide.</b></div>
+
+  <!-- ================= TERRAIN ================= -->
+  <section id="panneau-terrain" class="etage">
+    <div class="gauche">
+      <h2>Ecrans du parcours</h2>
+      <div class="chips">
+        <button class="chip" aria-current="true" onclick="ecran('connexion')"><span class="pas">1</span> Connexion</button>
+        <button class="chip" onclick="ecran('visites')"><span class="pas">2</span> Ma visite, creee de zero</button>
+        <button class="chip" onclick="ecran('zones')"><span class="pas">3</span> Secteur, localisation, etage</button>
+        <button class="chip" onclick="nouvelEquipement()"><span class="pas">4</span> Fiche vide, photo, lecture</button>
+        <button class="chip" onclick="ecran('champs')"><span class="pas">5</span> Champs selon le type</button>
+        <button class="chip" onclick="ecran('photo')"><span class="pas">6</span> Prise de photo</button>
+        <button class="chip" onclick="ecran('envoi')"><span class="pas">7</span> File d'envoi hors ligne</button>
+        <button class="chip" onclick="ecran('config')"><span class="pas">8</span> Configuration : contrat, listes</button>
+      </div>
+      <p class="note-bas">
+        <b>Le parcours commence par une fiche vide.</b> Aucun inventaire n'est pre-charge. Le technicien prend la
+        photo de la plaque, appuie sur <b>Lire la photo</b> si la reconnaissance est utile, sinon il saisit a la
+        main. Le type d'equipement choisi determine les champs affiches : une pompe a chaleur demande une puissance
+        et un fluide, un luminaire demande une puissance unitaire et un nombre de points, une armoire demande un
+        nombre de departs.<br><br>
+        <b>Trois champs separes : secteur, localisation, etage ou niveau</b> (par exemple Administration - Bureau -
+        NIVEAU 1). Les trois se creent a la volee depuis la fiche, et rien n'existe par defaut. Les trois dernieres
+        valeurs utilisees sont reproposees automatiquement sur l'equipement suivant. Pour revenir dans une zone deja
+        faite, on la touche dans la liste : la fiche s'ouvre avec les trois champs deja remplis.
+      </p>
+    </div>
+
+    <div class="telephone">
+      <div class="ecran">
+
+        <!-- 1. CONNEXION -->
+        <div id="e-connexion" class="ecran-vue" style="display:flex;flex-direction:column">
+          <div class="barre-etat"><span>4G</span><span class="num">09:41</span><span>86 %</span></div>
+          <div class="app-corps" style="display:flex;flex-direction:column;justify-content:center">
+            <div style="text-align:center;margin-bottom:20px">
+              <img src="logo-gemaya.png" alt="GEMAYA" class="logo-connexion">
+              <div style="font-size:12px;color:var(--muet);margin-top:10px">Etats des lieux - version terrain</div>
+            </div>
+            <div class="champ"><label>Adresse e-mail</label><input type="text" value="prenom.nom@gemaya.fr"></div>
+            <div class="champ"><label>Mot de passe</label><input type="password" value="motdepasse"></div>
+            <button class="bouton principal" onclick="ecran('visites')">Se connecter</button>
+            <p class="aide" style="text-align:center;margin-top:14px">Session conservee 30 jours : on ne retape pas le mot de passe devant un coffret.</p>
+          </div>
+        </div>
+
+        <!-- 2. VISITES -->
+        <div id="e-visites" class="ecran-vue cache" style="flex-direction:column">
+          <div class="barre-etat"><span id="etat-reseau">4G</span><span class="num">09:43</span><span>84 %</span></div>
+          <div class="app-entete"><h3>Mes releves</h3><button class="retour" onclick="ecran('connexion')">&#8249;</button></div>
+          <div class="app-corps">
+            <div id="bandeau-reseau" class="reseau en-ligne">
+              <span id="texte-reseau"><b>En ligne</b> - la visite se synchronise toute seule</span>
+            </div>
+            <div class="carte">
+              <h4>PALAIS NIKAÏA</h4>
+              <div class="sous">NICE - prise en charge du 07/10/2026</div>
+              <div class="champ" style="margin-top:10px">
+                <label>Contrat</label>
+                <select id="select-contrat-visite" onchange="choisirContrat(this)"></select>
+              </div>
+              <div class="mode-bloc">
+                <div class="sous-titre">Mode de la visite</div>
+                <div class="segments" role="tablist">
+                  <button class="mode-bouton" data-mode="INVENTAIRE" aria-selected="true" onclick="setMode('INVENTAIRE')">INVENTAIRE</button>
+                  <button class="mode-bouton" data-mode="PRISE EN CHARGE" aria-selected="false" onclick="setMode('PRISE EN CHARGE')">PRISE EN CHARGE</button>
+                </div>
+                <p class="aide" id="aide-mode">Inventaire : une ligne par equipement, comme ton fichier NIKAIA. Prise en charge : une fiche portrait par equipement.</p>
+              </div>
+              <div class="ligne-info" style="margin-top:10px"><span>Releves enregistres</span><span class="num" id="compteur-releves">0</span></div>
+              <div class="ligne-info"><span>Photos prises</span><span class="num" id="compteur-photos">0</span></div>
+              <div class="ligne-info"><span>Poids du hors ligne</span><span class="num" id="compteur-poids">0 Mo</span></div>
+              <div class="avancement" style="margin-top:12px"><i id="barre-avancement" style="width:0%"></i></div>
+              <p class="aide">Rien n'est pre-rempli : la visite se construit sur le terrain, equipement par equipement.</p>
+            </div>
+            <div class="carte">
+              <h4>Nouvelle prise en charge</h4>
+              <div class="sous">Choisir un client et un site, ou creer le site au vol</div>
+              <button class="bouton secondaire" style="margin-top:10px" onclick="toast('Couche hors ligne preparee : zones, photos, file d\'envoi')">Preparer le hors ligne</button>
+            </div>
+            <button class="bouton principal" onclick="ecran('zones')">Commencer</button>
+            <button class="bouton discret" onclick="basculerReseau()">Simuler la perte de reseau</button>
+          </div>
+          <div class="app-pied">
+            <button aria-current="true" onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
+            <button onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
+            <button onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
+            <button onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+          </div>
+        </div>
+
+        <!-- 3. ZONES -->
+        <div id="e-zones" class="ecran-vue cache" style="flex-direction:column">
+          <div class="barre-etat"><span>4G</span><span class="num">09:44</span><span>83 %</span></div>
+          <div class="app-entete"><h3>PALAIS NIKAÏA</h3><button class="retour" onclick="ecran('visites')">&#8249;</button></div>
+          <div class="app-corps">
+            <div class="reseau hors-ligne"><b>Hors ligne</b> - tout reste dans le telephone</div>
+            <div class="explique"><b>Aucune liste preetablie.</b> Tu crees le secteur, la localisation et l'etage quand tu y arrives, puis un equipement a la fois : chaque equipement ouvre une fiche vide.</div>
+            <button class="bouton principal" onclick="nouvelEquipement()">+ Nouvel equipement</button>
+            <div class="champ" style="margin-top:14px">
+              <label>Modifier un equipement deja saisi</label>
+              <select id="select-equipement" onchange="ouvrirDepuisListe(this)"></select>
+              <p class="aide" id="aide-liste">La liste se remplit a chaque equipement enregistre : choisis-le ici pour le rouvrir et le corriger.</p>
+            </div>
+            <div style="margin-top:14px">
+              <div class="zone-bloc">
+                <h5>Etages, localisations et equipements</h5>
+                <p class="aide" id="arbre-vide">Rien n'est cree pour l'instant. Le premier equipement ouvre la creation de l'etage et de la localisation, puis elles sont reproposees toutes seules.</p>
+                <div id="arbre-contenu"></div>
+              </div>
+            </div>
+
+            <div class="zone-bloc">
+              <h5>Fin de saisie - export CSV</h5>
+              <p class="aide" style="margin-bottom:10px">Le fichier est regenere a chaque equipement enregistre. CSV, separateur point-virgule, accents conserves : il s'ouvre directement dans Excel. Les photos sont citees par leur nom, elles voyagent dans le meme dossier.</p>
+              <div class="ligne-info"><span>Mode en cours</span><span id="mode-visite">INVENTAIRE</span></div>
+              <button class="bouton principal" style="margin-top:10px" onclick="apercuExport('inventaire')">Exporter l'inventaire (ligne par ligne)</button>
+              <button class="bouton secondaire" onclick="apercuExport('prise')">Exporter les prises en charge (portrait)</button>
+            </div>
+          </div>
+          <div class="app-pied">
+            <button onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
+            <button aria-current="true" onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
+            <button onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
+            <button onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+          </div>
+        </div>
+
+        <!-- 4. FICHE VIDE -->
+        <div id="e-fiche" class="ecran-vue cache" style="flex-direction:column">
+          <div class="barre-etat"><span>4G</span><span class="num">09:47</span><span>81 %</span></div>
+          <div class="app-entete"><h3 id="titre-fiche">Nouvel equipement</h3><button class="retour" onclick="ecran('zones')">&#8249;</button></div>
+          <div class="app-corps">
+            <div class="explique"><b>Fiche vide.</b> Prends d'abord la photo de la plaque signaletique, puis appuie sur <b>Lire la photo</b> : les informations reconnues viennent remplir les champs, a toi de confirmer. Si la lecture echoue, tu gardes la photo et tu saisis a la main.</div>
+
+            <div class="champ">
+              <label>Secteur <span class="badge attente" id="etat-secteur">a creer</span></label>
+              <div class="ligne-select">
+                <select id="sel-secteur" onchange="changerPaire()"></select>
+                <button class="bouton-corriger" onclick="ouvrirCorrection('secteurs')">corriger</button>
+              </div>
+            </div>
+            <div class="creation cache" id="creation-secteur">
+              <input type="text" id="nouveau-secteur" placeholder="Ex. Administration, Loges, Local technique SUD">
+              <button onclick="creerSecteur()">Creer le secteur</button>
+            </div>
+            <div class="correction cache" id="correction-secteurs">
+              <input type="text" id="renommer-secteurs" placeholder="Corriger le nom du secteur">
+              <div class="correction-actions">
+                <button onclick="renommerReferentiel('secteurs')">Renommer</button>
+                <button class="danger" onclick="supprimerReferentiel('secteurs')">Supprimer</button>
+                <button class="annuler" onclick="fermerCorrection('secteurs')">Annuler</button>
+              </div>
+            </div>
+            <div class="champ">
+              <label>Localisation <span class="badge attente" id="etat-loc">a creer</span></label>
+              <div class="ligne-select">
+                <select id="sel-loc" onchange="changerPaire()"></select>
+                <button class="bouton-corriger" onclick="ouvrirCorrection('localisations')">corriger</button>
+              </div>
+            </div>
+            <div class="creation cache" id="creation-loc">
+              <input type="text" id="nouveau-loc" placeholder="Ex. Bureau, local menage, placard technique, accueil">
+              <button onclick="creerLoc()">Creer la localisation</button>
+            </div>
+            <div class="correction cache" id="correction-localisations">
+              <input type="text" id="renommer-localisations" placeholder="Corriger le nom de la localisation">
+              <div class="correction-actions">
+                <button onclick="renommerReferentiel('localisations')">Renommer</button>
+                <button class="danger" onclick="supprimerReferentiel('localisations')">Supprimer</button>
+                <button class="annuler" onclick="fermerCorrection('localisations')">Annuler</button>
+              </div>
+            </div>
+            <div class="champ">
+              <label>Etage ou niveau <span class="badge attente" id="etat-niveau">a creer</span></label>
+              <div class="ligne-select">
+                <select id="sel-niveau" onchange="changerPaire()"></select>
+                <button class="bouton-corriger" onclick="ouvrirCorrection('niveaux')">corriger</button>
+              </div>
+            </div>
+            <div class="creation cache" id="creation-niveau">
+              <input type="text" id="nouveau-niveau" placeholder="Ex. NIVEAU 0 / RDC, sous-sol, toiture">
+              <button onclick="creerNiveau()">Creer l'etage</button>
+            </div>
+            <div class="correction cache" id="correction-niveaux">
+              <input type="text" id="renommer-niveaux" placeholder="Corriger le nom de l'etage">
+              <div class="correction-actions">
+                <button onclick="renommerReferentiel('niveaux')">Renommer</button>
+                <button class="danger" onclick="supprimerReferentiel('niveaux')">Supprimer</button>
+                <button class="annuler" onclick="fermerCorrection('niveaux')">Annuler</button>
+              </div>
+            </div>
+            <p class="aide">Rien n'est cree par defaut. Le secteur, la localisation et l'etage sont trois listes separees, et les trois dernieres valeurs utilisees sont reproposees sur l'equipement suivant : le technicien ne les recree qu'en changeant de zone. Le bouton <b>corriger</b> sert a reparer une faute de frappe ou a supprimer une valeur creee par erreur, sans quitter la fiche.</p>
+
+            <div class="champ">
+              <label>Photos <span class="badge attente">plaque obligatoire</span></label>
+              <div class="photos">
+                <div class="photo-slot" id="slot-plaque" onclick="prendrePhoto('plaque')"><span class="pict">&#43;</span>plaque</div>
+                <div class="photo-slot" id="slot-ensemble" onclick="prendrePhoto('ensemble')"><span class="pict">&#43;</span>ensemble</div>
+                <div class="photo-slot" id="slot-detail" onclick="prendrePhoto('detail')"><span class="pict">&#43;</span>detail</div>
+              </div>
+              <p class="aide">La photo de la plaque est celle qui sert a la lecture automatique.</p>
+            </div>
+
+            <button class="bouton reconnaissance" id="bouton-lire" disabled style="opacity:.45" onclick="lirePhoto()">Lire la photo (reconnaissance)</button>
+            <div class="bandeau-lecture" id="bandeau-lecture">Lecture de la plaque en cours... extraction du texte et du modele.</div>
+            <div id="resultat-lecture" class="cache" style="margin-top:12px">
+              <div class="explique" style="background:var(--violet-fond);border-color:var(--violet);color:var(--violet)">
+                <b>6 informations proposees.</b> Aucune n'est enregistree sans ta confirmation : accepte, corrige ou rejette champ par champ. Tu peux aussi tout saisir a la main.
+              </div>
+            </div>
+
+            <div class="champ" style="margin-top:12px">
+              <label>Equipement <span class="badge attente" id="etat-equipement">a choisir ou a creer</span></label>
+              <div class="bloc-creation">
+                <div class="sous-titre">Creation du nouvel equipement</div>
+                <div class="champ" style="margin:0 0 12px">
+                  <label>Equipement deja cree</label>
+                  <select id="select-designation" onchange="changerEquipement()"></select>
+                </div>
+                <div class="champ" style="margin:0 0 12px">
+                  <label>Famille et nombre d'equipements a renseigner</label>
+                  <div class="creation">
+                    <select id="famille-nouvel-equipement">
+                      <option value="CVC">CVC</option>
+                      <option value="ECL">ECL</option>
+                      <option value="CFO">CFO</option>
+                      <option value="SSI">SSI</option>
+                      <option value="DIVERS">Divers</option>
+                    </select>
+                    <input type="text" id="nombre-nouvel-equipement" inputmode="numeric" placeholder="Nombre">
+                    <button type="button" class="bouton-corriger" onclick="ouvrirCorrection('familles')">corriger</button>
+                  </div>
+                </div>
+                <div class="correction cache" id="correction-familles">
+                  <input type="text" id="renommer-familles" placeholder="Corriger le nom du lot">
+                  <div class="correction-actions">
+                    <button onclick="renommerReferentiel('familles')">Renommer</button>
+                    <button class="danger" onclick="supprimerReferentiel('familles')">Supprimer</button>
+                    <button class="annuler" onclick="fermerCorrection('familles')">Annuler</button>
+                  </div>
+                </div>
+                <div class="champ" style="margin:0 0 12px">
+                  <label>Nom du nouvel equipement</label>
+                  <input type="text" id="nom-nouvel-equipement" placeholder="Ex. Ventilo-convecteur">
+                </div>
+                <button class="bouton secondaire" onclick="creerEquipement()">Creer l'equipement</button>
+              </div>
+              <p class="aide" id="aide-type">Le champ de selection reste vide : il affiche seulement combien d'equipements sont deja crees. Tant qu'aucun equipement n'est pris en charge, la fiche n'affiche aucun champ. Cree-le ci-dessus, ou choisis-le dans la liste pour le reprendre tel quel dans une autre piece.</p>
+            </div>
+
+            <div id="champs-dynamiques">
+              <div class="bloc-champ" data-fam="CVC ECL CFO SSI DIVERS">
+                <div class="champ">
+                  <label>Marque <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC ECL CFO SSI">
+                <div class="champ">
+                  <label>Modele ou reference <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC ECL CFO SSI">
+                <div class="champ">
+                  <label>Numero de serie <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                  <p class="aide">Confiance faible : a verifier sur la plaque.</p>
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC">
+                <div class="champ">
+                  <label>Puissance thermique <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC CFO">
+                <div class="champ">
+                  <label>Puissance electrique <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC">
+                <div class="champ">
+                  <label>Debit d'air ou d'eau <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC">
+                <div class="champ">
+                  <label>Gaz / fluide frigorigene <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="ECL">
+                <div class="champ">
+                  <label>Type d'equipement <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+                <div class="champ">
+                  <label>Technologie <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+                <div class="champ">
+                  <label>Puissance unitaire (W) <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+                <div class="champ">
+                  <label>Nombre de points <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CFO">
+                <div class="champ">
+                  <label>Nombre de departs <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+                <div class="champ">
+                  <label>Calibre / intensite (A) <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="SSI">
+                <div class="champ">
+                  <label>Type de materiel incendie <span class="badge ia etat-ia cache">IA</span></label>
+                  <input type="text" class="saisie">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC ECL CFO SSI DIVERS">
+                <div class="champ"><label>Quantite</label><input type="text" id="champ-quantite" class="saisie" inputmode="numeric"></div>
+                <div class="champ"><label>Annee de mise en service</label><input type="text" class="saisie"></div>
+              </div>
+              <div class="champ" style="margin-top:14px">
+                <label>Degre d'urgence de la reparation ou du remplacement</label>
+                <div class="anomalies">
+                  <button class="anomalie" data-niv="A" aria-pressed="false" onclick="niveau('A', this)">A<small>48 h</small></button>
+                  <button class="anomalie" data-niv="B" aria-pressed="false" onclick="niveau('B', this)">B<small>1 mois</small></button>
+                  <button class="anomalie" data-niv="C" aria-pressed="false" onclick="niveau('C', this)">C<small>1 an</small></button>
+                </div>
+              </div>
+              <div class="champ">
+                <label>Commentaire</label>
+                <input type="text" class="saisie" placeholder="Observation, acces, etat general">
+                <p class="aide">Maintenir le micro enfonce pour dicter.</p>
+              </div>
+            </div>
+
+            <div class="champ" style="margin-top:16px">
+              <label>Etat de l'equipement <span class="badge attente" id="etat-equip">a renseigner</span></label>
+              <div class="etats">
+                <button class="etat-bouton" data-etat="bon" aria-pressed="false" onclick="etatEquipement('bon', this)">Bon</button>
+                <button class="etat-bouton" data-etat="correct" aria-pressed="false" onclick="etatEquipement('correct', this)">Correct</button>
+                <button class="etat-bouton" data-etat="vetuste" aria-pressed="false" onclick="etatEquipement('vetuste', this)">Vetuste</button>
+                <button class="etat-bouton" data-etat="hors" aria-pressed="false" onclick="etatEquipement('hors', this)">Hors service</button>
+                <button class="etat-bouton" data-etat="nonteste" aria-pressed="false" onclick="etatEquipement('nonteste', this)">Non teste / inaccessible</button>
+                <button class="etat-bouton" data-etat="neuf" aria-pressed="false" onclick="etatEquipement('neuf', this)">Neuf ou recent</button>
+                <button class="etat-bouton" data-etat="saison" aria-pressed="false" onclick="etatEquipement('saison', this)">Arret saisonnier</button>
+                <button class="etat-bouton" data-etat="travaux" aria-pressed="false" onclick="etatEquipement('travaux', this)">Remplacement prevu</button>
+              </div>
+              <p class="aide" id="aide-etat">L'etat decrit le materiel lui-meme. Le niveau d'anomalie fixe le delai d'intervention : les deux sont independants.</p>
+            </div>
+
+            <button class="bouton principal" id="bouton-enregistrer" onclick="enregistrerReleve()">Enregistrer le releve</button>
+            <button class="bouton discret" onclick="ecran('zones')">Annuler</button>
+          </div>
+        </div>
+
+        <!-- 5. CHAMPS SELON LE TYPE -->
+        <div id="e-champs" class="ecran-vue cache" style="flex-direction:column">
+          <div class="barre-etat"><span>4G</span><span class="num">09:52</span><span>79 %</span></div>
+          <div class="app-entete"><h3>Champs selon le type</h3><button class="retour" onclick="ecran('fiche')">&#8249;</button></div>
+          <div class="app-corps">
+            <div class="explique">Le meme formulaire s'adapte. Voici les trois exemples principaux de ce qui s'affiche selon l'equipement rencontre :</div>
+
+            <div class="zone-bloc">
+              <h5>CVC - pompe a chaleur</h5>
+              <div class="ligne-info"><span>Marque, modele, numero de serie</span><span>3 champs</span></div>
+              <div class="ligne-info"><span>Puissance thermique, puissance electrique</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Debit d'air ou d'eau, fluide frigorigene</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Quantite, annee de mise en service</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Anomalie, commentaire</span><span>2 champs</span></div>
+            </div>
+
+            <div class="zone-bloc">
+              <h5>ECL - luminaire</h5>
+              <div class="ligne-info"><span>Marque</span><span>1 champ</span></div>
+              <div class="ligne-info"><span>Type de luminaire, technologie</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Puissance unitaire, nombre de points</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Quantite, annee de mise en service</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Anomalie, commentaire</span><span>2 champs</span></div>
+            </div>
+
+            <div class="zone-bloc">
+              <h5>CFO - armoire electrique</h5>
+              <div class="ligne-info"><span>Marque, modele, numero de serie</span><span>3 champs</span></div>
+              <div class="ligne-info"><span>Nombre de departs, calibre general</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Puissance electrique</span><span>1 champ</span></div>
+              <div class="ligne-info"><span>Quantite, annee de mise en service</span><span>2 champs</span></div>
+              <div class="ligne-info"><span>Anomalie, commentaire</span><span>2 champs</span></div>
+            </div>
+            <p class="aide">Ces listes sont a valider avec toi : ce sont tes obligations de rapport D19 / Q19 qui doivent definir les champs obligatoires par famille.</p>
+          </div>
+        </div>
+
+        <!-- 6. PHOTO -->
+        <div id="e-photo" class="ecran-vue cache" style="flex-direction:column">
+          <div class="barre-etat"><span>4G</span><span class="num">09:48</span><span>80 %</span></div>
+          <div class="app-entete"><h3>Photo - plaque signaletique</h3><button class="retour" onclick="ecran('fiche')">&#8249;</button></div>
+          <div class="app-corps">
+            <div style="border:1px solid var(--bord);border-radius:12px;background:#111827;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:12px;margin-bottom:14px">
+              viseur de la camera native
+            </div>
+            <button class="bouton principal" onclick="photoPrise()">Prendre la photo</button>
+            <button class="bouton secondaire" onclick="ecran('fiche')">Choisir dans la galerie</button>
+            <p class="aide" style="margin-top:12px">Compression immediate sur le telephone : 1600 px de large, format WebP. Une photo de 4 Mo devient environ 450 Ko, ce qui permet de tenir une visite complete hors ligne.</p>
+          </div>
+        </div>
+
+        <!-- 7. ENVOI -->
+        <div id="e-envoi" class="ecran-vue cache" style="flex-direction:column">
+          <div class="barre-etat"><span id="etat-reseau2">4G</span><span class="num">10:12</span><span>72 %</span></div>
+          <div class="app-entete"><h3>File d'envoi</h3><button class="retour" onclick="ecran('visites')">&#8249;</button></div>
+          <div class="app-corps">
+            <div class="carte">
+              <h4><span id="compteur-file">4</span> elements en attente</h4>
+              <div class="sous">1 fiche equipement, 2 photos, 1 commentaire</div>
+              <div class="avancement" style="margin-top:10px"><i id="barre-envoi" style="width:0%"></i></div>
+            </div>
+            <div class="carte">
+              <div class="file"><span>NIVEAU 0 / RDC - nouvel equipement</span><span class="etat">attente</span></div>
+              <div class="file"><span>Photo plaque (450 Ko)</span><span class="etat">attente</span></div>
+              <div class="file"><span>Photo ensemble (512 Ko)</span><span class="etat">attente</span></div>
+              <div class="file"><span>Commentaire dicte (12 s)</span><span class="etat">attente</span></div>
+            </div>
+            <button class="bouton principal" onclick="envoyer()">Envoyer maintenant</button>
+            <button class="bouton secondaire" onclick="basculerReseau()">Activer le reseau</button>
+            <p class="aide" style="margin-top:12px">L'envoi se declenche aussi tout seul au retour du reseau, reprend apres coupure, et ne renvoie jamais deux fois le meme element.</p>
+          </div>
+          <div class="app-pied">
+            <button onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
+            <button onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
+            <button aria-current="true" onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
+            <button onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+          </div>
+        </div>
+
+        <!-- 8. CONFIGURATION -->
+        <div id="e-config" class="ecran-vue cache" style="flex-direction:column">
+          <div class="barre-etat"><span>4G</span><span class="num">09:52</span><span>79 %</span></div>
+          <div class="app-entete"><h3>Configuration</h3><button class="retour" onclick="ecran('visites')">&#8249;</button></div>
+          <div class="app-corps">
+            <div class="explique"><b>Ici on range les listes, on ne saisit aucun materiel.</b> Contrat, secteurs, localisations, etages, lots et equipements : chaque valeur peut etre renommee ou supprimee, avec le nombre d'equipements qui l'utilisent. Une valeur deja utilisee ne se supprime pas, elle se renomme : les equipements deja saisis suivent la correction. Deux valeurs qui se ressemblent sont signalees comme doublons et peuvent etre fusionnees.</div>
+            <div id="conf-contrats" class="conf-bloc"></div>
+            <div id="conf-secteurs" class="conf-bloc"></div>
+            <div id="conf-localisations" class="conf-bloc"></div>
+            <div id="conf-niveaux" class="conf-bloc"></div>
+            <div id="conf-familles" class="conf-bloc"></div>
+            <div id="conf-equipements" class="conf-bloc"></div>
+
+            <div class="conf-bloc" style="margin-top:18px">
+              <h5>Intelligence artificielle - lecture des plaques</h5>
+              <p class="aide" style="margin-bottom:10px">La cle reste sur ce telephone et ne passe pas par la page web. La reconnaissance se branche sur un service de vision : DeepSeek (verifie sur une plaque), Gemini, OpenAI, Mistral, ou un service compatible.</p>
+              <div class="champ">
+                <label>Fournisseur</label>
+                <select id="ia-fournisseur" onchange="choisirFournisseur()">
+                  <option value="gemini">Gemini (Google AI Studio)</option>
+                  <option value="openai">OpenAI</option>
+                  <option value="mistral">Mistral</option>
+                  <option value="deepseek">DeepSeek (verifie)</option>
+                  <option value="autre">Autre, compatible OpenAI</option>
+                </select>
+              </div>
+              <div class="champ">
+                <label>Modele</label>
+                <input type="text" id="ia-modele" placeholder="gemini-2.5-flash">
+              </div>
+              <div class="champ">
+                <label>Adresse du service (facultatif)</label>
+                <input type="text" id="ia-base" placeholder="https://.../v1">
+              </div>
+              <div class="champ">
+                <label>Cle API</label>
+                <input type="text" id="ia-cle" placeholder="Colle la cle ici" autocomplete="off">
+              </div>
+              <div class="correction-actions">
+                <button onclick="enregistrerConfigApp()">Enregistrer la configuration</button>
+                <button class="annuler" onclick="testerLecture()">Tester sur la photo en cours</button>
+              </div>
+            </div>
+
+            <div class="conf-bloc">
+              <h5>Donnees de ce telephone</h5>
+              <p class="aide" id="info-donnees">Base locale SQLite.</p>
+              <div class="correction-actions">
+                <button onclick="exporterCSV()">Exporter en CSV (mail)</button>
+                <button class="danger" onclick="viderDonnees()">Effacer les equipements</button>
+              </div>
+            </div>
+          </div>
+          <div class="app-pied">
+            <button onclick="ecran('visites')"><span class="pict">&#9776;</span>Visites</button>
+            <button onclick="ecran('zones')"><span class="pict">&#9633;</span>Ma visite</button>
+            <button onclick="ecran('envoi')"><span class="pict">&#8593;</span>Envoi</button>
+            <button aria-current="true" onclick="ecran('config')"><span class="pict">&#9881;</span>Config</button>
+          </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BUREAU ================= -->
+  <section id="panneau-bureau" class="cache">
+    <div class="fenetre">
+      <div class="chrome">
+        <span class="pastille"></span><span class="pastille"></span><span class="pastille"></span>
+        <span class="url">bureau.gemaya.fr/prises-en-charge/palais-nikaia-2026</span>
+      </div>
+      <div class="bureau">
+        <nav class="bureau-nav">
+          <div class="marque">EDL - Bureau</div>
+          <button aria-current="true" onclick="vueBureau('tableau', this)">Tableau de bord</button>
+          <button onclick="vueBureau('revue', this)">Revue des releves</button>
+          <button onclick="vueBureau('rapport', this)">Rapport et export</button>
+          <button onclick="vueBureau('comparaison', this)">Comparaison annuelle</button>
+          <div class="bas">Connecte : M. V.<br>GEMAYA</div>
+        </nav>
+
+        <div class="bureau-corps">
+          <div id="b-tableau" class="vue-bureau">
+            <div class="bureau-titre">
+              <div>
+                <h3>Tableau de bord</h3>
+                <p>Prises en charge recues du terrain et points a traiter</p>
+              </div>
+              <div class="barre-outils"><button onclick="toastBureau('Export Excel en preparation')">Exporter le tableau</button></div>
+            </div>
+            <div class="cartes-synth">
+              <div class="synth"><div class="val num">3</div><div class="lib">prises en charge a valider</div></div>
+              <div class="synth rouge"><div class="val num">2</div><div class="lib">anomalies de niveau A</div></div>
+              <div class="synth ambre"><div class="val num">5</div><div class="lib">releves sans photo complete</div></div>
+              <div class="synth vert"><div class="val num">118</div><div class="lib">lectures de plaque a confirmer</div></div>
+              <div class="synth rouge"><div class="val num">4</div><div class="lib">equipements hors service</div></div>
+              <div class="synth ambre"><div class="val num">23</div><div class="lib">vetustes, a budgeter</div></div>
+            </div>
+            <table>
+              <thead><tr><th>Site</th><th>Client</th><th>Date</th><th>Releves</th><th>Anomalies</th><th>Etat</th></tr></thead>
+              <tbody>
+                <tr><td>PALAIS NIKAÏA</td><td>NIKAIA</td><td class="num">07/10/2026</td><td class="num">271</td><td><span class="tag a">2 A</span> <span class="tag b">9 B</span></td><td><span class="tag neutre">a valider</span></td></tr>
+                <tr><td>Hopital Saint-Louis</td><td>HOPITAL SAINT-LOUIS</td><td class="num">06/10/2026</td><td class="num">184</td><td><span class="tag b">4 B</span></td><td><span class="tag c">valide</span></td></tr>
+                <tr><td>Musee du Louvre Lens</td><td>MUSEE DU LOUVRE LENS</td><td class="num">02/10/2026</td><td class="num">96</td><td><span class="tag a">1 A</span></td><td><span class="tag neutre">a valider</span></td></tr>
+                <tr><td>MINDEF - batiment C</td><td>MINDEF</td><td class="num">29/09/2026</td><td class="num">204</td><td><span class="tag c">aucune</span></td><td><span class="tag neutre">a valider</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="b-revue" class="vue-bureau cache">
+            <div class="bureau-titre">
+              <div>
+                <h3>Revue - PALAIS NIKAÏA, prise en charge 2026</h3>
+                <p>Une ligne a la fois : photos, champs releves, lecture de plaque a confirmer</p>
+              </div>
+              <div class="barre-outils">
+                <button onclick="toastBureau('Ligne precedente')">&#8249; Precedente</button>
+                <button class="plein" onclick="toastBureau('Ligne validee, passage a la suivante')">Valider la ligne</button>
+              </div>
+            </div>
+            <div class="revue">
+              <div class="liste-lignes">
+                <div class="tete">271 releves - premiers 4 affiches</div>
+                <button class="ligned" aria-current="true"><span class="zone">NIVEAU 0 / RDC - Loge 4</span><span class="meta">CVC - lecture de plaque a confirmer</span></button>
+                <button class="ligned"><span class="zone">NIVEAU 0 / RDC - Loge 1</span><span class="meta">ECL - saisie manuelle</span></button>
+                <button class="ligned"><span class="zone">Local technique R1</span><span class="meta">CVC - CTA 03 - anomalie A</span></button>
+                <button class="ligned"><span class="zone">CHAUFFERIE</span><span class="meta">CVC - chaudiere Hoval - conforme</span></button>
+              </div>
+
+              <div class="detail">
+                <h4>NIVEAU 0 / RDC - Loge 4 - CVC</h4>
+                <div style="margin-top:6px"><span class="badge attente">2 lectures a confirmer</span> <span class="badge humain">releve terrain : M. V., 09:47</span></div>
+
+                <div class="grille-detail">
+                  <div>
+                    <div class="photos-bureau">
+                      <div class="vignette">plaque</div>
+                      <div class="vignette">ensemble</div>
+                      <div class="vignette">detail</div>
+                    </div>
+                    <p class="aide" style="margin-top:8px">Photos originales conservees, plus les vignettes.</p>
+                    <div style="margin-top:16px">
+                      <h5 style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muet);font-weight:600;margin-bottom:8px">Informations relevees</h5>
+                      <div class="champ-bloc">
+                        <div class="nom">Famille et type <span class="badge humain">saisi</span></div>
+                        <div class="val">CVC - ventilo-convecteur</div>
+                      </div>
+                      <div class="champ-bloc">
+                        <div class="nom">Anomalie</div>
+                        <div class="val">Niveau B - filtre encrasse</div>
+                        <div class="compare">Delai contractuel : <b>1 mois</b>.</div>
+                      </div>
+                      <div class="champ-bloc">
+                        <div class="nom">Etat du materiel</div>
+                        <div class="val">Vetuste - remplacement a inscrire au budget</div>
+                        <div class="compare">Constat independant du delai : <b>sans obligation contractuelle</b>.</div>
+                      </div>
+                      <div class="champ-bloc">
+                        <div class="nom">Degre d'urgence <span class="badge humain">repris de l'inventaire</span></div>
+                        <div class="val" style="font-weight:400;font-size:12.5px;color:var(--muet)">Il vient du terrain. Tu peux le modifier ici, a la demande, sans retoucher le releve : le changement est trace (qui, quand, avant/apres).</div>
+                        <div class="urgence-boutons">
+                          <button class="urgence-b" data-niv="A" onclick="urgenceBureau('A', this)">A<small>48 h</small></button>
+                          <button class="urgence-b" data-niv="B" aria-pressed="true" onclick="urgenceBureau('B', this)">B<small>1 mois</small></button>
+                          <button class="urgence-b" data-niv="C" onclick="urgenceBureau('C', this)">C<small>1 an</small></button>
+                          <button class="urgence-b" data-niv="" onclick="urgenceBureau('', this)">aucune</button>
+                        </div>
+                        <div class="compare" id="compare-urgence">Delai contractuel applique : <b>1 mois</b>.</div>
+                      </div>
+                      <div class="champ-bloc">
+                        <div class="nom">Prise en charge depuis l'inventaire</div>
+                        <div class="val" style="font-weight:400;font-size:12.5px;color:var(--muet)">Cet equipement est une ligne d'inventaire. Tu peux en faire une prise en charge : la fiche portrait reprend ses caracteristiques, ses photos et son degre d'urgence.</div>
+                        <button class="mini" id="bouton-pc-ligne" style="margin-top:8px" onclick="priseEnChargeLigne(this)">En faire une prise en charge</button>
+                      </div>
+                      <div class="champ-bloc">
+                        <div class="nom">Reference precedente</div>
+                        <div class="val" style="font-weight:400;font-size:12.5px;color:var(--muet)">Aucune : c'est la premiere prise en charge de ce site. <b style="color:var(--texte)">La comparaison annuelle s'activera a la deuxieme visite.</b></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="proposition" id="prop-marque">
+                      <div class="tete">
+                        <span class="badge ia">lecture de plaque</span>
+                        <span class="num" style="font-size:11px;color:var(--violet)">confiance 92 %</span>
+                      </div>
+                      <div style="font-size:11px;color:var(--muet)">Marque</div>
+                      <div style="font-size:15px;font-weight:600;color:var(--encre)">Aermec</div>
+                      <div style="font-size:11px;color:var(--muet);margin-top:6px">Lue sur la plaque signaletique (photo 1), modele vision, 07/10/2026 09:47.</div>
+                      <div class="actions-proposition">
+                        <button data-act="accepter" onclick="decision('prop-marque','acceptee', this)">Accepter</button>
+                        <button data-act="corriger" onclick="decision('prop-marque','corrigee', this)">Corriger</button>
+                        <button data-act="rejeter" onclick="decision('prop-marque','rejetee', this)">Rejeter</button>
+                      </div>
+                    </div>
+
+                    <div class="proposition" id="prop-serie">
+                      <div class="tete">
+                        <span class="badge ia">lecture de plaque</span>
+                        <span class="num" style="font-size:11px;color:var(--violet)">confiance 61 %</span>
+                      </div>
+                      <div style="font-size:11px;color:var(--muet)">Numero de serie</div>
+                      <div style="font-size:15px;font-weight:600;color:var(--encre)">ATL-2001-04512</div>
+                      <div style="font-size:11px;color:var(--muet);margin-top:6px">Confiance faible : la plaque est partiellement lisible, verification humaine conseillee.</div>
+                      <div class="actions-proposition">
+                        <button data-act="accepter" onclick="decision('prop-serie','acceptee', this)">Accepter</button>
+                        <button data-act="corriger" onclick="decision('prop-serie','corrigee', this)">Corriger</button>
+                        <button data-act="rejeter" onclick="decision('prop-serie','rejetee', this)">Rejeter</button>
+                      </div>
+                    </div>
+
+                    <div class="champ-bloc">
+                      <div class="nom">Origine des donnees <span class="badge humain">tracabilite</span></div>
+                      <div class="val" style="font-size:12.5px;font-weight:400;line-height:1.7">
+                        Valeur validee par : humain<br>
+                        Source : lecture automatique puis validation<br>
+                        Photo justificative : conservee et consultable<br>
+                        Historique complet des modifications disponible
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="b-rapport" class="vue-bureau cache">
+            <div class="bureau-titre">
+              <div>
+                <h3>Rapport et export</h3>
+                <p>Apercu identique au PDF final, puis export</p>
+              </div>
+              <div class="barre-outils">
+                <button class="plein" onclick="toastBureau('Generation du PDF lancee')">Generer le PDF</button>
+                <button onclick="toastBureau('Export Excel en preparation')">Exporter en Excel</button>
+              </div>
+            </div>
+            <div class="rapport-page">
+              <header>
+                <div>
+                  <h4>Rapport d'etat des lieux - equipements techniques</h4>
+                  <div style="font-size:12px;color:var(--muet);margin-top:3px">PALAIS NIKAÏA - NICE</div>
+                </div>
+                <div class="ref">GEMAYA<br>Prise en charge 2026<br>07/10/2026</div>
+              </header>
+              <h5>1. Synthese</h5>
+              <p style="font-size:12px;line-height:1.6">La prise en charge a permis de relever 271 equipements sur 4 niveaux et 118 localisations. Deux anomalies de niveau A, neuf de niveau B, aucune de niveau C. Sur l'etat du materiel : 184 en bon etat, 60 corrects, 23 vetustes, 4 hors service. Trois releves n'ont pas de photo complete et deux cent dix n'ont pas encore de secteur attribue.</p>
+              <h5>2. Anomalies de niveau A</h5>
+              <table>
+                <thead><tr><th>Localisation</th><th>Materiel</th><th>Constat</th><th>Delai</th></tr></thead>
+                <tbody>
+                  <tr><td>Local technique R1</td><td>CTA 03 salle 8000</td><td>Courroie rompue</td><td class="num">48 h</td></tr>
+                  <tr><td>CHAUFFERIE</td><td>Pompe reseau chaud NK 125.250</td><td>Fuite sur presse-etoupe</td><td class="num">48 h</td></tr>
+                </tbody>
+              </table>
+              <h5>3. Inventaire par secteur</h5>
+              <table>
+                <thead><tr><th>Secteur</th><th>Releves</th><th>Photos</th><th>Etat</th></tr></thead>
+                <tbody>
+                  <tr><td>LOGE</td><td class="num">21</td><td class="num">63</td><td>Conforme</td></tr>
+                  <tr><td>ADMINISTRATION</td><td class="num">19</td><td class="num">57</td><td>Conforme</td></tr>
+                  <tr><td>PRODUCTION</td><td class="num">11</td><td class="num">33</td><td>Conforme</td></tr>
+                  <tr><td>LOCAL TECHNIQUE CTA NORD / SUD</td><td class="num">8</td><td class="num">24</td><td>1 anomalie A</td></tr>
+                  <tr><td>STAFF</td><td class="num">2</td><td class="num">6</td><td>Conforme</td></tr>
+                  <tr><td>Secteur a renseigner</td><td class="num">210</td><td class="num">630</td><td>A completer</td></tr>
+                </tbody>
+              </table>
+              <h5>4. Equipements a remplacer</h5>
+              <table>
+                <thead><tr><th>Localisation</th><th>Materiel</th><th>Etat</th><th>Suite proposee</th></tr></thead>
+                <tbody>
+                  <tr><td>Loge 4</td><td>CVC - ventilo-convecteur</td><td>Vetuste</td><td>Inscrire au budget 2027</td></tr>
+                  <tr><td>Local technique CTA SUD</td><td>CVC - CTA 05</td><td>Hors service</td><td>Remplacement - anomalie A</td></tr>
+                  <tr><td>Sanitaires</td><td>ECL - plafonniers</td><td>Vetuste</td><td>Passage en LED a etudier</td></tr>
+                  <tr><td>Chaufferie</td><td>CVC - chaudiere 02</td><td>Arret saisonnier</td><td>Aucune action, controle a la remise en chauffe</td></tr>
+                </tbody>
+              </table>
+              <div class="pied">
+                <span>Rapport genere automatiquement - GEMAYA</span>
+                <span class="num">page 1 / 12</span>
+              </div>
+            </div>
+
+            <div class="export-bureau">
+              <h5>Export CSV, pret pour Excel</h5>
+              <p class="aide">Le degre d'urgence saisi sur le terrain est repris ici et reste modifiable. Les deux fichiers sortent du meme releve, avec deux structures differentes.</p>
+              <div class="export-boutons">
+                <button class="plein" onclick="apercuExport('inventaire')">Inventaire : une ligne par equipement</button>
+                <button onclick="apercuExport('prise')">Prises en charge : une fiche portrait par equipement</button>
+              </div>
+              <p class="aide">Un CSV ne peut pas contenir d'images : il cite le nom des fichiers photo, les images partent dans le meme dossier (ou dans le ZIP du site). La fiche portrait avec les photos integrees, elle, ce sera le PDF.</p>
+            </div>
+          </div>
+
+          <div id="b-comparaison" class="vue-bureau cache">
+            <div class="bureau-titre">
+              <div>
+                <h3>Comparaison annuelle</h3>
+                <p>Disponible a partir de la deuxieme prise en charge du meme site</p>
+              </div>
+            </div>
+            <div class="cartes-synth">
+              <div class="synth"><div class="val num">0</div><div class="lib">prise en charge precedente enregistree</div></div>
+              <div class="synth ambre"><div class="val num">14</div><div class="lib">materiels remplaces (exemple annee 2)</div></div>
+              <div class="synth rouge"><div class="val num">6</div><div class="lib">materiels absents (exemple annee 2)</div></div>
+              <div class="synth vert"><div class="val num">9</div><div class="lib">materiels nouveaux (exemple annee 2)</div></div>
+            </div>
+            <table>
+              <thead><tr><th>Localisation</th><th>Materiel</th><th>Annee 1</th><th>Annee 2</th><th>Changement</th></tr></thead>
+              <tbody>
+                <tr><td>Loge 4</td><td>CVC</td><td>Atlantic electronic</td><td>Aermec</td><td><span class="tag b">remplace</span></td></tr>
+                <tr><td>Local technique R1</td><td>CTA 02</td><td>-</td><td>Trane CXAF 190 SE LN</td><td><span class="tag c">nouveau</span></td></tr>
+                <tr><td>Sanitaire homme / femme</td><td>ECL</td><td>plafonnier 50w x 4</td><td>plafonnier 36w x 4</td><td><span class="tag b">puissance modifiee</span></td></tr>
+                <tr><td>Vestiaire transforme en debarras</td><td>CVC</td><td>radiateur x 2</td><td>radiateur x 1</td><td><span class="tag a">absent</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <p class="note-bas">Le bureau ne saisit rien : il corrige, confirme les lectures de plaque et produit le rapport. Chaque valeur affiche d'ou elle vient et quelle photo la justifie.</p>
+  </section>
+
+  <div class="toast" id="toast-bureau" style="position:fixed;left:50%;transform:translateX(-50%);bottom:22px;width:auto;padding:12px 18px;border-radius:9px;background:var(--bleu-900);color:#fff;font-size:12.5px;opacity:0;transition:.25s;pointer-events:none;z-index:9"></div>
+  <div class="voile" id="voile" style="display:none">
+    <div class="modale">
+      <div class="tete">
+        <h4 id="modale-titre">Apercu du fichier</h4>
+        <button class="retour" style="background:var(--fond);color:var(--encre)" onclick="fermerModale()">&#10005;</button>
+      </div>
+      <pre id="modale-contenu"></pre>
+      <div class="pied">
+        <button class="plein" onclick="telechargerFichier()">Telecharger le CSV</button>
+        <button onclick="copierFichier()">Copier le texte</button>
+        <span class="aide" id="modale-info"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function choisirOnglet(cle, bouton){
+  document.querySelectorAll('.onglet').forEach(b => b.setAttribute('aria-selected', b === bouton ? 'true' : 'false'));
+  document.getElementById('panneau-terrain').classList.toggle('cache', cle !== 'terrain');
+  document.getElementById('panneau-bureau').classList.toggle('cache', cle !== 'bureau');
+}
+
+function ecran(nom){
+  const vues = ['connexion','visites','zones','fiche','champs','photo','envoi','config'];
+  if(nom === 'config' && typeof majConfig === 'function') majConfig();
+  vues.forEach(v => {
+    const el = document.getElementById('e-' + v);
+    if(!el) return;
+    el.classList.toggle('cache', v !== nom);
+    if(v === nom) el.style.display = 'flex';
+  });
+  document.querySelectorAll('.chip').forEach(c => {
+    const cible = c.getAttribute('onclick') || '';
+    c.setAttribute('aria-current', cible.indexOf("'" + nom + "'") >= 0 ? 'true' : 'false');
+  });
+}
+
+function toast(message){
+  const t = document.getElementById('toast');
+  t.textContent = message;
+  t.classList.add('actif');
+  clearTimeout(window._toast);
+  window._toast = setTimeout(() => t.classList.remove('actif'), 2600);
+}
+
+let horsLigne = false;
+function basculerReseau(){
+  horsLigne = !horsLigne;
+  const b = document.getElementById('bandeau-reseau');
+  const t = document.getElementById('texte-reseau');
+  b.classList.toggle('en-ligne', !horsLigne);
+  b.classList.toggle('hors-ligne', horsLigne);
+  t.innerHTML = horsLigne
+    ? '<b>Hors ligne</b> - tout reste dans le telephone'
+    : '<b>En ligne</b> - la visite se synchronise toute seule';
+  document.getElementById('etat-reseau').textContent = horsLigne ? 'hors ligne' : '4G';
+  document.getElementById('etat-reseau2').textContent = horsLigne ? 'hors ligne' : '4G';
+  toast(horsLigne ? 'Mode hors ligne active' : 'Reseau retrouve');
+}
+
+let photoPlaque = false;
+let photosAutres = {ensemble: false, detail: false};
+
+function photoAutre(nom, slot){
+  photosAutres[nom] = !photosAutres[nom];
+  slot.className = photosAutres[nom] ? 'photo-slot prise' : 'photo-slot';
+  slot.innerHTML = photosAutres[nom] ? '<span class="pict">&#10003;</span>' + nom : '<span class="pict">&#43;</span>' + nom;
+  if(photosAutres[nom]) toast('Photo ' + nom + ' prise, compressee a 480 Ko');
+}
+
+/* --- Etages et localisations : deux listes separees, creees a la volee --- */
+const CREER = '__creer__';
+let niveaux = [];
+let localisations = [];
+let secteurs = [];
+let dernierNiveau = '';
+let derniereLoc = '';
+let dernierSecteur = '';
+const equipements = [];
+let indexEdition = -1;
+
+/* --- Etat du materiel : constat, independant du delai d'anomalie --- */
+const LIBELLES_ETAT = {
+  bon: 'Bon', correct: 'Correct', vetuste: 'Vetuste', hors: 'Hors service',
+  nonteste: 'Non teste', neuf: 'Neuf ou recent', saison: 'Arret saisonnier', travaux: 'Remplacement prevu'
+};
+const AIDE_ETAT_DEFAUT = "L'etat decrit le materiel lui-meme. Le niveau d'anomalie fixe le delai d'intervention : les deux sont independants.";
+const AIDE_ETAT = {
+  hors: "Hors service : indique aussi le delai d'intervention (A ou B) juste au-dessus, sinon le client ne saura pas quand agir.",
+  nonteste: "Non teste : le materiel sera presente comme a controler lors de la prochaine visite, ce n'est pas un oubli.",
+  vetuste: "Vetuste : materiel a inscrire au budget de remplacement, sans delai d'urgence contractuel.",
+  saison: "Arret saisonnier : normal hors periode de chauffe ou de froid, ce n'est pas une panne.",
+  travaux: "Remplacement prevu : utile pour savoir que le materiel va disparaitre de l'inventaire prochain."
+};
+let etatChoisi = '';
+
+function majBadgeEtat(){
+  const badge = document.getElementById('etat-equip');
+  const aide = document.getElementById('aide-etat');
+  if(!etatChoisi){
+    badge.textContent = 'a renseigner';
+    badge.className = 'badge attente';
+    aide.textContent = AIDE_ETAT_DEFAUT;
+    return;
+  }
+  badge.textContent = LIBELLES_ETAT[etatChoisi];
+  if(etatChoisi === 'hors') badge.className = 'badge rouge';
+  else if(etatChoisi === 'bon' || etatChoisi === 'correct' || etatChoisi === 'neuf') badge.className = 'badge ok';
+  else badge.className = 'badge attente';
+  aide.textContent = AIDE_ETAT[etatChoisi] || AIDE_ETAT_DEFAUT;
+}
+
+function etatEquipement(cle, bouton){
+  document.querySelectorAll('.etat-bouton').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  bouton.setAttribute('aria-pressed', 'true');
+  etatChoisi = cle;
+  majBadgeEtat();
+}
+
+function construireSelects(){
+  const selS = document.getElementById('sel-secteur');
+  const selN = document.getElementById('sel-niveau');
+  const selL = document.getElementById('sel-loc');
+  if(!selN || !selL || !selS) return;
+  const ancienS = selS.value, ancienN = selN.value, ancienL = selL.value;
+  selS.innerHTML = '<option value="">Aucun secteur cree</option>' +
+    secteurs.map(s => '<option value="' + s + '">' + s + '</option>').join('') +
+    '<option value="' + CREER + '">+ Creer un secteur</option>';
+  selL.innerHTML = '<option value="">Aucune localisation creee</option>' +
+    localisations.map(l => '<option value="' + l + '">' + l + '</option>').join('') +
+    '<option value="' + CREER + '">+ Creer une localisation</option>';
+  selN.innerHTML = '<option value="">Aucun etage cree</option>' +
+    niveaux.map(n => '<option value="' + n + '">' + n + '</option>').join('') +
+    '<option value="' + CREER + '">+ Creer un etage ou un niveau</option>';
+  if(ancienS) selS.value = ancienS;
+  if(ancienN) selN.value = ancienN;
+  if(ancienL) selL.value = ancienL;
+}
+
+function etatBadge(valeur, derniere){
+  if(valeur === CREER) return ['creation', 'attente'];
+  if(!valeur) return ['a creer', 'attente'];
+  if(valeur === derniere && indexEdition < 0) return ['repris du precedent', 'humain'];
+  return ['existant', 'ok'];
+}
+
+function majBadgesPaire(){
+  const s = document.getElementById('sel-secteur').value;
+  const n = document.getElementById('sel-niveau').value;
+  const l = document.getElementById('sel-loc').value;
+  const bs = document.getElementById('etat-secteur');
+  const bn = document.getElementById('etat-niveau');
+  const bl = document.getElementById('etat-loc');
+  const es = etatBadge(s, dernierSecteur);
+  const en = etatBadge(n, dernierNiveau);
+  const el = etatBadge(l, derniereLoc);
+  bs.textContent = es[0];
+  bs.className = 'badge ' + es[1];
+  bn.textContent = en[0];
+  bn.className = 'badge ' + en[1];
+  bl.textContent = el[0];
+  bl.className = 'badge ' + el[1];
+  document.getElementById('creation-secteur').classList.toggle('cache', s !== CREER);
+  document.getElementById('creation-niveau').classList.toggle('cache', n !== CREER);
+  document.getElementById('creation-loc').classList.toggle('cache', l !== CREER);
+}
+
+function changerPaire(){ majBadgesPaire(); }
+
+function creerSecteur(){
+  const champ = document.getElementById('nouveau-secteur');
+  const v = champ.value.trim();
+  if(!v){ toast('Saisis le nom du secteur'); return; }
+  if(secteurs.indexOf(v) < 0) secteurs.push(v);
+  champ.value = '';
+  construireSelects();
+  document.getElementById('sel-secteur').value = v;
+  majBadgesPaire();
+  toast('Secteur cree : ' + v + '. Il sera repropose sur l\'equipement suivant.');
+}
+
+function creerNiveau(){
+  const champ = document.getElementById('nouveau-niveau');
+  const v = champ.value.trim();
+  if(!v){ toast('Saisis le nom de l\'etage ou du niveau'); return; }
+  if(niveaux.indexOf(v) < 0) niveaux.push(v);
+  champ.value = '';
+  construireSelects();
+  document.getElementById('sel-niveau').value = v;
+  majBadgesPaire();
+  toast('Etage cree : ' + v + '. Il sera repropose sur l\'equipement suivant.');
+}
+
+function creerLoc(){
+  const champ = document.getElementById('nouveau-loc');
+  const v = champ.value.trim();
+  if(!v){ toast('Saisis le nom de la localisation'); return; }
+  if(localisations.indexOf(v) < 0) localisations.push(v);
+  champ.value = '';
+  construireSelects();
+  document.getElementById('sel-loc').value = v;
+  majBadgesPaire();
+  toast('Localisation creee : ' + v);
+}
+
+function attribut(valeur){
+  return JSON.stringify(valeur).replace(/"/g, '&quot;');
+}
+
+function suffixeEtat(etat){
+  return etat && etat !== 'bon' ? ' (' + LIBELLES_ETAT[etat].toLowerCase() + ')' : '';
+}
+
+function libelleEquipement(e){
+  return e.designation + (e.marque ? ' - ' + e.marque : '') + suffixeEtat(e.etat);
+}
+
+function majArbre(){
+  const contenu = document.getElementById('arbre-contenu');
+  const vide = document.getElementById('arbre-vide');
+  const select = document.getElementById('select-equipement');
+  if(!contenu || !vide) return;
+
+  if(select){
+    if(!equipements.length){
+      select.innerHTML = '<option value="">Aucun equipement enregistre</option>';
+    } else {
+      const groupes = {}, ordre = [];
+      equipements.forEach((e, i) => {
+        const cle = e.secteur + ' - ' + e.loc;
+        if(!groupes[cle]){ groupes[cle] = []; ordre.push(cle); }
+        groupes[cle].push({e: e, i: i});
+      });
+      select.innerHTML = '<option value="">Choisir un equipement (' + equipements.length + ')</option>' +
+        ordre.map(cle =>
+          '<optgroup label="' + cle + '">' +
+            groupes[cle].map(x => '<option value="' + x.i + '">' + libelleEquipement(x.e) + ' - ' + x.e.niveau + '</option>').join('') +
+          '</optgroup>'
+        ).join('');
+    }
+  }
+
+  if(!equipements.length){
+    contenu.innerHTML = '';
+    vide.classList.remove('cache');
+    return;
+  }
+  vide.classList.add('cache');
+
+  const ordreSecteurs = [], parSecteur = {};
+  equipements.forEach((e, i) => {
+    if(!parSecteur[e.secteur]){ parSecteur[e.secteur] = []; ordreSecteurs.push(e.secteur); }
+    parSecteur[e.secteur].push({e: e, i: i});
+  });
+
+  contenu.innerHTML = ordreSecteurs.map(sc => {
+    const ordreLocs = [], parLoc = {};
+    parSecteur[sc].forEach(x => {
+      if(!parLoc[x.e.loc]){ parLoc[x.e.loc] = []; ordreLocs.push(x.e.loc); }
+      parLoc[x.e.loc].push(x);
+    });
+    return '<div class="zone-bloc"><h5>Secteur ' + sc + '</h5>' + ordreLocs.map(loc => {
+      const items = parLoc[loc];
+      const etages = [];
+      items.forEach(x => { if(etages.indexOf(x.e.niveau) < 0) etages.push(x.e.niveau); });
+      return '<div class="paire-tete"><b>' + loc + '</b><span class="num">' + items.length + (items.length > 1 ? ' equipements' : ' equipement') + '</span></div>' +
+        '<p class="aide" style="margin:-2px 0 8px">' + etages.join(' / ') + '</p>' +
+        items.map(x =>
+          '<button class="equip-ligne" onclick="ouvreEquipement(' + x.i + ')">' +
+            '<div class="haut"><b>' + x.e.designation + suffixeEtat(x.e.etat) + '</b><span class="meta">modifier</span></div>' +
+            '<span class="meta">' + (x.e.marque || 'marque non renseignee') + (x.e.anomalie ? ' - anomalie ' + x.e.anomalie : ' - aucune anomalie') + '</span>' +
+          '</button>'
+        ).join('') +
+        '<button class="mini" onclick="nouvelEquipement(' + attribut(items[0].e.niveau) + ',' + attribut(sc) + ',' + attribut(loc) + ')">+ Ajouter un equipement ici</button>';
+    }).join('') + '</div>';
+  }).join('');
+}
+
+function ouvreEquipement(i){
+  const e = equipements[i];
+  if(!e) return;
+  indexEdition = i;
+  construireSelects();
+  document.getElementById('sel-secteur').value = e.secteur;
+  document.getElementById('sel-niveau').value = e.niveau;
+  document.getElementById('sel-loc').value = e.loc;
+  majBadgesPaire();
+  const cleEquipement = ajouterDesignation(e.famille || 'DIVERS', e.designation || '');
+  construireDesignations();
+  document.getElementById('select-designation').value = cleEquipement;
+  familleChoisie = e.famille || '';
+  majBadgeEquipement();
+  appliquerType(false);
+  document.querySelectorAll('#champs-dynamiques .saisie').forEach((c, k) => {
+    c.value = (e.valeurs && e.valeurs[k] !== undefined) ? e.valeurs[k] : '';
+  });
+  photoPlaque = !!e.photoPlaque;
+  photosAutres = {ensemble: !!(e.photos && e.photos.ensemble), detail: !!(e.photos && e.photos.detail)};
+  const slot = document.getElementById('slot-plaque');
+  slot.className = photoPlaque ? 'photo-slot prise' : 'photo-slot';
+  slot.innerHTML = photoPlaque ? '<span class="pict">&#10003;</span>plaque' : '<span class="pict">&#43;</span>plaque';
+  ['ensemble', 'detail'].forEach(nom => {
+    const s = document.getElementById('slot-' + nom);
+    s.className = photosAutres[nom] ? 'photo-slot prise' : 'photo-slot';
+    s.innerHTML = (photosAutres[nom] ? '<span class="pict">&#10003;</span>' : '<span class="pict">&#43;</span>') + nom;
+  });
+  const bouton = document.getElementById('bouton-lire');
+  bouton.disabled = !photoPlaque;
+  bouton.style.opacity = photoPlaque ? '1' : '.45';
+  document.getElementById('bandeau-lecture').classList.remove('actif');
+  document.getElementById('resultat-lecture').classList.add('cache');
+  document.querySelectorAll('.etat-bouton').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  const boutonEtat = document.querySelector('.etat-bouton[data-etat="' + (e.etat || '') + '"]');
+  if(boutonEtat) boutonEtat.setAttribute('aria-pressed', 'true');
+  etatChoisi = e.etat || '';
+  majBadgeEtat();
+  document.querySelectorAll('.anomalie').forEach(a => a.setAttribute('aria-pressed', a.getAttribute('data-niv') === e.anomalie ? 'true' : 'false'));
+  document.getElementById('titre-fiche').textContent = 'Modifier l\'equipement';
+  document.getElementById('bouton-enregistrer').textContent = 'Enregistrer les modifications';
+  ecran('fiche');
+  toast('Equipement rouvert : corrige ce qu\'il faut puis enregistre');
+}
+
+function ouvrirDepuisListe(select){
+  if(select.value === '') return;
+  ouvreEquipement(parseInt(select.value, 10));
+  select.value = '';
+}
+
+function nouvelEquipement(niveau, secteur, localisation){
+  photoPlaque = false;
+  photosAutres = {ensemble: false, detail: false};
+  const slot = document.getElementById('slot-plaque');
+  slot.className = 'photo-slot';
+  slot.innerHTML = '<span class="pict">&#43;</span>plaque';
+  ['ensemble', 'detail'].forEach(nom => {
+    const s = document.getElementById('slot-' + nom);
+    s.className = 'photo-slot';
+    s.innerHTML = '<span class="pict">&#43;</span>' + nom;
+  });
+  const bouton = document.getElementById('bouton-lire');
+  bouton.disabled = true;
+  bouton.style.opacity = '.45';
+  document.querySelectorAll('.saisie').forEach(c => { c.value = ''; });
+  const nomNouvel = document.getElementById('nom-nouvel-equipement');
+  if(nomNouvel) nomNouvel.value = '';
+  const nombreNouvel = document.getElementById('nombre-nouvel-equipement');
+  if(nombreNouvel) nombreNouvel.value = '';
+  document.querySelectorAll('.etat-ia').forEach(b => { b.textContent = 'IA'; b.classList.add('cache'); });
+  document.getElementById('resultat-lecture').classList.add('cache');
+  document.getElementById('bandeau-lecture').classList.remove('actif');
+  document.querySelectorAll('.anomalie').forEach(a => a.setAttribute('aria-pressed', 'false'));
+  document.querySelectorAll('.etat-bouton').forEach(e => e.setAttribute('aria-pressed', 'false'));
+  etatChoisi = '';
+  majBadgeEtat();
+  indexEdition = -1;
+  document.getElementById('titre-fiche').textContent = 'Nouvel equipement';
+  document.getElementById('bouton-enregistrer').textContent = 'Enregistrer le releve';
+  familleChoisie = '';
+  construireDesignations();
+  document.getElementById('select-designation').value = '';
+  majBadgeEquipement();
+  appliquerType(false);
+  construireSelects();
+  document.getElementById('sel-secteur').value = secteur || dernierSecteur || '';
+  document.getElementById('sel-loc').value = localisation || derniereLoc || '';
+  document.getElementById('sel-niveau').value = niveau || dernierNiveau || '';
+  majBadgesPaire();
+  ecran('fiche');
+}
+
+function photoPrise(){
+  photoPlaque = true;
+  const slot = document.getElementById('slot-plaque');
+  slot.className = 'photo-slot prise';
+  slot.innerHTML = '<span class="pict">&#10003;</span>plaque';
+  const bouton = document.getElementById('bouton-lire');
+  bouton.disabled = false;
+  bouton.style.opacity = '1';
+  ecran('fiche');
+  toast('Photo prise, compressee a 450 Ko. Tu peux lire les informations.');
+}
+
+function lirePhoto(){
+  if(!photoPlaque){ toast('Prends d\'abord la photo de la plaque'); return; }
+  const bandeau = document.getElementById('bandeau-lecture');
+  bandeau.classList.add('actif');
+  document.getElementById('bouton-lire').disabled = true;
+  setTimeout(() => {
+    bandeau.classList.remove('actif');
+    document.querySelectorAll('.saisie[data-valeur-ia]').forEach(champ => {
+      if(!champ.value) champ.value = champ.getAttribute('data-valeur-ia');
+    });
+    document.querySelectorAll('.etat-ia').forEach(b => {
+      const champ = b.closest('.champ').querySelector('.saisie');
+      const conf = champ ? champ.getAttribute('data-confiance') : '';
+      if(conf) b.textContent = 'IA ' + conf + ' %';
+      b.classList.remove('cache');
+    });
+    document.getElementById('resultat-lecture').classList.remove('cache');
+    const cle = ajouterDesignation('CVC', 'Ventilo-convecteur');
+    construireDesignations();
+    document.getElementById('select-designation').value = cle;
+    familleChoisie = 'CVC';
+    document.getElementById('etat-equipement').textContent = 'propose par la lecture';
+    document.getElementById('etat-equipement').className = 'badge ia';
+    appliquerType(true);
+    toast('Lecture terminee : 6 informations proposees, equipement a confirmer');
+  }, 1500);
+}
+
+/* --- Equipements : crees une fois, reutilisables dans toutes les pieces --- */
+const designations = [];
+let familleChoisie = '';
+
+function construireDesignations(){
+  const sel = document.getElementById('select-designation');
+  if(!sel) return;
+  const ancienne = sel.value;
+  let html = '<option value="">' + (designations.length ? designations.length + (designations.length > 1 ? ' equipements crees' : ' equipement cree') : '0 equipement cree') + '</option>';
+  familles.forEach(f => {
+    const items = designations.filter(d => d.famille === f);
+    if(!items.length) return;
+    html += '<optgroup label="' + f + '">' +
+      items.map(d => '<option value="' + f + '|' + d.libelle + '">' + d.libelle + '</option>').join('') +
+      '</optgroup>';
+  });
+  sel.innerHTML = html;
+  if(ancienne) sel.value = ancienne;
+}
+
+function majBadgeEquipement(){
+  const badge = document.getElementById('etat-equipement');
+  const sel = document.getElementById('select-designation');
+  if(!sel.value){ badge.textContent = 'a choisir ou a creer'; badge.className = 'badge attente'; return; }
+  badge.textContent = 'equipement choisi'; badge.className = 'badge ok';
+}
+
+function changerEquipement(){
+  const sel = document.getElementById('select-designation');
+  familleChoisie = sel.value ? sel.value.split('|')[0] : '';
+  majBadgeEquipement();
+  appliquerType(false);
+}
+
+function ajouterDesignation(famille, libelle){
+  const existante = designations.find(d => d.famille === famille && d.libelle.toLowerCase() === libelle.toLowerCase());
+  if(existante) return famille + '|' + existante.libelle;
+  designations.push({famille: famille, libelle: libelle});
+  return famille + '|' + libelle;
+}
+
+function creerEquipement(){
+  const famille = document.getElementById('famille-nouvel-equipement').value;
+  const champ = document.getElementById('nom-nouvel-equipement');
+  const nom = champ.value.trim();
+  if(!nom){ toast('Saisis le nom du nouvel equipement'); return; }
+  const nombre = document.getElementById('nombre-nouvel-equipement').value.trim();
+  const existait = designations.some(d => d.famille === famille && d.libelle.toLowerCase() === nom.toLowerCase());
+  const cle = ajouterDesignation(famille, nom);
+  champ.value = '';
+  construireDesignations();
+  document.getElementById('select-designation').value = cle;
+  changerEquipement();
+  const champQuantite = document.getElementById('champ-quantite');
+  if(champQuantite && nombre) champQuantite.value = nombre;
+  document.getElementById('nombre-nouvel-equipement').value = '';
+  toast(existait
+    ? nom + ' existait deja : il est pris en charge'
+    : nom + ' pris en charge' + (nombre ? ', ' + nombre + ' unite' + (nombre > 1 ? 's' : '') : '') + ' : renseigne ses champs');
+}
+
+function appliquerType(depuisLecture){
+  let visibles = 0;
+  document.querySelectorAll('.bloc-champ').forEach(bloc => {
+    const familles = (bloc.getAttribute('data-fam') || '').split(' ');
+    const ok = familleChoisie && familles.indexOf(familleChoisie) >= 0;
+    bloc.style.display = ok ? '' : 'none';
+    if(ok) visibles++;
+  });
+  const aide = document.getElementById('aide-type');
+  if(!familleChoisie){
+    aide.textContent = 'Choisis un equipement deja cree pour le reprendre dans une autre piece, ou cree-le : c\'est lui qui determine les champs affiches.';
+  } else if(depuisLecture){
+    aide.textContent = 'Equipement propose par la lecture de la plaque, a confirmer. ' + visibles + ' blocs de champs affiches.';
+  } else {
+    aide.textContent = visibles + ' blocs de champs affiches pour la famille ' + familleChoisie + '.';
+  }
+}
+
+function niveau(n, bouton){
+  bouton.parentElement.querySelectorAll('.anomalie').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  bouton.setAttribute('aria-pressed', 'true');
+}
+
+function enregistrerReleve(){
+  const s = document.getElementById('sel-secteur').value;
+  const n = document.getElementById('sel-niveau').value;
+  const l = document.getElementById('sel-loc').value;
+  if(!s || s === CREER){ toast('Cree ou choisis d\'abord le secteur'); return; }
+  if(!l || l === CREER){ toast('Cree ou choisis d\'abord la localisation'); return; }
+  if(!n || n === CREER){ toast('Cree ou choisis d\'abord l\'etage ou le niveau'); return; }
+  const selEquipement = document.getElementById('select-designation');
+  if(!selEquipement.value || selEquipement.value === CREER){
+    toast('Choisis l\'equipement deja cree, ou cree-le avec le bouton Creer');
+    return;
+  }
+  const designation = selEquipement.value.split('|')[1];
+  if(!etatChoisi){ toast('Indique l\'etat de l\'equipement, en bas de la fiche'); return; }
+  const blocAnomalie = document.querySelector('.anomalie[aria-pressed="true"]');
+  if(etatChoisi === 'hors' && !blocAnomalie){
+    toast('Hors service : precise aussi le delai d\'intervention (A ou B)');
+    return;
+  }
+
+  const valeurs = [];
+  document.querySelectorAll('#champs-dynamiques .saisie').forEach(c => valeurs.push(c.value));
+  const champMarque = document.querySelector('.saisie[data-valeur-ia]');
+  const enregistrement = {
+    secteur: s,
+    niveau: n,
+    loc: l,
+    famille: familleChoisie,
+    designation: designation,
+    etat: etatChoisi,
+    anomalie: blocAnomalie ? blocAnomalie.getAttribute('data-niv') : '',
+    marque: champMarque ? champMarque.value : '',
+    photoPlaque: photoPlaque,
+    photos: {plaque: photoPlaque, ensemble: photosAutres.ensemble, detail: photosAutres.detail},
+    valeurs: valeurs
+  };
+
+  let message;
+  if(indexEdition >= 0){
+    equipements[indexEdition] = enregistrement;
+    message = 'Equipement modifie : ' + libelleEquipement(enregistrement);
+  } else {
+    equipements.push(enregistrement);
+    message = 'Releve enregistre : ' + n + ' / ' + l;
+  }
+  dernierSecteur = s;
+  dernierNiveau = n;
+  derniereLoc = l;
+  indexEdition = -1;
+
+  const nbPhotos = equipements.reduce((t, e) => t + (e.photos ? (e.photos.plaque ? 1 : 0) + (e.photos.ensemble ? 1 : 0) + (e.photos.detail ? 1 : 0) : 0), 0);
+  document.getElementById('compteur-releves').textContent = equipements.length;
+  document.getElementById('compteur-photos').textContent = nbPhotos;
+  document.getElementById('compteur-poids').textContent = (nbPhotos * 0.45).toFixed(1) + ' Mo';
+  document.getElementById('barre-avancement').style.width = Math.min(100, equipements.length * 4) + '%';
+  majArbre();
+  ecran('zones');
+  toast(message);
+}
+
+function envoyer(){
+  const barre = document.getElementById('barre-envoi');
+  let p = 0;
+  toast('Envoi en cours...');
+  const minuteur = setInterval(() => {
+    p = Math.min(100, p + 8);
+    barre.style.width = p + '%';
+    if(p >= 100){
+      clearInterval(minuteur);
+      document.getElementById('compteur-file').textContent = '0';
+      toast('4 elements envoyes, file videe');
+      setTimeout(() => { barre.style.width = '0%'; }, 1500);
+    }
+  }, 120);
+}
+
+function vueBureau(nom, bouton){
+  ['tableau','revue','rapport','comparaison'].forEach(v => {
+    const el = document.getElementById('b-' + v);
+    if(el) el.classList.toggle('cache', v !== nom);
+  });
+  document.querySelectorAll('.bureau-nav button').forEach(b => b.setAttribute('aria-current', b === bouton ? 'true' : 'false'));
+}
+
+function decision(id, etat, bouton){
+  const bloc = document.getElementById(id);
+  const tete = bloc.querySelector('.tete');
+  const existant = tete.querySelector('.badge.resultat');
+  if(existant) existant.remove();
+  const badge = document.createElement('span');
+  badge.className = 'badge resultat ' + (etat === 'acceptee' ? 'ok' : etat === 'corrigee' ? 'attente' : 'ia');
+  if(etat === 'rejetee'){ badge.style.background = 'var(--rouge-fond)'; badge.style.color = 'var(--rouge)'; }
+  badge.textContent = etat;
+  tete.appendChild(badge);
+  toastBureau('Proposition ' + etat + ' : la valeur et sa provenance sont enregistrees');
+}
+
+function urgenceBureau(niv, bouton){
+  document.querySelectorAll('.urgence-b').forEach(b => b.setAttribute('aria-pressed', b === bouton ? 'true' : 'false'));
+  const rappel = document.getElementById('compare-urgence');
+  if(rappel){
+    rappel.innerHTML = niv
+      ? 'Delai contractuel applique : <b>' + DELAIS[niv] + '</b>.'
+      : 'Degre d\'urgence retire : <b>plus de delai contractuel sur cette ligne</b>.';
+  }
+  toastBureau(niv ? 'Degre d\'urgence ' + niv + ' enregistre, changement trace' : 'Degre d\'urgence retire de cette ligne');
+}
+
+function priseEnChargeLigne(bouton){
+  bouton.textContent = 'Prise en charge creee : PC-002';
+  bouton.disabled = true;
+  bouton.style.opacity = '.6';
+  toastBureau('Fiche prise en charge creee depuis la ligne d\'inventaire, export disponible');
+}
+
+function toastBureau(message){
+  const t = document.getElementById('toast-bureau');
+  t.textContent = message;
+  t.style.opacity = '1';
+  clearTimeout(window._toastB);
+  window._toastB = setTimeout(() => { t.style.opacity = '0'; }, 2600);
+}
+
+/* --- Les deux systemes : INVENTAIRE (ligne par ligne) et PRISE EN CHARGE (portrait) --- */
+const SITE = 'PALAIS-NIKAIA';
+const DATE_RELEVE = '07/10/2026';
+const RELEVE_PAR = 'M. V.';
+const DELAIS = {A: '48 h ouvrees', B: '1 mois', C: '1 an'};
+let modeVisite = 'INVENTAIRE';
+let fichierEnCours = {nom: '', contenu: ''};
+
+const CHAMPS_FIXES = [
+  {index: 0, nom: 'Marque'},
+  {index: 1, nom: 'Modele / reference'},
+  {index: 2, nom: 'Numero de serie'}
+];
+const CHAMPS_DETAIL = [
+  {index: 3, nom: 'Puissance thermique'},
+  {index: 4, nom: 'Puissance electrique'},
+  {index: 5, nom: "Debit d'air ou d'eau"},
+  {index: 6, nom: 'Gaz / fluide frigorigene'},
+  {index: 7, nom: "Type d'equipement"},
+  {index: 8, nom: 'Technologie'},
+  {index: 9, nom: 'Puissance unitaire (W)'},
+  {index: 10, nom: 'Nombre de points'},
+  {index: 11, nom: 'Nombre de departs'},
+  {index: 12, nom: 'Calibre general (A)'},
+  {index: 13, nom: 'Type de materiel incendie'}
+];
+const INDEX_QUANTITE = 14, INDEX_ANNEE = 15, INDEX_COMMENTAIRE = 16;
+const LIBELLES_PHOTO = ["plaque signaletique", "vue d'ensemble", "detail"];
+
+function setMode(m){
+  modeVisite = m;
+  document.querySelectorAll('.mode-bouton').forEach(b => b.setAttribute('aria-selected', b.getAttribute('data-mode') === m ? 'true' : 'false'));
+  const etat = document.getElementById('mode-visite');
+  if(etat) etat.textContent = m;
+  const aide = document.getElementById('aide-mode');
+  if(aide) aide.textContent = m === 'INVENTAIRE'
+    ? 'Inventaire : une ligne par equipement, comme ton fichier NIKAIA. Le degre d\'urgence est repris et modifiable a la demande.'
+    : 'Prise en charge : une fiche portrait par equipement, avec photos, caracteristiques, commentaire et degre d\'urgence.';
+}
+
+function valeurChamp(e, i){ return (e.valeurs && e.valeurs[i]) ? e.valeurs[i] : ''; }
+
+function slug(v){
+  return String(v || '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function nomPhoto(e, role){
+  return SITE + '_' + slug(e.secteur) + '_' + slug(e.loc) + '_' + slug(e.designation) + '_' + slug(role) + '.jpg';
+}
+
+function nomsPhotos(e){
+  const noms = [];
+  if(e.photos && e.photos.plaque) noms.push(nomPhoto(e, 'plaque'));
+  if(e.photos && e.photos.ensemble) noms.push(nomPhoto(e, 'ensemble'));
+  if(e.photos && e.photos.detail) noms.push(nomPhoto(e, 'detail'));
+  return noms.join(' | ');
+}
+
+function urgenceCSV(e){
+  return e.anomalie ? e.anomalie + ' - ' + DELAIS[e.anomalie] : '';
+}
+
+function echapperCSV(v){
+  v = (v === undefined || v === null) ? '' : String(v);
+  return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+}
+function ligneCSV(valeurs){ return valeurs.map(echapperCSV).join(';'); }
+
+function inventaireCSV(){
+  const entetes = ['Secteur','Localisation','Etage ou niveau','Famille','Equipement','Marque','Modele / reference','Numero de serie','Quantite','Annee','Autres caracteristiques','Etat du materiel',"Degre d'urgence",'Delai contractuel','Commentaire','Photos','Releve le','Releve par'];
+  const lignes = [ligneCSV(entetes)];
+  equipements.forEach(e => {
+    const autres = CHAMPS_DETAIL.filter(c => valeurChamp(e, c.index)).map(c => c.nom + ': ' + valeurChamp(e, c.index)).join(' | ');
+    lignes.push(ligneCSV([
+      e.secteur, e.loc, e.niveau, e.famille, e.designation,
+      valeurChamp(e, 0), valeurChamp(e, 1), valeurChamp(e, 2),
+      valeurChamp(e, INDEX_QUANTITE) || '1',
+      valeurChamp(e, INDEX_ANNEE),
+      autres,
+      LIBELLES_ETAT[e.etat] || '',
+      e.anomalie || '',
+      e.anomalie ? DELAIS[e.anomalie] : '',
+      valeurChamp(e, INDEX_COMMENTAIRE),
+      nomsPhotos(e),
+      DATE_RELEVE,
+      RELEVE_PAR
+    ]));
+  });
+  return lignes.join('\r\n');
+}
+
+function priseEnChargeCSV(){
+  const lignes = [];
+  equipements.forEach((e, i) => {
+    if(i) lignes.push('');
+    lignes.push(ligneCSV(['PRISE EN CHARGE - FICHE EQUIPEMENT', 'PC-' + String(i + 1).padStart(3, '0')]));
+    lignes.push(ligneCSV(["Titre de l'equipement", e.designation]));
+    lignes.push(ligneCSV(['Famille', e.famille]));
+    lignes.push(ligneCSV(['Secteur', e.secteur]));
+    lignes.push(ligneCSV(['Localisation', e.loc]));
+    lignes.push(ligneCSV(['Etage ou niveau', e.niveau]));
+    lignes.push(ligneCSV(['Quantite', valeurChamp(e, INDEX_QUANTITE) || '1']));
+    CHAMPS_FIXES.forEach(c => { if(valeurChamp(e, c.index)) lignes.push(ligneCSV([c.nom, valeurChamp(e, c.index)])); });
+    CHAMPS_DETAIL.forEach(c => { if(valeurChamp(e, c.index)) lignes.push(ligneCSV([c.nom, valeurChamp(e, c.index)])); });
+    if(valeurChamp(e, INDEX_ANNEE)) lignes.push(ligneCSV(['Annee de mise en service', valeurChamp(e, INDEX_ANNEE)]));
+    const prises = [];
+    if(e.photos && e.photos.plaque) prises.push(nomPhoto(e, 'plaque'));
+    if(e.photos && e.photos.ensemble) prises.push(nomPhoto(e, 'ensemble'));
+    if(e.photos && e.photos.detail) prises.push(nomPhoto(e, 'detail'));
+    for(let k = 0; k < 3; k++){
+      lignes.push(ligneCSV(['Photo ' + (k + 1) + ' - ' + LIBELLES_PHOTO[k], prises[k] || 'a completer']));
+    }
+    lignes.push(ligneCSV(['Etat du materiel', LIBELLES_ETAT[e.etat] || '']));
+    lignes.push(ligneCSV(['Commentaire', valeurChamp(e, INDEX_COMMENTAIRE)]));
+    lignes.push(ligneCSV(["Degre d'urgence", e.anomalie ? e.anomalie : 'aucune']));
+    lignes.push(ligneCSV(['Delai contractuel', e.anomalie ? DELAIS[e.anomalie] : 'sans objet']));
+    lignes.push(ligneCSV(['Releve le', DATE_RELEVE]));
+    lignes.push(ligneCSV(['Releve par', RELEVE_PAR]));
+  });
+  return lignes.join('\r\n');
+}
+
+function apercuExport(type){
+  if(!equipements.length){ toast("Aucun equipement enregistre : il n'y a rien a exporter"); return; }
+  const inventaire = (type === 'inventaire');
+  const contenu = inventaire ? inventaireCSV() : priseEnChargeCSV();
+  fichierEnCours = {
+    nom: (inventaire ? 'INVENTAIRE_' : 'PRISES_EN_CHARGE_') + SITE + '_' + DATE_RELEVE.split('/').reverse().join('-') + '.csv',
+    contenu: '\ufeff' + contenu
+  };
+  document.getElementById('modale-titre').textContent = inventaire
+    ? 'Inventaire : une ligne par equipement'
+    : 'Prises en charge : une fiche portrait par equipement';
+  document.getElementById('modale-contenu').textContent = contenu;
+  document.getElementById('modale-info').textContent = equipements.length + ' equipement(s) - ' + fichierEnCours.nom;
+  document.getElementById('voile').style.display = 'flex';
+}
+
+function fermerModale(){ document.getElementById('voile').style.display = 'none'; }
+
+function telechargerFichier(){
+  if(!fichierEnCours.contenu) return;
+  const blob = new Blob([fichierEnCours.contenu], {type: 'text/csv;charset=utf-8'});
+  const lien = document.createElement('a');
+  lien.href = URL.createObjectURL(blob);
+  lien.download = fichierEnCours.nom;
+  document.body.appendChild(lien);
+  lien.click();
+  document.body.removeChild(lien);
+  toast('Fichier ' + fichierEnCours.nom + ' telecharge');
+}
+
+function copierFichier(){
+  const texte = document.getElementById('modale-contenu').textContent;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(texte).then(
+      () => toast('CSV copie dans le presse-papier'),
+      () => toast('Copie refusee par le navigateur : selectionne le texte a la main')
+    );
+  } else {
+    toast('Copie impossible depuis cet apercu');
+  }
+}
+
+/* --- Configuration : contrat et listes de reference (renommer, supprimer, fusionner) --- */
+let contrats = ['PALAIS NIKAÏA', 'GEMAYA - LESQUIN', 'HOPITAL SAINT-LOUIS', 'MINDEF - BATIMENT C'];
+let contratChoisi = 'PALAIS NIKAÏA';
+let familles = ['CVC', 'ECL', 'CFO', 'SSI', 'DIVERS'];
+let editionConfig = null;
+
+const REFERENTIELS = [
+  {cle: 'contrats', titre: 'Contrat', ajout: 'Ajouter un contrat', select: true},
+  {cle: 'secteurs', titre: 'Secteurs', ajout: 'Ajouter un secteur'},
+  {cle: 'localisations', titre: 'Localisations', ajout: 'Ajouter une localisation'},
+  {cle: 'niveaux', titre: 'Etages ou niveaux', ajout: 'Ajouter un etage'},
+  {cle: 'familles', titre: "Lots (familles d'equipement)", ajout: 'Ajouter un lot'},
+  {cle: 'equipements', titre: 'Equipements', ajout: 'Ajouter un equipement (lot puis nom)'}
+];
+const CHAMP_LIGNE = {secteurs: 'secteur', localisations: 'loc', niveaux: 'niveau'};
+const SELECT_DE = {contrats: 'select-contrat', secteurs: 'sel-secteur', localisations: 'sel-loc',
+                   niveaux: 'sel-niveau', familles: 'famille-nouvel-equipement', equipements: 'select-designation'};
+
+function listeDe(cle){
+  if(cle === 'contrats') return contrats;
+  if(cle === 'secteurs') return secteurs;
+  if(cle === 'localisations') return localisations;
+  if(cle === 'niveaux') return niveaux;
+  if(cle === 'familles') return familles;
+  return designations.map(d => d.famille + '|' + d.libelle);
+}
+function texteDe(cle, id){ return cle === 'equipements' ? id.split('|')[1] : id; }
+function lotDe(cle, id){ return cle === 'equipements' ? id.split('|')[0] : ''; }
+function selectDe(cle){ const el = document.getElementById(SELECT_DE[cle]); return el || null; }
+
+function usageDe(cle, id){
+  if(cle === 'contrats') return contratChoisi === id ? 1 : 0;
+  if(cle === 'equipements') return equipements.filter(e => e.famille + '|' + e.designation === id).length;
+  const champ = CHAMP_LIGNE[cle];
+  if(champ) return equipements.filter(e => e[champ] === id).length;
+  if(cle === 'familles') return equipements.filter(e => e.famille === id).length + designations.filter(d => d.famille === id).length;
+  return 0;
+}
+function usageTexte(cle, id){
+  const n = usageDe(cle, id);
+  if(cle === 'contrats') return n ? 'contrat selectionne' : 'aucune visite';
+  return n + (n > 1 ? ' equipements' : ' equipement');
+}
+function cleSimple(v){ return String(v).toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function cibleFusion(cle, id){
+  const k = cleSimple(texteDe(cle, id));
+  return listeDe(cle).find(x => x !== id && cleSimple(texteDe(cle, x)) === k);
+}
+function estDoublon(cle, id){ return !!cibleFusion(cle, id); }
+
+function choisirContrat(el){
+  contratChoisi = el.value;
+  majConfig();
+  toast('Contrat ' + contratChoisi + ' selectionne');
+}
+function ajouterContrat(){
+  const champ = document.getElementById('ajout-contrats');
+  const v = champ ? champ.value.trim() : '';
+  if(!v){ toast('Saisis le nom du contrat'); return; }
+  if(contrats.some(c => c.toLowerCase() === v.toLowerCase())){ toast('Ce contrat existe deja'); return; }
+  contrats.push(v);
+  contratChoisi = v;
+  majConfig();
+  toast('Contrat ajoute : ' + v);
+}
+
+function majConfig(){
+  REFERENTIELS.forEach(r => {
+    const hote = document.getElementById('conf-' + r.cle);
+    if(!hote) return;
+    const items = listeDe(r.cle);
+    const doublons = items.filter(id => estDoublon(r.cle, id)).length;
+    hote.innerHTML =
+      '<h5>' + r.titre + ' <span class="badge usage">' + items.length + (doublons ? ' dont ' + doublons + ' doublon' + (doublons > 1 ? 's' : '') : '') + '</span></h5>' +
+      (r.select ? '<div class="ligne-select" style="margin-bottom:10px"><select id="select-contrat" onchange="choisirContrat(this)"></select></div>' : '') +
+      (items.length ? items.map((id, i) => ligneConfig(r.cle, id, i)).join('') : '<p class="aide">Aucune valeur pour l\'instant.</p>') +
+      '<div class="conf-ajout"><input type="text" id="ajout-' + r.cle + '" placeholder="' + r.ajout + '"><button onclick="ajouterRef(\'' + r.cle + '\')">Ajouter</button></div>';
+  });
+  const selC = document.getElementById('select-contrat');
+  const selV = document.getElementById('select-contrat-visite');
+  [selC, selV].forEach(sel => {
+    if(!sel) return;
+    if(contrats.indexOf(contratChoisi) < 0) contratChoisi = contrats[0];
+    sel.innerHTML = contrats.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+    sel.value = contratChoisi;
+  });
+}
+
+function ligneConfig(cle, id, i){
+  if(editionConfig && editionConfig.cle === cle && editionConfig.index === i){
+    return '<div class="conf-ligne"><input class="edition" id="edition-' + cle + '" value="' + texteDe(cle, id).replace(/"/g, '&quot;') + '">' +
+      '<div class="conf-actions">' +
+      '<button onclick="validerRenommage(\'' + cle + '\',' + i + ')">ok</button>' +
+      '<button onclick="annulerEdition()">annuler</button>' +
+      '</div></div>';
+  }
+  return '<div class="conf-ligne"><div>' +
+    '<span class="nom">' + texteDe(cle, id) + '</span>' + (estDoublon(cle, id) ? ' <span class="badge doublon">doublon</span>' : '') +
+    '<span class="usage">' + usageTexte(cle, id) + (lotDe(cle, id) ? ' - lot ' + lotDe(cle, id) : '') + '</span>' +
+    '</div><div class="conf-actions">' +
+    (estDoublon(cle, id) ? '<button onclick="fusionnerRef(\'' + cle + '\',' + i + ')">fusionner</button>' : '') +
+    '<button onclick="editerRef(\'' + cle + '\',' + i + ')">renommer</button>' +
+    '<button class="danger" onclick="supprimerRef(\'' + cle + '\',' + i + ')">supprimer</button>' +
+    '</div></div>';
+}
+
+function editerRef(cle, i){
+  editionConfig = {cle: cle, index: i};
+  majConfig();
+  const champ = document.getElementById('edition-' + cle);
+  if(champ){ champ.focus(); champ.select(); }
+}
+function annulerEdition(){ editionConfig = null; majConfig(); }
+function validerRenommage(cle, i){
+  const champ = document.getElementById('edition-' + cle);
+  const nouveau = champ ? champ.value.trim() : '';
+  const ancien = listeDe(cle)[i];
+  if(!nouveau){ toast('Saisis un nom'); return; }
+  if(nouveau === ancien){ editionConfig = null; majConfig(); return; }
+  editionConfig = null;
+  renommerRef(cle, ancien, nouveau);
+  toast('Renomme : ' + ancien + ' devient ' + nouveau);
+}
+function ajouterRef(cle){
+  const champ = document.getElementById('ajout-' + cle);
+  const v = champ ? champ.value.trim() : '';
+  if(!v){ toast('Saisis un nom'); return; }
+  if(cle === 'contrats'){ ajouterContrat(); return; }
+  if(cle === 'equipements'){
+    let lot = familles[0], nom = v;
+    if(v.indexOf('|') >= 0){ const p = v.split('|'); lot = p[0].trim().toUpperCase(); nom = p[1].trim(); }
+    if(familles.indexOf(lot) < 0){ toast('Lot inconnu : ' + lot + '. Utilise lot|nom.'); return; }
+    const cle2 = ajouterDesignation(lot, nom);
+    construireDesignations();
+    const sel = document.getElementById('select-designation');
+    if(sel) sel.value = cle2;
+    majConfig(); majArbre();
+    toast('Equipement ajoute : ' + nom);
+    return;
+  }
+  const liste = listeDe(cle);
+  if(liste.some(x => x.toLowerCase() === v.toLowerCase())){ toast('Cette valeur existe deja'); return; }
+  const valeur = (cle === 'familles') ? v.toUpperCase() : v;
+  liste.push(valeur);
+  if(champ) champ.value = '';
+  rafraichirReferentiel(cle);
+  toast('Ajoute : ' + valeur);
+}
+function supprimerRef(cle, i){
+  const id = listeDe(cle)[i];
+  if(id === undefined) return;
+  const usage = usageDe(cle, id);
+  if(usage > 0){ toast(usage + ' equipement(s) utilisent cette valeur : renomme-la au lieu de la supprimer'); return; }
+  if(cle === 'contrats'){ contrats.splice(i, 1); contratChoisi = contrats[0]; }
+  else if(cle === 'familles'){
+    if(familles.length <= 1){ toast('Il faut garder au moins un lot'); return; }
+    familles.splice(i, 1);
+  }
+  else if(cle === 'equipements'){ designations.splice(i, 1); }
+  else { listeDe(cle).splice(i, 1); }
+  rafraichirReferentiel(cle);
+  toast('Supprime : ' + texteDe(cle, id));
+  if(cle === 'contrats') majConfig();
+}
+function fusionnerRef(cle, i){
+  const id = listeDe(cle)[i];
+  const cible = cibleFusion(cle, id);
+  if(id === undefined || !cible){ toast('Plus de doublon a fusionner'); return; }
+  if(cle === 'contrats'){
+    if(contratChoisi === id) contratChoisi = cible;
+    contrats.splice(contrats.indexOf(id), 1);
+    majConfig();
+  } else if(cle === 'familles'){
+    equipements.forEach(e => { if(e.famille === id) e.famille = cible; });
+    designations.forEach(d => { if(d.famille === id) d.famille = cible; });
+    document.querySelectorAll('[data-fam]').forEach(el => {
+      el.setAttribute('data-fam', el.getAttribute('data-fam').split(' ').map(x => x === id ? cible : x).join(' '));
+    });
+    familles.splice(familles.indexOf(id), 1);
+    reconstruireFamilles();
+  } else if(cle === 'equipements'){
+    const j = designations.findIndex(d => d.famille + '|' + d.libelle === id);
+    const lot = designations[j].famille, ancien = designations[j].libelle;
+    equipements.forEach(e => { if(e.designation === ancien && e.famille === lot) e.designation = cible.split('|')[1]; });
+    designations.splice(j, 1);
+  } else {
+    const champ = CHAMP_LIGNE[cle];
+    equipements.forEach(e => { if(e[champ] === id) e[champ] = cible; });
+    const liste = listeDe(cle);
+    liste.splice(liste.indexOf(id), 1);
+  }
+  rafraichirReferentiel(cle);
+  toast('Doublons fusionnes : ' + texteDe(cle, id) + ' rejoint ' + texteDe(cle, cible));
+  if(cle === 'contrats') majConfig();
+}
+
+function renommerRef(cle, ancien, nouveau){
+  const sel = selectDe(cle);
+  const etaitChoisi = sel && sel.value === ancien;
+  if(cle === 'contrats'){
+    const j = contrats.indexOf(ancien);
+    if(j >= 0) contrats[j] = nouveau;
+    if(contratChoisi === ancien) contratChoisi = nouveau;
+    majConfig();
+    return;
+  }
+  if(cle === 'equipements'){
+    const j = designations.findIndex(d => d.famille + '|' + d.libelle === ancien);
+    if(j >= 0){
+      const lot = designations[j].famille, avant = designations[j].libelle;
+      equipements.forEach(e => { if(e.designation === avant && e.famille === lot) e.designation = nouveau; });
+      designations[j].libelle = nouveau;
+      construireDesignations();
+      const s = selectDe('equipements');
+      if(s && etaitChoisi) s.value = lot + '|' + nouveau;
+    }
+  } else if(cle === 'familles'){
+    equipements.forEach(e => { if(e.famille === ancien) e.famille = nouveau; });
+    designations.forEach(d => { if(d.famille === ancien) d.famille = nouveau; });
+    document.querySelectorAll('[data-fam]').forEach(el => {
+      el.setAttribute('data-fam', el.getAttribute('data-fam').split(' ').map(x => x === ancien ? nouveau : x).join(' '));
+    });
+    const j = familles.indexOf(ancien);
+    if(j >= 0) familles[j] = nouveau;
+    if(familleChoisie === ancien) familleChoisie = nouveau;
+    reconstruireFamilles();
+    construireDesignations();
+  } else {
+    const champ = CHAMP_LIGNE[cle];
+    equipements.forEach(e => { if(e[champ] === ancien) e[champ] = nouveau; });
+    const liste = listeDe(cle);
+    const j = liste.indexOf(ancien);
+    if(j >= 0) liste[j] = nouveau;
+    if(cle === 'secteurs' && dernierSecteur === ancien) dernierSecteur = nouveau;
+    if(cle === 'localisations' && derniereLoc === ancien) derniereLoc = nouveau;
+    if(cle === 'niveaux' && dernierNiveau === ancien) dernierNiveau = nouveau;
+    construireSelects();
+    const s = selectDe(cle);
+    if(s && etaitChoisi) s.value = nouveau;
+    majBadgesPaire();
+  }
+  majConfig();
+  majArbre();
+}
+
+function reconstruireFamilles(){
+  const sel = document.getElementById('famille-nouvel-equipement');
+  if(!sel) return;
+  const ancien = sel.value;
+  sel.innerHTML = familles.map(f => '<option value="' + f + '">' + f.charAt(0) + f.slice(1).toLowerCase() + '</option>').join('');
+  sel.value = familles.indexOf(ancien) >= 0 ? ancien : familles[0];
+}
+
+function rafraichirReferentiel(cle){
+  if(cle === 'secteurs' || cle === 'localisations' || cle === 'niveaux'){ construireSelects(); majBadgesPaire(); }
+  else if(cle === 'familles'){ reconstruireFamilles(); construireDesignations(); }
+  else if(cle === 'equipements'){ construireDesignations(); }
+  majConfig();
+  majArbre();
+}
+
+/* --- Correction depuis la fiche : renommer ou supprimer la valeur choisie --- */
+function ouvrirCorrection(cle){
+  const sel = selectDe(cle);
+  const valeur = sel ? sel.value : '';
+  const boite = document.getElementById('correction-' + cle);
+  if(!boite) return;
+  if(!valeur || valeur === CREER){ toast('Choisis d\'abord une valeur dans la liste, puis corrige-la'); return; }
+  fermerCorrections();
+  boite.classList.remove('cache');
+  const champ = document.getElementById('renommer-' + cle);
+  if(champ){ champ.value = texteDe(cle, valeur); champ.focus(); champ.select(); }
+}
+function fermerCorrection(cle){
+  const b = document.getElementById('correction-' + cle);
+  if(b) b.classList.add('cache');
+}
+function fermerCorrections(){
+  ['secteurs', 'localisations', 'niveaux', 'familles'].forEach(fermerCorrection);
+}
+function renommerReferentiel(cle){
+  const sel = selectDe(cle);
+  const ancien = sel ? sel.value : '';
+  if(!ancien || ancien === CREER){ toast('Aucune valeur selectionnee'); return; }
+  const champ = document.getElementById('renommer-' + cle);
+  const nouveau = champ ? champ.value.trim() : '';
+  if(!nouveau){ toast('Saisis le nouveau nom'); return; }
+  if(nouveau === ancien){ fermerCorrection(cle); return; }
+  renommerRef(cle, ancien, nouveau);
+  const s = selectDe(cle);
+  if(s) s.value = nouveau;
+  majBadgesPaire();
+  fermerCorrection(cle);
+  toast('Corrige : ' + ancien + ' devient ' + nouveau);
+}
+function supprimerReferentiel(cle){
+  const sel = selectDe(cle);
+  const valeur = sel ? sel.value : '';
+  if(!valeur || valeur === CREER){ toast('Aucune valeur selectionnee'); return; }
+  const i = listeDe(cle).indexOf(valeur);
+  if(i < 0) return;
+  supprimerRef(cle, i);
+  fermerCorrection(cle);
+}
+
+/* Initialisation : rien n'existe par defaut */
+construireSelects();
+construireDesignations();
+majBadgesPaire();
+majArbre();
+majConfig();
+setMode('INVENTAIRE');
+</script>
+</body>
+</html>

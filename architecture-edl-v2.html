@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDL v2 - architecture cible</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #020617;
+      min-height: 100vh;
+      padding: 2rem;
+      color: white;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { margin-bottom: 2rem; }
+    .header-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+    .pulse-dot { width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 1.75rem; }
+    .diagram-container {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 1rem;
+      border: 1px solid #1e293b;
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+    svg { width: 100%; min-width: 1000px; display: block; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 0.75rem;
+      border: 1px solid #1e293b;
+      padding: 1.25rem;
+    }
+    .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .card-dot.cyan { background: #22d3ee; }
+    .card-dot.emerald { background: #34d399; }
+    .card-dot.violet { background: #a78bfa; }
+    .card-dot.amber { background: #fbbf24; }
+    .card-dot.rose { background: #fb7185; }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { list-style: none; color: #94a3b8; font-size: 0.75rem; }
+    .card li { margin-bottom: 0.375rem; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>EDL v2 - architecture cible</h1>
+      </div>
+      <p class="subtitle">Un seul code source : APK Android pour le terrain, site web pour le bureau - simulation a valider</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1120 800">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <marker id="arrow-rose" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#fb7185" />
+          </marker>
+          <marker id="arrow-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- ============ ARROWS (draw early, behind boxes) ============ -->
+        <line x1="210" y1="172" x2="300" y2="240" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="236" y="192" fill="#94a3b8" font-size="8" text-anchor="middle">HTTPS</text>
+        <line x1="525" y1="172" x2="385" y2="240" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="478" y="192" fill="#94a3b8" font-size="8" text-anchor="middle">HTTPS</text>
+
+        <line x1="335" y1="297" x2="215" y2="342" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="252" y="325" fill="#94a3b8" font-size="8" text-anchor="middle">API</text>
+        <line x1="322" y1="405" x2="356" y2="405" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="339" y="396" fill="#94a3b8" font-size="7" text-anchor="middle">travaux</text>
+
+        <line x1="120" y1="470" x2="120" y2="516" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="130" y="497" fill="#94a3b8" font-size="8">SQL</text>
+        <line x1="280" y1="472" x2="330" y2="516" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="330" y="500" fill="#94a3b8" font-size="8" text-anchor="middle">photos</text>
+        <line x1="470" y1="472" x2="512" y2="516" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="512" y="500" fill="#94a3b8" font-size="8" text-anchor="middle">genere</text>
+
+        <line x1="615" y1="405" x2="686" y2="405" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrow-rose)"/>
+        <text x="650" y="396" fill="#fb7185" font-size="7" text-anchor="middle">photo</text>
+
+        <line x1="860" y1="405" x2="860" y2="441" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrow-rose)"/>
+        <text x="872" y="428" fill="#fb7185" font-size="7">vision</text>
+
+        <line x1="150" y1="635" x2="150" y2="651" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrow-amber)"/>
+        <line x1="360" y1="635" x2="360" y2="651" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrow-amber)"/>
+
+        <!-- ============ SERVER BOUNDARY ============ -->
+        <rect x="35" y="210" width="610" height="490" rx="12" fill="rgba(251, 191, 36, 0.05)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="47" y="228" fill="#fbbf24" font-size="10" font-weight="600">VPS - Docker Compose (donnees chez toi)</text>
+
+        <!-- ============ CLIENTS ============ -->
+        <rect x="45" y="55" width="330" height="115" rx="8" fill="#0f172a"/>
+        <rect x="45" y="55" width="330" height="115" rx="8" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="60" y="80" fill="white" font-size="12" font-weight="600">Terrain - application Android (APK)</text>
+        <text x="60" y="101" fill="#94a3b8" font-size="9">SvelteKit + Capacitor, installe sur le telephone</text>
+        <text x="60" y="117" fill="#94a3b8" font-size="9">camera native, SQLite hors ligne</text>
+        <text x="60" y="133" fill="#94a3b8" font-size="9">file d'envoi, reprise automatique</text>
+        <text x="60" y="155" fill="#22d3ee" font-size="8">saisie en sous-sol sans reseau</text>
+
+        <rect x="400" y="55" width="250" height="115" rx="8" fill="#0f172a"/>
+        <rect x="400" y="55" width="250" height="115" rx="8" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="415" y="80" fill="white" font-size="12" font-weight="600">Bureau - navigateur PC</text>
+        <text x="415" y="101" fill="#94a3b8" font-size="9">meme code source que l'APK</text>
+        <text x="415" y="117" fill="#94a3b8" font-size="9">revue, edition, validation</text>
+        <text x="415" y="133" fill="#94a3b8" font-size="9">apercu du rapport, export</text>
+        <text x="415" y="155" fill="#22d3ee" font-size="8">grands tableaux de saisie</text>
+
+        <rect x="675" y="55" width="400" height="115" rx="8" fill="#0f172a"/>
+        <rect x="675" y="55" width="400" height="115" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="690" y="80" fill="white" font-size="12" font-weight="600">Distribution de l'APK</text>
+        <text x="690" y="101" fill="#94a3b8" font-size="9">keystore conserve en coffre (sinon plus de mise a jour)</text>
+        <text x="690" y="117" fill="#94a3b8" font-size="9">lien direct, ou Play Store canal interne</text>
+        <text x="690" y="133" fill="#94a3b8" font-size="9">Android uniquement : iOS hors perimetre (tranche)</text>
+        <text x="690" y="155" fill="#94a3b8" font-size="8">Android 7 minimum - mise a jour a integrer des la phase 2</text>
+
+        <!-- ============ SERVER COMPONENTS ============ -->
+        <rect x="225" y="245" width="220" height="52" rx="6" fill="#0f172a"/>
+        <rect x="225" y="245" width="220" height="52" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="335" y="266" fill="white" font-size="11" font-weight="600" text-anchor="middle">Caddy</text>
+        <text x="335" y="282" fill="#94a3b8" font-size="9" text-anchor="middle">HTTPS, certificats</text>
+
+        <rect x="70" y="345" width="250" height="125" rx="8" fill="#0f172a"/>
+        <rect x="70" y="345" width="250" height="125" rx="8" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="85" y="368" fill="white" font-size="12" font-weight="600">Application SvelteKit</text>
+        <text x="85" y="388" fill="#94a3b8" font-size="9">routes /terrain et /bureau</text>
+        <text x="85" y="404" fill="#94a3b8" font-size="9">comptes nominatifs, roles</text>
+        <text x="85" y="420" fill="#94a3b8" font-size="9">journal d'audit</text>
+        <text x="85" y="436" fill="#94a3b8" font-size="9">API interne</text>
+        <text x="85" y="458" fill="#34d399" font-size="8">TypeScript compile en JS minimal</text>
+
+        <rect x="360" y="345" width="255" height="125" rx="8" fill="#0f172a"/>
+        <rect x="360" y="345" width="255" height="125" rx="8" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="375" y="368" fill="white" font-size="12" font-weight="600">File de travaux</text>
+        <text x="375" y="388" fill="#94a3b8" font-size="9">compression des photos</text>
+        <text x="375" y="404" fill="#94a3b8" font-size="9">generation des rapports</text>
+        <text x="375" y="420" fill="#94a3b8" font-size="9">extraction IA (phase 5)</text>
+        <text x="375" y="436" fill="#94a3b8" font-size="9">envois en arriere-plan</text>
+        <text x="375" y="458" fill="#34d399" font-size="8">reprise sur erreur, idempotent</text>
+
+        <rect x="50" y="520" width="205" height="115" rx="6" fill="#0f172a"/>
+        <rect x="50" y="520" width="205" height="115" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="65" y="543" fill="white" font-size="11" font-weight="600">PostgreSQL 16</text>
+        <text x="65" y="562" fill="#94a3b8" font-size="8">clients, sites, visites</text>
+        <text x="65" y="577" fill="#94a3b8" font-size="8">lignes d'inventaire</text>
+        <text x="65" y="592" fill="#94a3b8" font-size="8">champs + provenance IA</text>
+        <text x="65" y="607" fill="#94a3b8" font-size="8">metadonnees photos</text>
+        <text x="65" y="625" fill="#a78bfa" font-size="7">petite base, rapide a sauver</text>
+
+        <rect x="270" y="520" width="170" height="115" rx="6" fill="#0f172a"/>
+        <rect x="270" y="520" width="170" height="115" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="285" y="543" fill="white" font-size="11" font-weight="600">Stockage objet S3</text>
+        <text x="285" y="562" fill="#94a3b8" font-size="8">MinIO, B2 ou R2</text>
+        <text x="285" y="577" fill="#94a3b8" font-size="8">photos + miniatures</text>
+        <text x="285" y="592" fill="#94a3b8" font-size="8">SHA-256, lien signe</text>
+        <text x="285" y="610" fill="#fbbf24" font-size="7">hors de la base</text>
+
+        <rect x="455" y="520" width="175" height="115" rx="6" fill="#0f172a"/>
+        <rect x="455" y="520" width="175" height="115" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="470" y="543" fill="white" font-size="11" font-weight="600">Gotenberg</text>
+        <text x="470" y="562" fill="#94a3b8" font-size="8">gabarit HTML / CSS</text>
+        <text x="470" y="577" fill="#94a3b8" font-size="8">-> PDF D19 / Q19</text>
+        <text x="470" y="592" fill="#94a3b8" font-size="8">apercu identique</text>
+        <text x="470" y="610" fill="#34d399" font-size="7">Chromium sans interface</text>
+
+        <rect x="50" y="655" width="580" height="40" rx="6" fill="#0f172a"/>
+        <rect x="50" y="655" width="580" height="40" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="65" y="672" fill="white" font-size="10" font-weight="600">Sauvegardes</text>
+        <text x="65" y="687" fill="#94a3b8" font-size="8">pg_dump chiffre + copie des objets -&gt; NAS local, puis copie hors site - restauration testee</text>
+
+        <!-- ============ IA (outside) ============ -->
+        <rect x="690" y="265" width="395" height="140" rx="8" fill="#0f172a"/>
+        <rect x="690" y="265" width="395" height="140" rx="8" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="705" y="290" fill="white" font-size="12" font-weight="600">Extraction IA - phase 5, deja prevue</text>
+        <text x="705" y="311" fill="#94a3b8" font-size="9">OCR de la plaque + modele vision</text>
+        <text x="705" y="327" fill="#94a3b8" font-size="9">propose marque, type, n. de serie, puissance</text>
+        <text x="705" y="343" fill="#94a3b8" font-size="9">score de confiance, photo d'origine conservee</text>
+        <text x="705" y="359" fill="#94a3b8" font-size="9">statut : propose / valide / corrige / rejete</text>
+        <text x="705" y="385" fill="#fb7185" font-size="8">jamais d'ecriture automatique dans l'inventaire</text>
+
+        <rect x="690" y="445" width="395" height="85" rx="8" fill="#0f172a"/>
+        <rect x="690" y="445" width="395" height="85" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="705" y="468" fill="white" font-size="11" font-weight="600">Modele vision</text>
+        <text x="705" y="488" fill="#94a3b8" font-size="9">auto-heberge : Qwen2.5-VL + PaddleOCR (carte graphique)</text>
+        <text x="705" y="504" fill="#94a3b8" font-size="9">ou API externe : Claude / GPT (RGPD a traiter)</text>
+        <text x="705" y="521" fill="#94a3b8" font-size="8">0,01 a 0,05 euro par photo en API</text>
+
+        <rect x="690" y="560" width="395" height="135" rx="8" fill="transparent" stroke="#fb7185" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="702" y="580" fill="#fb7185" font-size="9" font-weight="600">Mis de cote volontairement</text>
+        <text x="702" y="600" fill="#94a3b8" font-size="8">phase 5 : extraction des plaques</text>
+        <text x="702" y="616" fill="#94a3b8" font-size="8">phase 6 : reprise de l'existant Supabase</text>
+        <text x="702" y="632" fill="#94a3b8" font-size="8">distribution directe de l'APK pour commencer</text>
+        <text x="702" y="648" fill="#94a3b8" font-size="8">Play Store : formalites administratives</text>
+        <text x="702" y="668" fill="#94a3b8" font-size="8">rapport D19 / Q19 : a reprendre tel quel</text>
+        <text x="702" y="686" fill="#94a3b8" font-size="8">reprise de donnees : acces projet requis</text>
+
+        <!-- ============ LEGEND (below all boundaries) ============ -->
+        <text x="45" y="726" fill="white" font-size="10" font-weight="600">Legende</text>
+        <rect x="130" y="717" width="16" height="10" rx="2" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="152" y="726" fill="#94a3b8" font-size="8">Interface terrain / bureau</text>
+        <rect x="300" y="717" width="16" height="10" rx="2" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="322" y="726" fill="#94a3b8" font-size="8">Serveur applicatif</text>
+        <rect x="450" y="717" width="16" height="10" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="472" y="726" fill="#94a3b8" font-size="8">Base de donnees</text>
+        <rect x="600" y="717" width="16" height="10" rx="2" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="622" y="726" fill="#94a3b8" font-size="8">Stockage, PDF, sauvegardes</text>
+        <rect x="830" y="717" width="16" height="10" rx="2" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1"/>
+        <text x="852" y="726" fill="#94a3b8" font-size="8">IA (phase 5)</text>
+
+        <line x1="130" y1="753" x2="146" y2="753" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5"/>
+        <text x="152" y="756" fill="#94a3b8" font-size="8">flux IA / service externe</text>
+        <rect x="300" y="748" width="16" height="10" rx="2" fill="transparent" stroke="#fb7185" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="322" y="756" fill="#94a3b8" font-size="8">perimetre mis de cote</text>
+        <rect x="450" y="748" width="16" height="10" rx="2" fill="transparent" stroke="#fbbf24" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="472" y="756" fill="#94a3b8" font-size="8">limite du serveur</text>
+      </svg>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot emerald"></div>
+          <h3>Pile technique retenue</h3>
+        </div>
+        <ul>
+          <li>• SvelteKit 5 + TypeScript (un seul code)</li>
+          <li>• Capacitor pour produire l'APK Android</li>
+          <li>• Tailwind CSS + shadcn-svelte</li>
+          <li>• PostgreSQL 16 + Drizzle (migrations versionnees)</li>
+          <li>• Stockage objet compatible S3 pour les photos</li>
+          <li>• Gotenberg pour les PDF, Caddy + Docker sur un VPS</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot cyan"></div>
+          <h3>Ce que change l'APK</h3>
+        </div>
+        <ul>
+          <li>• Camera native, geolocalisation, dictee du systeme</li>
+          <li>• Donnees locales en SQLite : sous-sol sans reseau</li>
+          <li>• Installation sans magasin d'applications</li>
+          <li>• Le keystore est vital : perdu, plus de mise a jour</li>
+          <li>• Mise a jour a integrer (controle de version dans l'appli)</li>
+          <li>• iPhone non couvert : a trancher avant de coder</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot rose"></div>
+          <h3>IA : prevue, deconnectee</h3>
+        </div>
+        <ul>
+          <li>• Table des champs : source, confiance, modele, statut</li>
+          <li>• L'IA propose, l'humain valide : aucune ecriture directe</li>
+          <li>• Photo d'origine conservee comme preuve</li>
+          <li>• Auto-heberge (donnees chez toi) ou API (immediat)</li>
+          <li>• 600 photos par site = quelques euros en API</li>
+          <li>• A prevoir maintenant, a developper en phase 5</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot amber"></div>
+          <h3>Decoupage et charge</h3>
+        </div>
+        <ul>
+          <li>• Phase 1 : socle donnees et comptes (5 a 8 j)</li>
+          <li>• Phase 2 : terrain + hors ligne (10 a 15 j)</li>
+          <li>• Phase 2b : APK, signature, distribution (3 a 5 j)</li>
+          <li>• Phase 3 : bureau, revue, comparaison (8 a 12 j)</li>
+          <li>• Phase 4 : rapports PDF (5 a 8 j)</li>
+          <li>• Phase 5 : IA + phase 6 reprise : 11 a 17 j</li>
+          <li>• Total : 45 a 69 jours de developpement</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer">EDL v2 - simulation d'architecture - SEMERU FAYAT - octobre 2026</p>
+  </div>
+</body>
+</html>
