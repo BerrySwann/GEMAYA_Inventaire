@@ -529,6 +529,7 @@ tbody tr:hover{background:var(--bleu-050)}
                 <div class="sous-titre">Creation du nouvel equipement</div>
                 <div class="champ" style="margin:0 0 12px">
                   <label>Equipement deja cree</label>
+                  <input type="text" id="filtre-designation" placeholder="Filtrer : CTA, filtre, prise, voyant..." oninput="construireDesignations()" autocomplete="off">
                   <select id="select-designation" onchange="changerEquipement()"></select>
                 </div>
                 <div class="champ" style="margin:0 0 12px">
@@ -1645,20 +1646,41 @@ function lirePhoto(){
 const designations = [];
 let familleChoisie = '';
 
+/* Comparaison sans accents ni majuscules : « eclairage » doit trouver « Éclairage ». */
+function sansAccent(texte){
+  return String(texte || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().trim();
+}
+
 function construireDesignations(){
   const sel = document.getElementById('select-designation');
   if(!sel) return;
   const ancienne = sel.value;
-  let html = '<option value="">' + (designations.length ? designations.length + (designations.length > 1 ? ' equipements crees' : ' equipement cree') : '0 equipement cree') + '</option>';
+  const champ = document.getElementById('filtre-designation');
+  const filtre = champ ? sansAccent(champ.value.trim()) : '';
+
+  /* Le catalogue complet depasse la centaine d'entrees : sans filtre on n'affiche
+     que les familles deja utilisees, et la saisie restreint la liste au fur et a mesure. */
+  const gardees = filtre
+    ? designations.filter(d => sansAccent(d.libelle).indexOf(filtre) >= 0
+                            || sansAccent(d.famille).indexOf(filtre) >= 0)
+    : designations;
+
+  let html = '<option value="">' + (gardees.length
+      ? gardees.length + ' equipement' + (gardees.length > 1 ? 's' : '') + (filtre ? ' trouve' + (gardees.length > 1 ? 's' : '') : ' cree' + (gardees.length > 1 ? 's' : ''))
+      : (filtre ? 'aucun equipement ne correspond' : 'aucun equipement cree')) + '</option>';
   familles.forEach(f => {
-    const items = designations.filter(d => d.famille === f);
+    const items = gardees.filter(d => d.famille === f);
     if(!items.length) return;
     html += '<optgroup label="' + f + '">' +
       items.map(d => '<option value="' + f + '|' + d.libelle + '">' + d.libelle + '</option>').join('') +
       '</optgroup>';
   });
   sel.innerHTML = html;
-  if(ancienne) sel.value = ancienne;
+  if(ancienne && sel.querySelector('option[value="' + ancienne.replace(/"/g, '\\"') + '"]')) {
+    sel.value = ancienne;
+  }
 }
 
 function majBadgeEquipement(){
