@@ -131,7 +131,9 @@ function demarrer() {
   if (deja) { toast('Donnees locales rechargees : ' + equipements.length + ' equipement(s)'); }
 
   /* premiere ouverture : l'inventaire de depart est deja dedans */
-  if (!equipements.length && !configIA.inventaireImporte && window.INVENTAIRE_INITIAL) {
+  /* base vide : l'inventaire livre reprend sa place, meme si un ancien
+     enregistrement prétendait l'avoir deja importe */
+  if (!equipements.length && window.INVENTAIRE_INITIAL) {
     window.importRecu(window.INVENTAIRE_INITIAL, true);
     configIA.inventaireImporte = true;
     listesSales = true;
@@ -1139,6 +1141,22 @@ function validerCode() {
   toast('Code refuse');
 }
 
+
+
+/* Remet les 180 lignes de l'inventaire livre avec l'application. */
+function chargerInventaireOrigine() {
+  if (!window.INVENTAIRE_INITIAL) {
+    toast("L'inventaire d'origine n'est pas dans cette version");
+    return;
+  }
+  if (equipements.length && !window.confirm(equipements.length + " equipement(s) deja presents.\n\nAjouter les 180 lignes de l'inventaire d'origine ?")) {
+    return;
+  }
+  window.importRecu(window.INVENTAIRE_INITIAL);
+  configIA.inventaireImporte = true;
+  listesSales = true;
+  sauvegarder();
+}
 
 /* --------------------------------------------- fichiers ranges dans la base */
 let documentsRanges = [];
