@@ -1041,7 +1041,7 @@ function ajouterSiAbsent(liste, valeur) {
   if (valeur && liste.indexOf(valeur) < 0) { liste.push(valeur); }
 }
 
-window.importRecu = function (texte, silencieux) {
+window.importRecu = function (texte, silencieux, fusion) {
   if (!texte || texte.length < 10) { toast('Fichier vide ou illisible'); return; }
   const lignes = texte.split(/\r?\n/).filter(l => l.trim() !== '');
   if (lignes.length < 2) { toast('Aucune ligne a importer'); return; }
@@ -1073,6 +1073,12 @@ window.importRecu = function (texte, silencieux) {
   const maintenant = new Date().toISOString();
   let ajoutees = 0;
   let ignorees = 0;
+  let dejaLa = 0;
+  /* en fusion, une ligne deja presente (meme piece, meme equipement) n'est pas dupliquee */
+  const cleFiche = (secteur, loc, designation) =>
+    String(secteur || '').trim().toLowerCase() + '|' + String(loc || '').trim().toLowerCase() + '|' +
+    String(designation || '').trim().toLowerCase();
+  const existantes = new Set(equipements.map(e => cleFiche(e.secteur, e.loc, e.designation)));
 
   for (let n = 1; n < lignes.length; n++) {
     const champs = decouperCSV(lignes[n], separateur);
@@ -1089,6 +1095,12 @@ window.importRecu = function (texte, silencieux) {
     const quantite = valeur(col.quantite);
     const etat = valeur(col.etat).toLowerCase();
     const urgence = valeur(col.urgence).toUpperCase();
+
+    if (fusion) {
+      const cle = cleFiche(secteur, loc, equipement);
+      if (existantes.has(cle)) { dejaLa++; continue; }
+      existantes.add(cle);
+    }
 
     ajouterSiAbsent(contrats, contrat);
     ajouterSiAbsent(secteurs, secteur);
@@ -1149,7 +1161,9 @@ window.importRecu = function (texte, silencieux) {
   majCompteurs();
   majArbre();
   if (!silencieux) {
-    toast(ajoutees + ' equipement(s) importe(s)' + (ignorees ? ', ' + ignorees + ' ligne(s) sans nom' : ''));
+    toast(ajoutees + ' equipement(s) importe(s)'
+      + (dejaLa ? ', ' + dejaLa + ' deja present(s)' : '')
+      + (ignorees ? ', ' + ignorees + ' ligne(s) sans nom' : ''));
   }
 };
 
@@ -1210,10 +1224,12 @@ function chargerInventaireOrigine() {
     toast("L'inventaire d'origine n'est pas dans cette version");
     return;
   }
-  if (equipements.length && !window.confirm(equipements.length + " equipement(s) deja presents.\n\nAjouter les 180 lignes de l'inventaire d'origine ?")) {
+  if (equipements.length && !window.confirm(equipements.length + " equipement(s) deja enregistres.\n\n"
+      + "Les lignes de l'inventaire d'origine qui manquent seront ajoutees.\n"
+      + "Celles deja presentes ne sont pas touchees (etats, photos, commentaires conserves).")) {
     return;
   }
-  window.importRecu(window.INVENTAIRE_INITIAL);
+  window.importRecu(window.INVENTAIRE_INITIAL, false, true);
   configIA.inventaireImporte = true;
   listesSales = true;
   sauvegarder();
