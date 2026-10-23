@@ -463,7 +463,7 @@ tbody tr:hover{background:var(--bleu-050)}
             <div class="champ">
               <label>Sous-localisation <span class="badge attente">facultatif</span></label>
               <div class="ligne-select">
-                <select id="sel-sousloc" onchange="majBadgesPaire()"></select>
+                <select id="sel-sousloc" onchange="choixSousloc()"></select>
                 <button class="bouton-corriger" onclick="ouvrirCorrection('sousloc')">corriger</button>
               </div>
               <p class="aide">A remplir seulement quand la piece contient plusieurs sous-espaces (les sanitaires dans la loge). Laisse vide sinon : la colonne disparait du CSV.</p>
@@ -518,6 +518,9 @@ tbody tr:hover{background:var(--bleu-050)}
               <div class="explique" style="background:var(--violet-fond);border-color:var(--violet);color:var(--violet)">
                 <b>6 informations proposees.</b> Aucune n'est enregistree sans ta confirmation : accepte, corrige ou rejette champ par champ. Tu peux aussi tout saisir a la main.
               </div>
+            </div>
+            <div class="explique cache" id="alerte-non-enregistre" style="margin-top:10px;background:var(--ambre-fond);border-color:var(--ambre);color:var(--ambre)">
+              <b>Equipement pas encore enregistre.</b> La lecture porte sur le releve en cours : appuie sur <b>Enregistrer le releve</b> pour le creer, sinon les informations lues seront perdues en changeant d'ecran.
             </div>
 
             <div class="champ" style="margin-top:12px">
@@ -1307,6 +1310,21 @@ function construireSousLocs(){
     connues.map(v => '<option value="' + v + '">' + v + '</option>').join('') +
     '<option value="' + CREER + '">+ Creer une sous-localisation</option>';
   if(ancien && ancien !== CREER && connues.indexOf(ancien) >= 0) sel.value = ancien;
+}
+
+function choixSousloc(){
+  const sel = document.getElementById('sel-sousloc');
+  const boite = document.getElementById('creation-sousloc');
+  if(!sel || !boite) return;
+  if(sel.value === CREER){
+    fermerCorrections();
+    boite.classList.remove('cache');
+    const champ = document.getElementById('nouveau-sousloc');
+    if(champ){ champ.focus(); }
+    return;
+  }
+  boite.classList.add('cache');
+  majBadgesPaire();
 }
 
 function creerSousloc(){

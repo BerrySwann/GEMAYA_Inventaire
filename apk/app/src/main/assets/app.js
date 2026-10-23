@@ -343,13 +343,28 @@ function appliquerLecture(d) {
   champs[19] && d.taille && (champs[19].value = d.taille);
   champs[20] && d.classe_filtre && (champs[20].value = d.classe_filtre);
 
+  /* Le type lu sur la plaque ne cree rien : il selectionne l'equipement deja
+     au catalogue s'il existe, sinon il le propose dans le champ sans l'ajouter. */
   if (d.type) {
-    const cle = ajouterDesignation(familleChoisie || 'DIVERS', d.type);
-    construireDesignations();
+    const chercher = String(d.type).trim().toLowerCase();
+    const trouve = designations.find(x => String(x.libelle).trim().toLowerCase() === chercher);
     const sel = document.getElementById('select-designation');
-    if (sel) { sel.value = cle; }
-    familleChoisie = (familleChoisie || 'DIVERS');
-    majBadgeEquipement();
+    if (trouve && sel) {
+      sel.value = trouve.famille + '|' + trouve.libelle;
+      familleChoisie = trouve.famille;
+      majBadgeEquipement();
+    } else {
+      const champ = document.getElementById('nom-nouvel-equipement');
+      if (champ && !champ.value.trim()) { champ.value = String(d.type).trim(); }
+      toast("Type reconnu : " + d.type + ". Choisis-le dans la liste ou cree-le avec le bouton Creer.");
+    }
+  }
+
+  /* le releve en cours n'existe pas encore : on le dit clairement */
+  const alerte = document.getElementById('alerte-non-enregistre');
+  if (alerte) {
+    if (indexEdition < 0) { alerte.classList.remove('cache'); }
+    else { alerte.classList.add('cache'); }
   }
   document.getElementById('resultat-lecture').classList.remove('cache');
   document.querySelector('#resultat-lecture b').textContent = 'Informations proposees par la lecture.';
@@ -494,6 +509,8 @@ function enregistrerReleve() {
   dernierNiveau = n;
   derniereLoc = l;
   indexEdition = -1;
+  const alerteCree = document.getElementById('alerte-non-enregistre');
+  if (alerteCree) { alerteCree.classList.add('cache'); }
   idFiche = '';
   photosFiche = {plaque: null, ensemble: null, detail: null};
 
@@ -591,6 +608,8 @@ function nouvelEquipement(niveau, secteur, localisation) {
   idFiche = '';
   document.getElementById('titre-fiche').textContent = 'Nouvel equipement';
   document.getElementById('bouton-enregistrer').textContent = 'Enregistrer le releve';
+  const alerteNouvelle = document.getElementById('alerte-non-enregistre');
+  if (alerteNouvelle) { alerteNouvelle.classList.add('cache'); }
   familleChoisie = '';
   construireDesignations();
   document.getElementById('select-designation').value = '';
