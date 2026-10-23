@@ -1258,6 +1258,51 @@ window.envoiGitHubRecu = function (json) {
   toast("Envoi impossible : " + (r.erreur || 'raison inconnue'));
 };
 
+
+/* ------------------------------------------- recherche rapide dans la fiche */
+function rechercherFiche() {
+  const champ = document.getElementById('recherche-fiche');
+  const liste = document.getElementById('resultats-recherche');
+  if (!champ || !liste) { return; }
+  const mot = sansAccent(champ.value.trim());
+  if (mot.length < 2) {
+    liste.classList.add('cache');
+    liste.innerHTML = '';
+    return;
+  }
+  /* une seule ligne par nom d'equipement, avec le nombre d'occurrences :
+     chercher « filtre » ne doit pas afficher huit fois le meme gainable */
+  const parNom = new Map();
+  equipements.forEach((e, i) => {
+    const texte = sansAccent([e.designation, e.marque, e.secteur, e.loc, e.famille].join(' '));
+    if (texte.indexOf(mot) < 0) { return; }
+    const cle = sansAccent(e.designation);
+    const vu = parNom.get(cle);
+    if (vu) { vu.nombre++; return; }
+    parNom.set(cle, {e: e, i: i, nombre: 1});
+  });
+  const trouves = [...parNom.values()].sort((a, b) => b.nombre - a.nombre).slice(0, 8);
+  if (!trouves.length) {
+    liste.innerHTML = '<button onclick="return false">Aucun equipement ne correspond</button>';
+    liste.classList.remove('cache');
+    return;
+  }
+  liste.innerHTML = trouves.map(x =>
+    '<button onclick="ouvreEquipement(' + x.i + '); viderRechercheFiche()">' +
+      '<b>' + x.e.designation + '</b><br>' +
+      x.e.secteur + ' / ' + x.e.loc + (x.e.marque ? ' - ' + x.e.marque : '') +
+      (x.nombre > 1 ? ' <span class="badge">' + x.nombre + ' fois</span>' : '') +
+    '</button>').join('');
+  liste.classList.remove('cache');
+}
+
+function viderRechercheFiche() {
+  const champ = document.getElementById('recherche-fiche');
+  const liste = document.getElementById('resultats-recherche');
+  if (champ) { champ.value = ''; }
+  if (liste) { liste.classList.add('cache'); liste.innerHTML = ''; }
+}
+
 /* --------------------------------------------- fichiers ranges dans la base */
 let documentsRanges = [];
 

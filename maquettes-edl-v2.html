@@ -107,6 +107,16 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);col
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%230b2545' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 13px center;background-size:12px 8px}
 .champ input:focus,.champ select:focus{outline:2px solid var(--bleu-500);outline-offset:1px;border-color:var(--bleu-500)}
+/* la fiche tient sur un ecran de telephone : tout est resserre d'un cran */
+#e-fiche .champ label{font-size:11.5px}
+#e-fiche .champ input,#e-fiche .champ select{font-size:13px;min-height:40px;padding:9px 11px}
+#e-fiche .champ select{padding-right:34px;background-size:11px 7px;background-position:right 11px center}
+#e-fiche .aide,#e-fiche .explique{font-size:10.5px}
+#e-fiche .champ{margin-bottom:11px}
+#e-fiche .sous-titre{font-size:11px}
+.liste-recherche{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.liste-recherche button{font:inherit;font-size:11.5px;text-align:left;padding:9px 11px;border:1px solid var(--bord-fort);border-radius:8px;background:var(--blanc);cursor:pointer;color:var(--encre)}
+.liste-recherche button b{color:var(--bleu-700)}
 .aide{font-size:11px;color:var(--muet);margin-top:4px}
 .creation{display:flex;gap:8px;margin:0}
 .creation input{flex:0 0 104px;font:inherit;font-size:13px;padding:10px 12px;border:1px solid var(--bord-fort);border-radius:9px;min-height:42px;text-align:center}
@@ -425,6 +435,11 @@ tbody tr:hover{background:var(--bleu-050)}
           <div class="barre-etat"><span>4G</span><span class="num">09:47</span><span>81 %</span></div>
           <div class="app-entete"><h3 id="titre-fiche">Nouvel equipement</h3><button class="retour" onclick="ecran('zones')">&#8249;</button></div>
           <div class="app-corps">
+            <div class="champ" id="bloc-recherche">
+              <label>Rechercher un equipement deja saisi</label>
+              <input type="text" id="recherche-fiche" placeholder="mot cle : CTA, filtre, prise, hublot..." oninput="rechercherFiche()" autocomplete="off">
+              <div class="liste-recherche cache" id="resultats-recherche"></div>
+            </div>
             <div class="explique"><b>Fiche vide.</b> Prends d'abord la photo de la plaque signaletique, puis appuie sur <b>Lire la photo</b> : les informations reconnues viennent remplir les champs, a toi de confirmer. Si la lecture echoue, tu gardes la photo et tu saisis a la main.</div>
 
             <div class="champ">
