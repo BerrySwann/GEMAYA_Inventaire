@@ -39,7 +39,7 @@ ENTETES = [
     "contrat", "secteur", "sous-localisation", "localisation", "etage",
     "famille", "quantite", "equipement", "marque", "modele", "reference",
     "numero de serie", "puissance electrique", "puissance thermique", "debit",
-    "type", "etat", "urgence", "commentaire", "annee", "intensite",
+    "type", "etat", "urgence", "commentaire", "annee", "intensite", "ajout",
 ]
 
 
@@ -88,7 +88,7 @@ def lire(chemin):
             texte(feuille.cell(r, COL_PUISSANCE_THERM).value),
             debit,
             texte(feuille.cell(r, COL_TYPE_MATERIEL).value),
-            "", "", commentaire, annee, "",
+            "", "", commentaire, annee, "", "",
         ])
     return lignes
 

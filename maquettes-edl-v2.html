@@ -1396,7 +1396,7 @@ function majArbre(){
         '<p class="aide" style="margin:-2px 0 8px">' + etages.join(' / ') + '</p>' +
         items.map(x =>
           '<button class="equip-ligne" onclick="ouvreEquipement(' + x.i + ')">' +
-            '<div class="haut"><b>' + x.e.designation + suffixeEtat(x.e.etat) + '</b><span class="meta">modifier</span></div>' +
+            '<div class="haut"><b>' + x.e.designation + suffixeEtat(x.e.etat) + (x.e.ajout ? ' <span class="badge ok">nouveau</span>' : '') + '</b><span class="meta">modifier</span></div>' +
             '<span class="meta">' + (x.e.marque || 'marque non renseignee') + (x.e.anomalie ? ' - anomalie ' + x.e.anomalie : ' - aucune anomalie') + '</span>' +
           '</button>'
         ).join('') +
@@ -1824,7 +1824,7 @@ function inventaireCSV(){
   entetes.push('Etage ou niveau', 'Famille', 'Equipement', 'Marque', 'Modele / reference',
                'Numero de serie', 'Quantite', 'Annee', 'Autres caracteristiques',
                'Etat du materiel', "Degre d'urgence", 'Delai contractuel', 'Commentaire',
-               'Photos', 'Releve le', 'Releve par');
+               'Photos', 'Releve le', 'Releve par', 'Ajout');
   const lignes = [ligneCSV(entetes)];
   equipements.forEach(e => {
     const autres = CHAMPS_DETAIL.filter(c => valeurChamp(e, c.index)).map(c => c.nom + ': ' + valeurChamp(e, c.index)).join(' | ');
@@ -1842,7 +1842,8 @@ function inventaireCSV(){
       valeurChamp(e, INDEX_COMMENTAIRE),
       nomsPhotos(e),
       DATE_RELEVE,
-      RELEVE_PAR
+      RELEVE_PAR,
+      e.ajout || ''
     );
     lignes.push(ligneCSV(ligne));
   });

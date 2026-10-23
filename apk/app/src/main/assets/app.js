@@ -973,7 +973,8 @@ function importerInventaire() {
   champ.click();
 }
 
-function decouperCSV(ligne) {
+function decouperCSV(ligne, separateur) {
+  const sep = separateur || ';';
   const champs = [];
   let courant = '';
   let guillemets = false;
@@ -984,7 +985,7 @@ function decouperCSV(ligne) {
         if (ligne[i + 1] === '"') { courant += '"'; i++; } else { guillemets = false; }
       } else { courant += c; }
     } else if (c === '"') { guillemets = true; }
-    else if (c === ';' || c === ',') { champs.push(courant); courant = ''; }
+    else if (c === sep) { champs.push(courant); courant = ''; }
     else { courant += c; }
   }
   champs.push(courant);
@@ -1000,7 +1001,10 @@ window.importRecu = function (texte, silencieux) {
   const lignes = texte.split(/\r?\n/).filter(l => l.trim() !== '');
   if (lignes.length < 2) { toast('Aucune ligne a importer'); return; }
 
-  const entetes = decouperCSV(lignes[0]).map(e => normaliser(e));
+  /* le point-virgule est notre format ; la virgule ne sert que pour un export anglo-saxon,
+     mais une valeur peut contenir une virgule : on ne devine qu'une fois, sur l'en-tete */
+  const separateur = lignes[0].indexOf(';') >= 0 ? ';' : ',';
+  const entetes = decouperCSV(lignes[0], separateur).map(e => normaliser(e));
   const index = (nom) => entetes.indexOf(nom);
   const col = {
     contrat: index('contrat'), secteur: index('secteur'), sousloc: index('sous-localisation'),
@@ -1010,7 +1014,7 @@ window.importRecu = function (texte, silencieux) {
     puissanceElectrique: index('puissance electrique'), puissanceThermique: index('puissance thermique'),
     puissanceWatts: index('puissance electrique en watts'),
     annee: (index('annee') >= 0 ? index('annee') : index('date de mise en service')),
-    intensite: index('intensite'), vitesse: index('vitesse'), rpm: index('rpm'),
+    intensite: index('intensite'), vitesse: index('vitesse'), rpm: index('rpm'), ajout: index('ajout'),
     toursParMinute: index('tours par minute'),
     debit: index('debit'), type: index('type'), etat: index('etat'),
     urgence: index('urgence'), commentaire: index('commentaire')
@@ -1025,7 +1029,7 @@ window.importRecu = function (texte, silencieux) {
   let ignorees = 0;
 
   for (let n = 1; n < lignes.length; n++) {
-    const champs = decouperCSV(lignes[n]);
+    const champs = decouperCSV(lignes[n], separateur);
     const valeur = (i) => (i >= 0 && champs[i] !== undefined) ? String(champs[i]).trim() : '';
     const equipement = valeur(col.equipement);
     if (!equipement) { ignorees++; continue; }
@@ -1080,6 +1084,7 @@ window.importRecu = function (texte, silencieux) {
       valeurs: valeurs,
       photos: {},
       fichiers: {},
+      ajout: valeur(col.ajout),
       cree_le: maintenant,
       modifie_le: maintenant
     });
