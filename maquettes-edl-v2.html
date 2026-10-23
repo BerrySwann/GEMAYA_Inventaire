@@ -101,15 +101,16 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);col
 .champ{margin-bottom:12px}
 .champ label{display:block;font-size:12px;font-weight:600;color:var(--encre);margin-bottom:5px}
 .champ input,.champ select{width:100%;font:inherit;font-size:14px;padding:11px 12px;border:1px solid var(--bord-fort);border-radius:9px;background:var(--blanc);color:var(--encre);min-height:44px}
-/* une liste deroulante doit se voir comme telle : chevron a droite */
-.champ select{-webkit-appearance:none;appearance:none;padding-right:38px;
+/* une liste deroulante doit se voir comme telle : chevron a droite.
+   La regle couvre tous les ecrans de l'application, configuration comprise. */
+.telephone select, .champ select{-webkit-appearance:none;appearance:none;padding-right:38px;
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%230b2545' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 13px center;background-size:12px 8px}
 .champ input:focus,.champ select:focus{outline:2px solid var(--bleu-500);outline-offset:1px;border-color:var(--bleu-500)}
 .aide{font-size:11px;color:var(--muet);margin-top:4px}
 .creation{display:flex;gap:8px;margin:0}
 .creation input{flex:0 0 104px;font:inherit;font-size:13px;padding:10px 12px;border:1px solid var(--bord-fort);border-radius:9px;min-height:42px;text-align:center}
-.creation select{flex:1;font:inherit;font-size:13px;padding:10px 8px;border:1px solid var(--bord-fort);border-radius:9px;background:var(--blanc);min-height:42px}
+.creation select{flex:1;font:inherit;font-size:13px;padding:10px 8px;border:1px solid var(--bord-fort);border-radius:9px;background-color:var(--blanc);min-height:42px}
 .bloc-creation{background:var(--bleu-050);border:1px solid var(--bleu-100);border-radius:10px;padding:12px}
 .bloc-creation .creation{margin:0}
 .bloc-creation .champ label{font-size:11.5px}
