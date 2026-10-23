@@ -639,6 +639,18 @@ tbody tr:hover{background:var(--bleu-050)}
                 <input type="text" class="saisie" placeholder="Observation, acces, etat general">
                 <p class="aide">Maintenir le micro enfonce pour dicter.</p>
               </div>
+              <div class="bloc-champ" data-fam="CVC CFO SSI ECL ELC DIVERS">
+                <div class="champ">
+                  <label>Intensite (A)</label>
+                  <input type="text" class="saisie" inputmode="decimal" placeholder="Amperes">
+                </div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC CFO ECL DIVERS">
+                <div class="champ">
+                  <label>Vitesse (tr/min)</label>
+                  <input type="text" class="saisie" inputmode="numeric" placeholder="Tours par minute">
+                </div>
+              </div>
             </div>
 
             <div class="champ" style="margin-top:16px">
@@ -1758,7 +1770,9 @@ const CHAMPS_DETAIL = [
   {index: 10, nom: 'Nombre de points'},
   {index: 11, nom: 'Nombre de departs'},
   {index: 12, nom: 'Calibre general (A)'},
-  {index: 13, nom: 'Type de materiel incendie'}
+  {index: 13, nom: 'Type de materiel incendie'},
+  {index: 17, nom: 'Intensite (A)'},
+  {index: 18, nom: 'Vitesse (tr/min)'}
 ];
 const INDEX_QUANTITE = 14, INDEX_ANNEE = 15, INDEX_COMMENTAIRE = 16;
 const LIBELLES_PHOTO = ["plaque signaletique", "vue d'ensemble", "detail"];

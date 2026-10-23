@@ -31,12 +31,15 @@ COL_DEBIT_AIR = 16
 COL_DEBIT_EAU = 17
 COL_OBSERVATION = 18
 COL_TYPE_MATERIEL = 19
+COL_PUISSANCE_WATTS = 30
+COL_MISE_EN_SERVICE = 31
+COL_NATURE = 20
 
 ENTETES = [
     "contrat", "secteur", "sous-localisation", "localisation", "etage",
     "famille", "quantite", "equipement", "marque", "modele", "reference",
     "numero de serie", "puissance electrique", "puissance thermique", "debit",
-    "type", "etat", "urgence", "commentaire",
+    "type", "etat", "urgence", "commentaire", "annee", "intensite",
 ]
 
 
@@ -53,11 +56,20 @@ def lire(chemin):
     for r in range(1, feuille.max_row + 1):
         contrat = texte(feuille.cell(r, COL_CONTRAT).value)
         equipement = texte(feuille.cell(r, COL_EQUIPEMENT).value)
+        if not equipement:
+            # lignes de detail du client : le materiel est decrit en colonne 20
+            equipement = texte(feuille.cell(r, COL_NATURE).value)
         if not contrat or not equipement:
+            continue
+        if contrat.upper().startswith("SECTEUR") or contrat.upper().startswith("LOCALISATION") \
+                or contrat.upper().startswith("CONTRAT"):
             continue
         if contrat.upper().startswith("CONTRAT"):
             continue
         debit = texte(feuille.cell(r, COL_DEBIT_AIR).value) or texte(feuille.cell(r, COL_DEBIT_EAU).value)
+        puissance = (texte(feuille.cell(r, COL_PUISSANCE_ELEC).value)
+                     or texte(feuille.cell(r, COL_PUISSANCE_WATTS).value))
+        annee = texte(feuille.cell(r, COL_MISE_EN_SERVICE).value)
         commentaire = texte(feuille.cell(r, COL_DETAILS).value) or texte(feuille.cell(r, COL_OBSERVATION).value)
         lignes.append([
             contrat,
@@ -72,11 +84,11 @@ def lire(chemin):
             texte(feuille.cell(r, COL_MODELE).value),
             texte(feuille.cell(r, COL_REFERENCE).value),
             texte(feuille.cell(r, COL_SERIE).value),
-            texte(feuille.cell(r, COL_PUISSANCE_ELEC).value),
+            puissance,
             texte(feuille.cell(r, COL_PUISSANCE_THERM).value),
             debit,
             texte(feuille.cell(r, COL_TYPE_MATERIEL).value),
-            "", "", commentaire,
+            "", "", commentaire, annee, "",
         ])
     return lignes
 

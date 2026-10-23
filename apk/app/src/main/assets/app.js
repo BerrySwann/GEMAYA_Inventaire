@@ -1008,6 +1008,10 @@ window.importRecu = function (texte, silencieux) {
     quantite: index('quantite'), equipement: index('equipement'), marque: index('marque'),
     modele: index('modele'), serie: index('numero de serie'),
     puissanceElectrique: index('puissance electrique'), puissanceThermique: index('puissance thermique'),
+    puissanceWatts: index('puissance electrique en watts'),
+    annee: (index('annee') >= 0 ? index('annee') : index('date de mise en service')),
+    intensite: index('intensite'), vitesse: index('vitesse'), rpm: index('rpm'),
+    toursParMinute: index('tours par minute'),
     debit: index('debit'), type: index('type'), etat: index('etat'),
     urgence: index('urgence'), commentaire: index('commentaire')
   };
@@ -1050,10 +1054,13 @@ window.importRecu = function (texte, silencieux) {
     valeurs[1] = valeur(col.modele);
     valeurs[2] = valeur(col.serie);
     valeurs[3] = valeur(col.puissanceThermique);
-    valeurs[4] = valeur(col.puissanceElectrique);
+    valeurs[4] = valeur(col.puissanceElectrique) || valeur(col.puissanceWatts);
     valeurs[5] = valeur(col.debit);
     valeurs[7] = valeur(col.type);
     valeurs[14] = quantite;
+    valeurs[15] = valeur(col.annee);
+    valeurs[17] = valeur(col.intensite);
+    valeurs[18] = valeur(col.vitesse) || valeur(col.rpm) || valeur(col.toursParMinute);
     valeurs[16] = valeur(col.commentaire);
 
     equipements.push({
