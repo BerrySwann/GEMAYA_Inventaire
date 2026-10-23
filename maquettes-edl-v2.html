@@ -461,8 +461,23 @@ tbody tr:hover{background:var(--bleu-050)}
             </div>
             <div class="champ">
               <label>Sous-localisation <span class="badge attente">facultatif</span></label>
-              <input type="text" id="champ-sousloc" placeholder="Ex. sanitaires, salle de bain">
+              <div class="ligne-select">
+                <select id="sel-sousloc" onchange="majBadgesPaire()"></select>
+                <button class="bouton-corriger" onclick="ouvrirCorrection('sousloc')">corriger</button>
+              </div>
               <p class="aide">A remplir seulement quand la piece contient plusieurs sous-espaces (les sanitaires dans la loge). Laisse vide sinon : la colonne disparait du CSV.</p>
+            </div>
+            <div class="creation cache" id="creation-sousloc">
+              <input type="text" id="nouveau-sousloc" placeholder="Ex. sanitaires, salle de bain">
+              <button onclick="creerSousloc()">Creer la sous-localisation</button>
+            </div>
+            <div class="correction cache" id="correction-sousloc">
+              <input type="text" id="renommer-sousloc" placeholder="Corriger le nom de la sous-localisation">
+              <div class="correction-actions">
+                <button onclick="renommerReferentiel('sousloc')">Renommer</button>
+                <button class="danger" onclick="supprimerReferentiel('sousloc')">Supprimer</button>
+                <button class="annuler" onclick="fermerCorrection('sousloc')">Annuler</button>
+              </div>
             </div>
 
             <div class="champ">
@@ -1194,6 +1209,7 @@ function photoAutre(nom, slot){
 const CREER = '__creer__';
 let niveaux = [];
 let localisations = [];
+let sousLocalisations = [];
 let secteurs = [];
 let dernierNiveau = '';
 let derniereLoc = '';
@@ -1257,6 +1273,48 @@ function construireSelects(){
   if(ancienS) selS.value = ancienS;
   if(ancienN) selN.value = ancienN;
   if(ancienL) selL.value = ancienL;
+  construireSousLocs();
+}
+
+/* Sous-localisations deja utilisees : proposees dans la liste, avec creation et correction. */
+function construireSousLocs(){
+  const sel = document.getElementById('sel-sousloc');
+  if(!sel) return;
+  const ancien = sel.value;
+  const connues = sousLocalisations.slice();
+  equipements.forEach(e => { if(e.sousloc && connues.indexOf(e.sousloc) < 0) connues.push(e.sousloc); });
+  connues.sort();
+  sousLocalisations = connues;
+  sel.innerHTML = '<option value="">Aucune sous-localisation</option>' +
+    connues.map(v => '<option value="' + v + '">' + v + '</option>').join('') +
+    '<option value="' + CREER + '">+ Creer une sous-localisation</option>';
+  if(ancien && ancien !== CREER && connues.indexOf(ancien) >= 0) sel.value = ancien;
+}
+
+function creerSousloc(){
+  const champ = document.getElementById('nouveau-sousloc');
+  const valeur = champ ? champ.value.trim() : '';
+  if(!valeur){ toast('Saisis le nom de la sous-localisation'); return; }
+  if(sousLocalisations.indexOf(valeur) < 0) sousLocalisations.push(valeur);
+  champ.value = '';
+  construireSousLocs();
+  const sel = document.getElementById('sel-sousloc');
+  if(sel) sel.value = valeur;
+  document.getElementById('creation-sousloc').classList.add('cache');
+  majBadgesPaire();
+  toast('Sous-localisation creee : ' + valeur);
+}
+
+/* Remplissage au chargement d'une fiche. */
+function poserSousloc(valeur){
+  construireSousLocs();
+  const sel = document.getElementById('sel-sousloc');
+  if(!sel) return;
+  if(valeur && sel.querySelector('option[value="' + valeur.replace(/"/g, '\\"') + '"]') === null){
+    sousLocalisations.push(valeur);
+    construireSousLocs();
+  }
+  sel.value = valeur || '';
 }
 
 function etatBadge(valeur, derniere){
@@ -1973,15 +2031,17 @@ const REFERENTIELS = [
   {cle: 'familles', titre: "Lots (familles d'equipement)", ajout: 'Ajouter un lot'},
   {cle: 'equipements', titre: 'Equipements', ajout: 'Ajouter un equipement (lot puis nom)'}
 ];
-const CHAMP_LIGNE = {secteurs: 'secteur', localisations: 'loc', niveaux: 'niveau'};
+const CHAMP_LIGNE = {secteurs: 'secteur', localisations: 'loc', niveaux: 'niveau', sousloc: 'sousloc'};
 const SELECT_DE = {contrats: 'select-contrat', secteurs: 'sel-secteur', localisations: 'sel-loc',
-                   niveaux: 'sel-niveau', familles: 'famille-nouvel-equipement', equipements: 'select-designation'};
+                   niveaux: 'sel-niveau', sousloc: 'sel-sousloc',
+                   familles: 'famille-nouvel-equipement', equipements: 'select-designation'};
 
 function listeDe(cle){
   if(cle === 'contrats') return contrats;
   if(cle === 'secteurs') return secteurs;
   if(cle === 'localisations') return localisations;
   if(cle === 'niveaux') return niveaux;
+  if(cle === 'sousloc') return sousLocalisations;
   if(cle === 'familles') return familles;
   return designations.map(d => d.famille + '|' + d.libelle);
 }

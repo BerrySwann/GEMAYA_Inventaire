@@ -36,6 +36,7 @@ function instantane() {
     contrats: contrats,
     secteurs: secteurs,
     localisations: localisations,
+    sousLocalisations: sousLocalisations,
     niveaux: niveaux,
     familles: familles,
     designations: designations.map(d => ({famille: d.famille, libelle: d.libelle})),
@@ -91,6 +92,7 @@ function chargerEtat() {
   if (Array.isArray(d.contrats) && d.contrats.length) { contrats = d.contrats; }
   if (Array.isArray(d.secteurs)) { secteurs = d.secteurs; }
   if (Array.isArray(d.localisations)) { localisations = d.localisations; }
+  if (Array.isArray(d.sousLocalisations)) { sousLocalisations = d.sousLocalisations; }
   if (Array.isArray(d.niveaux)) { niveaux = d.niveaux; }
   if (Array.isArray(d.familles) && d.familles.length) { familles = d.familles; }
   if (Array.isArray(d.designations)) {
@@ -439,7 +441,8 @@ function enregistrerReleve() {
     secteur: s,
     niveau: n,
     loc: l,
-    sousloc: (document.getElementById('champ-sousloc') || {}).value || '',
+    sousloc: (document.getElementById('sel-sousloc') || {}).value === CREER ? ''
+      : ((document.getElementById('sel-sousloc') || {}).value || ''),
     famille: familleChoisie,
     designation: designation,
     etat: etatChoisi,
@@ -509,8 +512,8 @@ function ouvreEquipement(i) {
   document.getElementById('sel-secteur').value = e.secteur;
   document.getElementById('sel-niveau').value = e.niveau;
   document.getElementById('sel-loc').value = e.loc;
-  const sousLoc = document.getElementById('champ-sousloc');
-  if (sousLoc) { sousLoc.value = e.sousloc || ''; }
+  const sousLoc = document.getElementById('sel-sousloc');
+  if (typeof poserSousloc === 'function') { poserSousloc(e.sousloc || ''); }
   majBadgesPaire();
   const cleEquipement = ajouterDesignation(e.famille || 'DIVERS', e.designation || '');
   construireDesignations();
@@ -568,7 +571,7 @@ function nouvelEquipement(niveau, secteur, localisation) {
   bouton.disabled = true;
   bouton.style.opacity = '.45';
   document.querySelectorAll('#champs-dynamiques .saisie').forEach(c => { c.value = ''; });
-  const sousLocNeuve = document.getElementById('champ-sousloc');
+  const sousLocNeuve = document.getElementById('sel-sousloc');
   if (sousLocNeuve) { sousLocNeuve.value = ''; }
   const nomNouvel = document.getElementById('nom-nouvel-equipement');
   if (nomNouvel) { nomNouvel.value = ''; }
