@@ -651,6 +651,12 @@ tbody tr:hover{background:var(--bleu-050)}
                   <input type="text" class="saisie" inputmode="numeric" placeholder="Tours par minute">
                 </div>
               </div>
+              <div class="bloc-champ" data-fam="CVC CFO ECL ELC SSI DIVERS">
+                <div class="champ">
+                  <label>Taille (filtre ou autre)</label>
+                  <input type="text" class="saisie" placeholder="ex. 592x592x45, DN 20">
+                </div>
+              </div>
             </div>
 
             <div class="champ" style="margin-top:16px">
@@ -1396,7 +1402,7 @@ function majArbre(){
         '<p class="aide" style="margin:-2px 0 8px">' + etages.join(' / ') + '</p>' +
         items.map(x =>
           '<button class="equip-ligne" onclick="ouvreEquipement(' + x.i + ')">' +
-            '<div class="haut"><b>' + x.e.designation + suffixeEtat(x.e.etat) + (x.e.ajout ? ' <span class="badge ok">nouveau</span>' : '') + '</b><span class="meta">modifier</span></div>' +
+            '<div class="haut"><b>' + x.e.designation + suffixeEtat(x.e.etat) + (x.e.ajout ? ' <span class="badge ok">nouveau</span>' : '') + ((x.e.origine || 'inventaire') === 'saisie' ? ' <span class="badge attente">New</span>' : '') + '</b><span class="meta">modifier</span></div>' +
             '<span class="meta">' + (x.e.marque || 'marque non renseignee') + (x.e.anomalie ? ' - anomalie ' + x.e.anomalie : ' - aucune anomalie') + '</span>' +
           '</button>'
         ).join('') +
@@ -1772,7 +1778,8 @@ const CHAMPS_DETAIL = [
   {index: 12, nom: 'Calibre general (A)'},
   {index: 13, nom: 'Type de materiel incendie'},
   {index: 17, nom: 'Intensite (A)'},
-  {index: 18, nom: 'Vitesse (tr/min)'}
+  {index: 18, nom: 'Vitesse (tr/min)'},
+  {index: 19, nom: 'Taille (filtre ou autre)'}
 ];
 const INDEX_QUANTITE = 14, INDEX_ANNEE = 15, INDEX_COMMENTAIRE = 16;
 const LIBELLES_PHOTO = ["plaque signaletique", "vue d'ensemble", "detail"];
@@ -1824,7 +1831,7 @@ function inventaireCSV(){
   entetes.push('Etage ou niveau', 'Famille', 'Equipement', 'Marque', 'Modele / reference',
                'Numero de serie', 'Quantite', 'Annee', 'Autres caracteristiques',
                'Etat du materiel', "Degre d'urgence", 'Delai contractuel', 'Commentaire',
-               'Photos', 'Releve le', 'Releve par', 'Ajout');
+               'Photos', 'Releve le', 'Releve par', 'Ajout', 'New');
   const lignes = [ligneCSV(entetes)];
   equipements.forEach(e => {
     const autres = CHAMPS_DETAIL.filter(c => valeurChamp(e, c.index)).map(c => c.nom + ': ' + valeurChamp(e, c.index)).join(' | ');
@@ -1843,7 +1850,8 @@ function inventaireCSV(){
       nomsPhotos(e),
       DATE_RELEVE,
       RELEVE_PAR,
-      e.ajout || ''
+      e.ajout || '',
+      ((e.origine || 'inventaire') === 'saisie' ? 'New' : '')
     );
     lignes.push(ligneCSV(ligne));
   });

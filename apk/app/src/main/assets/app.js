@@ -274,7 +274,7 @@ function lirePhoto() {
     image: photosFiche.plaque.dataUrl,
     consigne: "Tu lis la plaque signaletique d'un equipement technique de batiment. " +
       "Reponds UNIQUEMENT par un objet JSON, sans texte autour, avec les cles : " +
-      "marque, type, reference, numero_serie, gaz, puissance, debit, annee, " +
+      "marque, type, reference, numero_serie, gaz, puissance, debit, annee, taille, " +
       "et confiance (objet avec les memes cles, valeur 0 a 100). " +
       "Si une information n'est pas lisible, mets une chaine vide et une confiance a 0."
   };
@@ -337,6 +337,7 @@ function appliquerLecture(d) {
   poser(6, d.gaz, 'gaz');
   poser(7, d.type, 'type');
   champs[15] && d.annee && (champs[15].value = d.annee);
+  champs[19] && d.taille && (champs[19].value = d.taille);
 
   if (d.type) {
     const cle = ajouterDesignation(familleChoisie || 'DIVERS', d.type);
@@ -432,6 +433,9 @@ function enregistrerReleve() {
 
   const fiche = {
     id: ancienne && ancienne.id ? ancienne.id : 'F' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+    /* origine : une ligne reprise de l'inventaire le reste, une creation porte New */
+    origine: ancienne && ancienne.origine ? ancienne.origine : 'saisie',
+    ajout: ancienne && ancienne.ajout ? ancienne.ajout : '',
     secteur: s,
     niveau: n,
     loc: l,
@@ -1015,6 +1019,7 @@ window.importRecu = function (texte, silencieux) {
     puissanceWatts: index('puissance electrique en watts'),
     annee: (index('annee') >= 0 ? index('annee') : index('date de mise en service')),
     intensite: index('intensite'), vitesse: index('vitesse'), rpm: index('rpm'), ajout: index('ajout'),
+    taille: index('taille'),
     toursParMinute: index('tours par minute'),
     debit: index('debit'), type: index('type'), etat: index('etat'),
     urgence: index('urgence'), commentaire: index('commentaire')
@@ -1065,6 +1070,7 @@ window.importRecu = function (texte, silencieux) {
     valeurs[15] = valeur(col.annee);
     valeurs[17] = valeur(col.intensite);
     valeurs[18] = valeur(col.vitesse) || valeur(col.rpm) || valeur(col.toursParMinute);
+    valeurs[19] = valeur(col.taille);
     valeurs[16] = valeur(col.commentaire);
 
     equipements.push({
@@ -1085,6 +1091,7 @@ window.importRecu = function (texte, silencieux) {
       photos: {},
       fichiers: {},
       ajout: valeur(col.ajout),
+      origine: 'inventaire',
       cree_le: maintenant,
       modifie_le: maintenant
     });

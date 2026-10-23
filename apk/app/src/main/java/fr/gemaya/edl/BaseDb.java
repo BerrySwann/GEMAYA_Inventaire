@@ -28,7 +28,7 @@ import java.util.Iterator;
 public class BaseDb extends SQLiteOpenHelper {
 
     private static final String NOM = "gemaya-edl.db";
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
 
     public BaseDb(Context contexte) {
         super(contexte, NOM, null, VERSION);
@@ -45,7 +45,7 @@ public class BaseDb extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE fiches("
                 + "id TEXT PRIMARY KEY, contrat TEXT, visite TEXT, secteur TEXT, localisation TEXT,"
                 + "sous_localisation TEXT, niveau TEXT, famille TEXT, designation TEXT, marque TEXT, quantite TEXT,"
-                + "etat TEXT, urgence TEXT, commentaire TEXT, valeurs TEXT, photos TEXT, ajout TEXT,"
+                + "etat TEXT, urgence TEXT, commentaire TEXT, valeurs TEXT, photos TEXT, ajout TEXT, origine TEXT,"
                 + "fichiers TEXT, cree_le TEXT, modifie_le TEXT)");
         db.execSQL("CREATE TABLE config(cle TEXT PRIMARY KEY, valeur TEXT)");
         db.execSQL("CREATE INDEX idx_fiches_secteur ON fiches(secteur, localisation, niveau)");
@@ -69,6 +69,13 @@ public class BaseDb extends SQLiteOpenHelper {
                     + "blob BLOB, octets INTEGER, sha256 TEXT, largeur INTEGER, hauteur INTEGER,"
                     + "prise_le TEXT, vignette BLOB)");
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_photos_fiche ON photos(fiche_id)");
+        }
+        if (ancienne < 6) {
+            /* d'ou vient la ligne : inventaire client ou saisie sur le terrain */
+            try {
+                db.execSQL("ALTER TABLE fiches ADD COLUMN origine TEXT");
+            } catch (Exception ignore) {
+            }
         }
         if (ancienne < 5) {
             /* marque les lignes arrivees avec une nouvelle version de l'inventaire */
@@ -154,7 +161,7 @@ public class BaseDb extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery("SELECT id, contrat, visite, secteur, localisation, sous_localisation,"
                 + " niveau, famille, designation, marque, quantite, etat, urgence, commentaire, valeurs,"
-                + " cree_le, modifie_le, ajout FROM fiches ORDER BY cree_le", null);
+                + " cree_le, modifie_le, ajout, origine FROM fiches ORDER BY cree_le", null);
         while (c.moveToNext()) {
             JSONObject o = new JSONObject();
             o.put("id", c.getString(0));
@@ -175,6 +182,7 @@ public class BaseDb extends SQLiteOpenHelper {
             o.put("photos", parFiche.optJSONObject(c.getString(0)) == null
                     ? new JSONObject() : parFiche.optJSONObject(c.getString(0)));
             o.put("ajout", texte(c, 17));
+            o.put("origine", texte(c, 18));
             o.put("cree_le", texte(c, 15));
             o.put("modifie_le", texte(c, 16));
             liste.put(o);
@@ -315,6 +323,7 @@ public class BaseDb extends SQLiteOpenHelper {
         cv.put("cree_le", f.optString("cree_le", ""));
         cv.put("modifie_le", f.optString("modifie_le", ""));
         cv.put("ajout", f.optString("ajout", ""));
+        cv.put("origine", f.optString("origine", "inventaire"));
         db.replace("fiches", null, cv);
     }
 
