@@ -387,17 +387,23 @@ function appliquerLecture(d) {
 /* Consigne du 19/10 : a la creation d'un equipement, tous les champs de la fiche
    apparaissent, et la fiche se replace en haut de la section. */
 function appliquerType(depuisLecture) {
+  /* Seuls les champs utiles a la famille s'affichent. Le fichier client le montre :
+     sur 159 luminaires, le numero de serie et le gaz ne sont jamais renseignes,
+     alors que la puissance l'est dans 58 % des cas. */
+  let visibles = 0;
   document.querySelectorAll('.bloc-champ').forEach(bloc => {
-    const liste = (bloc.getAttribute('data-fam') || '').split(' ');
-    const sienne = familleChoisie && liste.indexOf(familleChoisie) >= 0;
-    bloc.style.display = '';
-    bloc.classList.toggle('de-la-famille', !!sienne);
+    const liste = ' ' + (bloc.getAttribute('data-fam') || '') + ' ';
+    /* sans famille choisie on montre tout : la fiche reste utilisable a vide */
+    const sienne = !familleChoisie || liste.indexOf(' ' + familleChoisie + ' ') >= 0;
+    bloc.style.display = sienne ? '' : 'none';
+    bloc.classList.toggle('de-la-famille', !!familleChoisie && sienne);
+    if (sienne) { visibles++; }
   });
   const aide = document.getElementById('aide-type');
   if (aide) {
     aide.textContent = familleChoisie
-      ? 'Tous les champs sont affiches. Ceux de la famille ' + familleChoisie + ' sont encadres : renseigne ce que tu as, laisse vide le reste.'
-      : 'Tous les champs sont affiches : choisis l equipement pour mettre en avant ceux de sa famille.';
+      ? visibles + ' groupes de champs pour la famille ' + familleChoisie + '. Les autres sont masques : ils resteraient vides.'
+      : 'Choisis l equipement : les champs inutiles pour sa famille se masquent.';
   }
 }
 

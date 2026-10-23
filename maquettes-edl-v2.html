@@ -564,19 +564,19 @@ tbody tr:hover{background:var(--bleu-050)}
             </div>
 
             <div id="champs-dynamiques">
-              <div class="bloc-champ" data-fam="CVC ECL CFO SSI DIVERS">
+              <div class="bloc-champ" data-fam="CVC ECL CFO SSI ELEC ELC PB SAN RIA DIVERS AGT AMENAGEMENT INTERIEUR CLOS COUVERT A DEFINIR MEN FRO">
                 <div class="champ">
                   <label>Marque <span class="badge ia etat-ia cache">IA</span></label>
                   <input type="text" class="saisie">
                 </div>
               </div>
-              <div class="bloc-champ" data-fam="CVC ECL CFO SSI">
+              <div class="bloc-champ" data-fam="CVC ECL CFO SSI ELEC ELC PB SAN RIA DIVERS AGT AMENAGEMENT INTERIEUR CLOS COUVERT A DEFINIR MEN FRO">
                 <div class="champ">
                   <label>Modele ou reference <span class="badge ia etat-ia cache">IA</span></label>
                   <input type="text" class="saisie">
                 </div>
               </div>
-              <div class="bloc-champ" data-fam="CVC ECL CFO SSI">
+              <div class="bloc-champ" data-fam="CVC CFO SSI FRO">
                 <div class="champ">
                   <label>Numero de serie <span class="badge ia etat-ia cache">IA</span></label>
                   <input type="text" class="saisie">
@@ -641,8 +641,10 @@ tbody tr:hover{background:var(--bleu-050)}
                   <input type="text" class="saisie">
                 </div>
               </div>
-              <div class="bloc-champ" data-fam="CVC ECL CFO SSI DIVERS">
+              <div class="bloc-champ" data-fam="CVC ECL CFO SSI ELEC ELC PB SAN RIA DIVERS AGT AMENAGEMENT INTERIEUR CLOS COUVERT A DEFINIR MEN FRO">
                 <div class="champ"><label>Quantite</label><input type="text" id="champ-quantite" class="saisie" inputmode="numeric"></div>
+              </div>
+              <div class="bloc-champ" data-fam="CVC SSI PB CFO">
                 <div class="champ"><label>Annee de mise en service</label><input type="text" class="saisie"></div>
               </div>
               <div class="champ" style="margin-top:14px">
@@ -658,19 +660,19 @@ tbody tr:hover{background:var(--bleu-050)}
                 <input type="text" class="saisie" placeholder="Observation, acces, etat general">
                 <p class="aide">Maintenir le micro enfonce pour dicter.</p>
               </div>
-              <div class="bloc-champ" data-fam="CVC CFO SSI ECL ELC DIVERS">
+              <div class="bloc-champ" data-fam="CVC CFO DIVERS">
                 <div class="champ">
                   <label>Intensite (A)</label>
                   <input type="text" class="saisie" inputmode="decimal" placeholder="Amperes">
                 </div>
               </div>
-              <div class="bloc-champ" data-fam="CVC CFO ECL DIVERS">
+              <div class="bloc-champ" data-fam="CVC">
                 <div class="champ">
                   <label>Vitesse (tr/min)</label>
                   <input type="text" class="saisie" inputmode="numeric" placeholder="Tours par minute">
                 </div>
               </div>
-              <div class="bloc-champ" data-fam="CVC CFO ECL ELC SSI DIVERS">
+              <div class="bloc-champ" data-fam="CVC SAN DIVERS">
                 <div class="champ">
                   <label>Taille (filtre ou autre)</label>
                   <input type="text" class="saisie" placeholder="ex. 592x592x45, DN 20">
@@ -1703,8 +1705,10 @@ function creerEquipement(){
 function appliquerType(depuisLecture){
   let visibles = 0;
   document.querySelectorAll('.bloc-champ').forEach(bloc => {
-    const familles = (bloc.getAttribute('data-fam') || '').split(' ');
-    const ok = familleChoisie && familles.indexOf(familleChoisie) >= 0;
+    /* comparaison avec espaces de cadrage : sinon « AMENAGEMENT INTERIEUR »
+       n'est jamais reconnu dans une liste separee par des espaces */
+    const liste = ' ' + (bloc.getAttribute('data-fam') || '') + ' ';
+    const ok = !!familleChoisie && liste.indexOf(' ' + familleChoisie + ' ') >= 0;
     bloc.style.display = ok ? '' : 'none';
     if(ok) visibles++;
   });
