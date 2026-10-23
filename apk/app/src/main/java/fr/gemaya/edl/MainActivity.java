@@ -195,6 +195,11 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public String sauvegarderBase() {
+            return MainActivity.this.copierBase();
+        }
+
+        @JavascriptInterface
         public String documents() {
             return base.listeDocuments();
         }
@@ -252,6 +257,36 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public String partager(String nom, String contenu) {
             return MainActivity.this.partagerFichier(nom, contenu);
+        }
+    }
+
+    /** Copie la base avant une operation lourde, pour pouvoir revenir en arriere. */
+    String copierBase() {
+        try {
+            java.io.File origine = getDatabasePath("gemaya-edl.db");
+            if (!origine.exists()) {
+                return "rien a copier";
+            }
+            java.io.File dossier = new java.io.File(getFilesDir(), "sauvegardes");
+            if (!dossier.exists() && !dossier.mkdirs()) {
+                return "dossier impossible";
+            }
+            String quand = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss",
+                    java.util.Locale.FRANCE).format(new java.util.Date());
+            java.io.File copie = new java.io.File(dossier, "base-" + quand + ".db");
+            java.io.InputStream entree = new java.io.FileInputStream(origine);
+            java.io.OutputStream sortie = new java.io.FileOutputStream(copie);
+            byte[] bloc = new byte[65536];
+            int lus;
+            while ((lus = entree.read(bloc)) > 0) {
+                sortie.write(bloc, 0, lus);
+            }
+            sortie.flush();
+            sortie.close();
+            entree.close();
+            return copie.getName();
+        } catch (Exception e) {
+            return "echec " + e.getMessage();
         }
     }
 

@@ -852,7 +852,9 @@ function telechargerDansNavigateur(contenu, nom) {
 }
 
 function viderDonnees() {
-  if (!confirm('Effacer tous les equipements enregistres sur ce telephone ?')) { return; }
+  if (!confirm('Effacer tous les equipements enregistres sur ce telephone ?\n\n'
+      + 'Une copie de la base est faite avant, dans le dossier sauvegardes de l application.')) { return; }
+  if (PONT && PONT.sauvegarderBase) { toast('Copie de securite : ' + PONT.sauvegarderBase()); }
   equipements.length = 0;
   fichesModifiees.clear();
   photosAecrire.length = 0;
@@ -1247,6 +1249,9 @@ function chargerInventaireOrigine() {
       + "Celles deja presentes ne sont pas touchees (etats, photos, commentaires conserves).")) {
     return;
   }
+  if (PONT && PONT.sauvegarderBase) {
+    toast('Copie de securite : ' + PONT.sauvegarderBase());
+  }
   window.importRecu(window.INVENTAIRE_INITIAL, false, true);
   configIA.inventaireImporte = true;
   listesSales = true;
@@ -1260,7 +1265,12 @@ function pousserVersGitHub() {
   if (!equipements.length) { toast("Aucun equipement a envoyer"); return; }
   const f = contenuCSV();
   toast("Envoi du releve (" + f.nbLignes + " equipements)...");
-  PONT.envoyerGitHub("atelier/dernier-releve.csv", f.contenu);
+  /* un fichier par envoi, horodate : rien n'est ecrase dans le depot */
+  const t = new Date();
+  const deux = (n) => String(n).padStart(2, '0');
+  const quand = t.getFullYear() + '-' + deux(t.getMonth() + 1) + '-' + deux(t.getDate())
+    + '_' + deux(t.getHours()) + 'h' + deux(t.getMinutes()) + 'm' + deux(t.getSeconds()) + 's';
+  PONT.envoyerGitHub("atelier/releve-" + quand + ".csv", f.contenu);
 }
 
 window.envoiGitHubRecu = function (json) {
