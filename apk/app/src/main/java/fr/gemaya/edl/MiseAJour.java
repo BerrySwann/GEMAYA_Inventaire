@@ -45,12 +45,37 @@ final class MiseAJour {
             }
             String corps = lire(adresse);
             JSONObject o = new JSONObject(corps);
+            int code = o.optInt("versionCode", 0);
+            String nom = o.optString("versionName", "");
+            String apk = o.optString("apk", "");
+            String notes = o.optString("notes", "");
+
+            /* Le fichier update.json est servi par un cache de cinq minutes. Plutot que
+               d'annoncer une version perimee, on demande directement a GitHub quelle est
+               la derniere publication : l'API repond en quelques secondes. */
+            try {
+                JSONObject derniere = dernierePublication();
+                if (derniere != null) {
+                    String etiquette = derniere.optString("tag_name", "").replaceFirst("^v", "");
+                    int codeApi = codeDeLEtiquette(etiquette);
+                    String apkApi = premierePieceJointe(derniere);
+                    if (codeApi > code && !apkApi.isEmpty()) {
+                        code = codeApi;
+                        nom = etiquette;
+                        apk = apkApi;
+                        notes = derniere.optString("body", "");
+                    }
+                }
+            } catch (Exception ignore) {
+                /* sans l'API on garde la reponse du fichier */
+            }
+
             JSONObject reponse = new JSONObject();
             reponse.put("ok", true);
-            reponse.put("versionCode", o.optInt("versionCode", 0));
-            reponse.put("versionName", o.optString("versionName", ""));
-            reponse.put("apk", o.optString("apk", ""));
-            reponse.put("notes", o.optString("notes", ""));
+            reponse.put("versionCode", code);
+            reponse.put("versionName", nom);
+            reponse.put("apk", apk);
+            reponse.put("notes", notes);
             return reponse.toString();
         } catch (Exception e) {
             return "{\"ok\":false,\"erreur\":\"" + echapper("Verification impossible : " + e.getMessage()) + "\"}";
@@ -128,6 +153,42 @@ final class MiseAJour {
             return "{\"ok\":true}";
         } catch (Exception e) {
             return "{\"ok\":false,\"erreur\":\"" + echapper("Installation impossible : " + e.getMessage()) + "\"}";
+        }
+    }
+
+    /** Derniere publication du depot, lue par l'API GitHub (sans cache de fichier). */
+    private static JSONObject dernierePublication() {
+        try {
+            String corps = lire("https://api.github.com/repos/BerrySwann/gemaya-maj/releases/latest");
+            return new JSONObject(corps);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /** "0.42" devient 42 ; une etiquette illisible vaut 0. */
+    private static int codeDeLEtiquette(String etiquette) {
+        try {
+            String[] morceaux = etiquette.split("\\.");
+            if (morceaux.length == 1) {
+                return Integer.parseInt(morceaux[0]);
+            }
+            return Integer.parseInt(morceaux[0]) * 100 + Integer.parseInt(morceaux[1]);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /** Adresse du premier fichier joint de la publication. */
+    private static String premierePieceJointe(JSONObject publication) {
+        try {
+            org.json.JSONArray fichiers = publication.optJSONArray("assets");
+            if (fichiers == null || fichiers.length() == 0) {
+                return "";
+            }
+            return fichiers.getJSONObject(0).optString("browser_download_url", "");
+        } catch (Exception e) {
+            return "";
         }
     }
 
