@@ -1095,8 +1095,12 @@ window.importRecu = function (texte, silencieux, fusion) {
   let ignorees = 0;
   let dejaLa = 0;
   /* en fusion, une ligne deja presente (meme piece, meme equipement) n'est pas dupliquee */
+  /* l'ancienne localisation « Local technique R1 » et la nouvelle
+     « 01 - Local technique R1 » designent la meme piece : sans ce nettoyage,
+     le rechargement creerait des doublons vides a cote des lignes deja saisies */
+  const sansPrefixe = (v) => String(v || '').trim().replace(/^\d{2}\s*-\s*/, '').toLowerCase();
   const cleFiche = (secteur, loc, designation) =>
-    String(secteur || '').trim().toLowerCase() + '|' + String(loc || '').trim().toLowerCase() + '|' +
+    sansPrefixe(secteur) + '|' + sansPrefixe(loc) + '|' +
     String(designation || '').trim().toLowerCase();
   const existantes = new Set(equipements.map(e => cleFiche(e.secteur, e.loc, e.designation)));
 
