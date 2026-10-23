@@ -277,6 +277,7 @@ function lirePhoto() {
     consigne: "Tu lis la plaque signaletique d'un equipement technique de batiment. " +
       "Reponds UNIQUEMENT par un objet JSON, sans texte autour, avec les cles : " +
       "marque, type, reference, numero_serie, gaz, puissance, debit, annee, taille, " +
+      "classe_filtre (ePM1 55% ISO 16890, F7 EN 779, G4...), " +
       "et confiance (objet avec les memes cles, valeur 0 a 100). " +
       "Si une information n'est pas lisible, mets une chaine vide et une confiance a 0."
   };
@@ -340,6 +341,7 @@ function appliquerLecture(d) {
   poser(7, d.type, 'type');
   champs[15] && d.annee && (champs[15].value = d.annee);
   champs[19] && d.taille && (champs[19].value = d.taille);
+  champs[20] && d.classe_filtre && (champs[20].value = d.classe_filtre);
 
   if (d.type) {
     const cle = ajouterDesignation(familleChoisie || 'DIVERS', d.type);
@@ -1022,7 +1024,7 @@ window.importRecu = function (texte, silencieux) {
     puissanceWatts: index('puissance electrique en watts'),
     annee: (index('annee') >= 0 ? index('annee') : index('date de mise en service')),
     intensite: index('intensite'), vitesse: index('vitesse'), rpm: index('rpm'), ajout: index('ajout'),
-    taille: index('taille'),
+    taille: index('taille'), classeFiltre: index('classe du filtre'),
     toursParMinute: index('tours par minute'),
     debit: index('debit'), type: index('type'), etat: index('etat'),
     urgence: index('urgence'), commentaire: index('commentaire')
@@ -1074,6 +1076,7 @@ window.importRecu = function (texte, silencieux) {
     valeurs[17] = valeur(col.intensite);
     valeurs[18] = valeur(col.vitesse) || valeur(col.rpm) || valeur(col.toursParMinute);
     valeurs[19] = valeur(col.taille);
+    valeurs[20] = valeur(col.classeFiltre);
     valeurs[16] = valeur(col.commentaire);
 
     equipements.push({

@@ -672,6 +672,13 @@ tbody tr:hover{background:var(--bleu-050)}
                   <input type="text" class="saisie" placeholder="ex. 592x592x45, DN 20">
                 </div>
               </div>
+              <div class="bloc-champ" data-fam="CVC SAN DIVERS">
+                <div class="champ">
+                  <label>Classe du filtre (efficacite)</label>
+                  <input type="text" class="saisie" placeholder="ex. ePM1 55% ISO 16890, F7 EN 779">
+                  <p class="aide">Recopie ce qui est marque sur le cadre : ePM10, ePM2,5, ePM1 avec le pourcentage, ou G4, M5, F7, F9.</p>
+                </div>
+              </div>
             </div>
 
             <div class="champ" style="margin-top:16px">
@@ -1837,7 +1844,8 @@ const CHAMPS_DETAIL = [
   {index: 13, nom: 'Type de materiel incendie'},
   {index: 17, nom: 'Intensite (A)'},
   {index: 18, nom: 'Vitesse (tr/min)'},
-  {index: 19, nom: 'Taille (filtre ou autre)'}
+  {index: 19, nom: 'Taille (filtre ou autre)'},
+  {index: 20, nom: 'Classe du filtre'}
 ];
 const INDEX_QUANTITE = 14, INDEX_ANNEE = 15, INDEX_COMMENTAIRE = 16;
 const LIBELLES_PHOTO = ["plaque signaletique", "vue d'ensemble", "detail"];
