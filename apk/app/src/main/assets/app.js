@@ -276,9 +276,19 @@ function lirePhoto() {
     image: photosFiche.plaque.dataUrl,
     consigne: "Tu lis la plaque signaletique d'un equipement technique de batiment. " +
       "Reponds UNIQUEMENT par un objet JSON, sans texte autour, avec les cles : " +
-      "marque, type, reference, numero_serie, gaz, puissance, debit, annee, taille, " +
+      "marque, type, reference, numero_serie, gaz, puissance, intensite, debit, annee, taille, " +
       "classe_filtre (ePM1 55% ISO 16890, F7 EN 779, G4...), " +
       "et confiance (objet avec les memes cles, valeur 0 a 100). " +
+
+      "L'intensite peut etre notee A, I, In, Imax, Ie, ou donnee en amperes sans lettre. " +
+      "Ecris toujours la valeur avec son unite et sa notation, par exemple '2,6 A' ou 'In 4 A'. " +
+
+      "Quand la plaque donne DEUX valeurs separees par un slash, un tiret ou les mots " +
+      "grande vitesse / petite vitesse (GV, PV, HI, LO, maxi / mini), ce sont deux regimes " +
+      "et non une erreur : recopie les deux, dans l'ordre de la plaque, avec leur regime. " +
+      "Exemple : intensite '110/220 A (GV/PV)', puissance '0,55/1,1 kW (PV/GV)'. " +
+      "Fais de meme pour la puissance quand deux valeurs apparaissent. " +
+
       "Si une information n'est pas lisible, mets une chaine vide et une confiance a 0."
   };
 
@@ -342,6 +352,7 @@ function appliquerLecture(d) {
   champs[15] && d.annee && (champs[15].value = d.annee);
   champs[19] && d.taille && (champs[19].value = d.taille);
   champs[20] && d.classe_filtre && (champs[20].value = d.classe_filtre);
+  champs[17] && d.intensite && (champs[17].value = d.intensite);
 
   /* Le type lu sur la plaque ne cree rien : il selectionne l'equipement deja
      au catalogue s'il existe, sinon il le propose dans le champ sans l'ajouter. */
