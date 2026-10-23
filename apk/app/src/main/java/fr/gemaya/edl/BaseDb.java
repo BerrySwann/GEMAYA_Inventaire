@@ -28,7 +28,7 @@ import java.util.Iterator;
 public class BaseDb extends SQLiteOpenHelper {
 
     private static final String NOM = "gemaya-edl.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
 
     public BaseDb(Context contexte) {
         super(contexte, NOM, null, VERSION);
@@ -54,6 +54,9 @@ public class BaseDb extends SQLiteOpenHelper {
                 + "blob BLOB, octets INTEGER, sha256 TEXT, largeur INTEGER, hauteur INTEGER,"
                 + "prise_le TEXT, vignette BLOB)");
         db.execSQL("CREATE INDEX idx_photos_fiche ON photos(fiche_id)");
+        db.execSQL("CREATE TABLE documents("
+                + "nom TEXT PRIMARY KEY, mime TEXT, blob BLOB, octets INTEGER,"
+                + " ajoute_le TEXT, source TEXT)");
     }
 
     @Override
@@ -66,6 +69,12 @@ public class BaseDb extends SQLiteOpenHelper {
                     + "blob BLOB, octets INTEGER, sha256 TEXT, largeur INTEGER, hauteur INTEGER,"
                     + "prise_le TEXT, vignette BLOB)");
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_photos_fiche ON photos(fiche_id)");
+        }
+        if (ancienne < 4) {
+            /* les fichiers d'origine (l'inventaire Excel) sont ranges dans la base */
+            db.execSQL("CREATE TABLE IF NOT EXISTS documents("
+                    + "nom TEXT PRIMARY KEY, mime TEXT, blob BLOB, octets INTEGER,"
+                    + " ajoute_le TEXT, source TEXT)");
         }
         if (ancienne < 3) {
             /* la sous-localisation : une piece dans une piece (les sanitaires dans la loge) */
@@ -411,6 +420,72 @@ public class BaseDb extends SQLiteOpenHelper {
         }
         c.close();
         return reponse;
+    }
+
+    /* --------------------------------------------------------- fichiers en base */
+
+    public synchronized void enregistrerDocument(String nom, String mime, byte[] octets, String source) {
+        ContentValues v = new ContentValues();
+        v.put("nom", nom);
+        v.put("mime", mime);
+        v.put("blob", octets);
+        v.put("octets", octets == null ? 0 : octets.length);
+        v.put("ajoute_le", new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",
+                java.util.Locale.FRANCE).format(new java.util.Date()));
+        v.put("source", source);
+        getWritableDatabase().replace("documents", null, v);
+    }
+
+    public synchronized String listeDocuments() {
+        JSONArray liste = new JSONArray();
+        Cursor c = getReadableDatabase().rawQuery(
+                "SELECT nom, mime, octets, ajoute_le, source FROM documents ORDER BY nom", null);
+        while (c.moveToNext()) {
+            try {
+                JSONObject o = new JSONObject();
+                o.put("nom", c.getString(0));
+                o.put("mime", c.isNull(1) ? "" : c.getString(1));
+                o.put("octets", c.getLong(2));
+                o.put("ajoute_le", c.isNull(3) ? "" : c.getString(3));
+                o.put("source", c.isNull(4) ? "" : c.getString(4));
+                liste.put(o);
+            } catch (JSONException ignore) {
+            }
+        }
+        c.close();
+        return liste.toString();
+    }
+
+    public synchronized byte[] lireDocument(String nom) {
+        Cursor c = getReadableDatabase().rawQuery("SELECT blob FROM documents WHERE nom = ?",
+                new String[]{nom});
+        byte[] octets = null;
+        if (c.moveToFirst() && !c.isNull(0)) {
+            octets = c.getBlob(0);
+        }
+        c.close();
+        return octets;
+    }
+
+    public synchronized String mimeDocument(String nom) {
+        Cursor c = getReadableDatabase().rawQuery("SELECT mime FROM documents WHERE nom = ?",
+                new String[]{nom});
+        String mime = "application/octet-stream";
+        if (c.moveToFirst() && !c.isNull(0)) {
+            mime = c.getString(0);
+        }
+        c.close();
+        return mime;
+    }
+
+    public synchronized int compterDocuments() {
+        Cursor c = getReadableDatabase().rawQuery("SELECT COUNT(*) FROM documents", null);
+        int nombre = 0;
+        if (c.moveToFirst()) {
+            nombre = c.getInt(0);
+        }
+        c.close();
+        return nombre;
     }
 
     /* -------------------------------------------------------------------- info */

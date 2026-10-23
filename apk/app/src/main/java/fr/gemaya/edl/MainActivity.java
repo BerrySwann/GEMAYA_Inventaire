@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         base = new BaseDb(this);
+        importerInventaireOrigine();
         pont = new PontGemaya(this, base);
 
         /* en debug seulement : permet d'inspecter la page depuis le poste de developpement */
@@ -165,6 +166,16 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public String documents() {
+            return base.listeDocuments();
+        }
+
+        @JavascriptInterface
+        public String exporterDocument(String nom) {
+            return MainActivity.this.exporterDocument(nom);
+        }
+
+        @JavascriptInterface
         public String info() {
             return pont.info();
         }
@@ -212,6 +223,59 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public String partager(String nom, String contenu) {
             return MainActivity.this.partagerFichier(nom, contenu);
+        }
+    }
+
+    /** Range l'inventaire Excel livre avec l'application dans la base, une seule fois. */
+    private void importerInventaireOrigine() {
+        try {
+            if (base.compterDocuments() > 0) {
+                return;
+            }
+            java.io.InputStream entree = getAssets().open("inventaire-origine.xlsx");
+            java.io.ByteArrayOutputStream tampon = new java.io.ByteArrayOutputStream();
+            byte[] bloc = new byte[65536];
+            int lus;
+            while ((lus = entree.read(bloc)) > 0) {
+                tampon.write(bloc, 0, lus);
+            }
+            entree.close();
+            base.enregistrerDocument("INVENTAIRE PALAIS NIKAIA - mise en page 2.xlsx",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    tampon.toByteArray(), "livre avec l'application");
+        } catch (Exception ignore) {
+            /* sans fichier d'origine l'application reste utilisable */
+        }
+    }
+
+    /** Ecrit un fichier de la base dans Telechargements/gemaya et rend son chemin. */
+    String exporterDocument(String nom) {
+        try {
+            byte[] octets = base.lireDocument(nom);
+            if (octets == null) {
+                return "erreur document introuvable";
+            }
+            String propre = (nom == null || nom.isEmpty()) ? "document" : nom.replaceAll("[^A-Za-z0-9._ -]", "_");
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                android.content.ContentValues valeurs = new android.content.ContentValues();
+                valeurs.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, propre);
+                valeurs.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, base.mimeDocument(nom));
+                valeurs.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
+                        android.os.Environment.DIRECTORY_DOWNLOADS + "/gemaya");
+                android.net.Uri cible = getContentResolver().insert(
+                        android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, valeurs);
+                if (cible == null) {
+                    return "erreur emplacement refuse";
+                }
+                java.io.OutputStream sortie = getContentResolver().openOutputStream(cible);
+                sortie.write(octets);
+                sortie.flush();
+                sortie.close();
+                return "ok|Telechargements/gemaya/" + propre;
+            }
+            return "erreur Android anterieur a 10";
+        } catch (Exception e) {
+            return "erreur " + e.getMessage();
         }
     }
 

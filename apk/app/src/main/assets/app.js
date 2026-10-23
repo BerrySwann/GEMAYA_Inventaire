@@ -131,7 +131,7 @@ function demarrer() {
   if (deja) { toast('Donnees locales rechargees : ' + equipements.length + ' equipement(s)'); }
 
   /* premiere ouverture : l'inventaire de depart est deja dedans */
-  if (!deja && !configIA.inventaireImporte && window.INVENTAIRE_INITIAL) {
+  if (!equipements.length && !configIA.inventaireImporte && window.INVENTAIRE_INITIAL) {
     window.importRecu(window.INVENTAIRE_INITIAL, true);
     configIA.inventaireImporte = true;
     listesSales = true;
@@ -610,6 +610,7 @@ function remplirConfigApp() {
       ? 'Cle presente (' + String(configIA.cle).slice(0, 6) + '...' + String(configIA.cle).slice(-4) + ', ' + String(configIA.cle).length + ' caracteres)'
       : 'Aucune cle : la lecture de plaque ne peut pas fonctionner';
   }
+  chargerDocuments();
   const info = document.getElementById('info-donnees');
   if (info) {
     let texte = equipements.length + ' equipement(s) enregistre(s) sur ce telephone.';
@@ -637,12 +638,14 @@ function choisirFournisseur() {
 }
 
 function enregistrerConfigApp() {
-  configIA = {
+  const saisieCle = (document.getElementById('ia-cle').value || '').trim();
+  configIA = Object.assign({}, configIA, {
     fournisseur: document.getElementById('ia-fournisseur').value,
     modele: document.getElementById('ia-modele').value.trim(),
     base: document.getElementById('ia-base').value.trim(),
-    cle: document.getElementById('ia-cle').value.trim()
-  };
+    /* un champ laisse vide ne doit jamais effacer la cle deja en place */
+    cle: saisieCle || configIA.cle
+  });
   sauvegarder();
   remplirConfigApp();
   toast('Configuration enregistree sur ce telephone');
@@ -1134,6 +1137,45 @@ function validerCode() {
   champ.value = '';
   majPointsCode();
   toast('Code refuse');
+}
+
+
+/* --------------------------------------------- fichiers ranges dans la base */
+let documentsRanges = [];
+
+function chargerDocuments() {
+  const zone = document.getElementById('info-documents');
+  if (!zone) { return; }
+  if (!PONT || !PONT.documents) {
+    zone.textContent = 'Fichiers ranges dans la base : indisponible sur cet appareil.';
+    return;
+  }
+  try {
+    documentsRanges = JSON.parse(PONT.documents() || '[]');
+  } catch (e) {
+    documentsRanges = [];
+  }
+  if (!documentsRanges.length) {
+    zone.textContent = 'Fichiers ranges dans la base : aucun.';
+    return;
+  }
+  zone.textContent = 'Fichiers ranges dans la base : ' + documentsRanges.map(d =>
+    d.nom + ' (' + (Math.round(d.octets / 1024 * 10) / 10) + ' Ko)').join(', ');
+}
+
+function exporterFichierBase(nom) {
+  if (!PONT || !PONT.exporterDocument) { toast('Export impossible sur cet appareil'); return; }
+  const reponse = PONT.exporterDocument(nom) || '';
+  if (reponse.indexOf('ok|') === 0) {
+    toast('Fichier ecrit dans ' + reponse.substring(3));
+  } else {
+    toast('Export impossible : ' + reponse);
+  }
+}
+
+function exporterDocumentPrincipal() {
+  if (!documentsRanges.length) { toast('Aucun fichier range dans la base'); return; }
+  exporterFichierBase(documentsRanges[0].nom);
 }
 
 /* ------------------------------------------------------------------ amorcage */

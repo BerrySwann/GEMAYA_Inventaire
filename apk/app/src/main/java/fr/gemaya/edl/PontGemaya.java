@@ -84,6 +84,16 @@ public class PontGemaya {
     }
 
     @JavascriptInterface
+    public String documents() {
+        return base.listeDocuments();
+    }
+
+    @JavascriptInterface
+    public String exporterDocument(String nom) {
+        return activite.exporterDocument(nom);
+    }
+
+    @JavascriptInterface
     public String photosDeFiche(String ficheId) {
         return base.photosDeFiche(ficheId);
     }
