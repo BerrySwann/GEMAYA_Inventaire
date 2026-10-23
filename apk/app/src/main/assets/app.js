@@ -866,6 +866,13 @@ function viderDonnees() {
   toast('Donnees effacees');
 }
 
+function basculerZone(secteur, localisation) {
+  window.zonesOuvertes = window.zonesOuvertes || {};
+  const cle = secteur + '|' + localisation;
+  window.zonesOuvertes[cle] = !window.zonesOuvertes[cle];
+  majArbre();
+}
+
 function afficherZone(secteur, localisation) {
   window.zonesOuvertes = window.zonesOuvertes || {};
   window.zonesOuvertes[secteur + '|' + localisation] = true;

@@ -53,6 +53,8 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);col
 .correction-actions button.danger{background:var(--blanc);color:var(--rouge);border-color:var(--rouge)}
 .correction-actions button.annuler{background:var(--blanc);color:var(--bleu-700);border-color:var(--bord-fort)}
 .conf-bloc{background:var(--blanc);border:1px solid var(--bord);border-radius:10px;padding:12px;margin-bottom:12px}
+.conf-bloc h5.entete-bloc{cursor:pointer;user-select:none}
+.conf-bloc h5.entete-bloc:hover{color:var(--bleu-500)}
 .conf-bloc h5{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--bleu-700);font-weight:600;margin-bottom:9px;display:flex;justify-content:space-between;gap:8px;align-items:center}
 .conf-ligne{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--fond)}
 .conf-ligne:last-of-type{border-bottom:0}
@@ -1522,10 +1524,15 @@ function majArbre(){
     });
     return '<div class="zone-bloc"><h5>Secteur ' + sc + '</h5>' + ordreLocs.map(loc => {
       const tout = parLoc[loc];
-      const items = zonesOuvertes[sc + '|' + loc] ? tout : tout.slice(0, LIMITE_LISTE);
+      const cle = sc + '|' + loc;
+      /* la piece est fermee par defaut : la liste reste courte, on ouvre ce qu'on visite */
+      const ouverte = !!zonesOuvertes[cle];
+      const items = ouverte ? tout.slice(0, LIMITE_LISTE) : [];
       const etages = [];
-      items.forEach(x => { if(etages.indexOf(x.e.niveau) < 0) etages.push(x.e.niveau); });
-      return '<div class="paire-tete"><b>' + loc + '</b><span class="num">' + tout.length + (tout.length > 1 ? ' equipements' : ' equipement') + '</span></div>' +
+      tout.forEach(x => { if(etages.indexOf(x.e.niveau) < 0) etages.push(x.e.niveau); });
+      const chevron = ouverte ? '&#9662;' : '&#9656;';
+      return '<div class="paire-tete depliable" onclick="basculerZone(' + attribut(sc) + ',' + attribut(loc) + ')">' +
+          '<b>' + chevron + ' ' + loc + '</b><span class="num">' + tout.length + (tout.length > 1 ? ' equipements' : ' equipement') + '</span></div>' +
         '<p class="aide" style="margin:-2px 0 8px">' + etages.join(' / ') + '</p>' +
         items.map(x =>
           '<button class="equip-ligne" onclick="ouvreEquipement(' + x.i + ')">' +
@@ -1533,8 +1540,8 @@ function majArbre(){
             '<span class="meta">' + (x.e.marque || 'marque non renseignee') + (x.e.anomalie ? ' - anomalie ' + x.e.anomalie : ' - aucune anomalie') + '</span>' +
           '</button>'
         ).join('') +
-        (tout.length > items.length ? '<button class="mini" onclick="afficherZone(' + attribut(sc) + ',' + attribut(loc) + ')">... et ' + (tout.length - items.length) + ' autres equipements de cette piece</button>' : '') +
-        '<button class="mini" onclick="nouvelEquipement(' + attribut(items[0].e.niveau) + ',' + attribut(sc) + ',' + attribut(loc) + ')">+ Ajouter un equipement ici</button>';
+        (ouverte && tout.length > items.length ? '<button class="mini" onclick="afficherZone(' + attribut(sc) + ',' + attribut(loc) + ')">... et ' + (tout.length - items.length) + ' autres equipements de cette piece</button>' : '') +
+        '<button class="mini" onclick="nouvelEquipement(' + attribut(tout[0].e.niveau) + ',' + attribut(sc) + ',' + attribut(loc) + ')">+ Ajouter un equipement ici</button>';
     }).join('') + '</div>';
   }).join('');
 }
@@ -2178,17 +2185,29 @@ function ajouterContrat(){
   toast('Contrat ajoute : ' + v);
 }
 
+const blocsConfigOuverts = {contrats: true};
+
+function basculerBlocConfig(cle){
+  blocsConfigOuverts[cle] = !blocsConfigOuverts[cle];
+  majConfig();
+}
+
 function majConfig(){
   REFERENTIELS.forEach(r => {
     const hote = document.getElementById('conf-' + r.cle);
     if(!hote) return;
     const items = listeDe(r.cle);
     const doublons = items.filter(id => estDoublon(r.cle, id)).length;
+    const ouvert = !!blocsConfigOuverts[r.cle];
     hote.innerHTML =
-      '<h5>' + r.titre + ' <span class="badge usage">' + items.length + (doublons ? ' dont ' + doublons + ' doublon' + (doublons > 1 ? 's' : '') : '') + '</span></h5>' +
-      (r.select ? '<div class="ligne-select" style="margin-bottom:10px"><select id="select-contrat" onchange="choisirContrat(this)"></select></div>' : '') +
-      (items.length ? items.map((id, i) => ligneConfig(r.cle, id, i)).join('') : '<p class="aide">Aucune valeur pour l\'instant.</p>') +
-      '<div class="conf-ajout"><input type="text" id="ajout-' + r.cle + '" placeholder="' + r.ajout + '"><button onclick="ajouterRef(\'' + r.cle + '\')">Ajouter</button></div>';
+      '<h5 class="entete-bloc" onclick="basculerBlocConfig(\'' + r.cle + '\')">' +
+        '<span>' + (ouvert ? '&#9662;' : '&#9656;') + ' ' + r.titre + '</span>' +
+        '<span class="badge usage">' + items.length + (doublons ? ' dont ' + doublons + ' doublon' + (doublons > 1 ? 's' : '') : '') + '</span></h5>' +
+      '<div class="' + (ouvert ? '' : 'cache') + '">' +
+        (r.select ? '<div class="ligne-select" style="margin-bottom:10px"><select id="select-contrat" onchange="choisirContrat(this)"></select></div>' : '') +
+        (items.length ? items.map((id, i) => ligneConfig(r.cle, id, i)).join('') : '<p class="aide">Aucune valeur pour l\'instant.</p>') +
+        '<div class="conf-ajout"><input type="text" id="ajout-' + r.cle + '" placeholder="' + r.ajout + '"><button onclick="ajouterRef(\'' + r.cle + '\')">Ajouter</button></div>' +
+      '</div>';
   });
   const selC = document.getElementById('select-contrat');
   const selV = document.getElementById('select-contrat-visite');
