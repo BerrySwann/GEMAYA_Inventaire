@@ -512,23 +512,28 @@ public class BaseDb extends SQLiteOpenHelper {
         File fichier = contexte.getDatabasePath(NOM);
         int fiches = 0;
         int photos = 0;
+        long octetsPhotos = 0;
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT COUNT(*) FROM fiches", null);
         if (c.moveToFirst()) {
             fiches = c.getInt(0);
         }
         c.close();
-        File dossier = new File(contexte.getFilesDir(), "photos");
-        File[] liste = dossier.listFiles();
-        if (liste != null) {
-            photos = liste.length;
+        /* les photos sont dans la base depuis la version 2 : compter les lignes de
+           la table, pas le dossier disque qui ne sert plus (il affichait 0 a tort) */
+        Cursor p = db.rawQuery("SELECT COUNT(*), COALESCE(SUM(octets), 0) FROM photos", null);
+        if (p.moveToFirst()) {
+            photos = p.getInt(0);
+            octetsPhotos = p.getLong(1);
         }
+        p.close();
         try {
             JSONObject o = new JSONObject();
             o.put("chemin", fichier.getAbsolutePath());
             o.put("octets", fichier.exists() ? fichier.length() : 0);
             o.put("fiches", fiches);
             o.put("photos", photos);
+            o.put("octetsPhotos", octetsPhotos);
             return o.toString();
         } catch (JSONException e) {
             return "{}";

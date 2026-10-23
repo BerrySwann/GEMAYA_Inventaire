@@ -226,6 +226,13 @@ window.photoRecue = function (role, json) {
     photosFiche[role] = r;
   }
   majSlots();
+  /* les photos restent en memoire tant que le releve n'est pas enregistre */
+  const alertePhotos = document.getElementById('alerte-non-enregistre');
+  if (alertePhotos && indexEdition < 0) {
+    alertePhotos.innerHTML = '<b>Photos en memoire.</b> Elles ne sont rangees dans la base '
+      + "qu'a l'appui sur <b>Enregistrer le releve</b>. Si tu quittes cet ecran avant, elles sont perdues.";
+    alertePhotos.classList.remove('cache');
+  }
   const bouton = document.getElementById('bouton-lire');
   if (bouton) {
     bouton.disabled = !photoPlaque;
@@ -603,6 +610,13 @@ function nouvelEquipement(niveau, secteur, localisation) {
   photosAutres = {ensemble: false, detail: false};
   photosFiche = {plaque: null, ensemble: null, detail: null};
   majSlots();
+  /* les photos restent en memoire tant que le releve n'est pas enregistre */
+  const alertePhotos = document.getElementById('alerte-non-enregistre');
+  if (alertePhotos && indexEdition < 0) {
+    alertePhotos.innerHTML = '<b>Photos en memoire.</b> Elles ne sont rangees dans la base '
+      + "qu'a l'appui sur <b>Enregistrer le releve</b>. Si tu quittes cet ecran avant, elles sont perdues.";
+    alertePhotos.classList.remove('cache');
+  }
   const bouton = document.getElementById('bouton-lire');
   bouton.disabled = true;
   bouton.style.opacity = '.45';
@@ -664,7 +678,11 @@ function remplirConfigApp() {
     if (PONT && PONT.info) {
       try {
         const i = JSON.parse(PONT.info());
-        texte = i.fiches + ' equipement(s), ' + i.photos + ' photo(s) - ' + i.chemin + ' (' + i.octets + ' octets)';
+        const poids = (n) => n >= 1048576 ? (Math.round(n / 104857.6) / 10) + ' Mo'
+          : (Math.round(n / 102.4) / 10) + ' Ko';
+        texte = i.fiches + ' equipement(s), ' + i.photos + ' photo(s)'
+          + (i.octetsPhotos ? ' pour ' + poids(i.octetsPhotos) : '')
+          + ' - base de ' + poids(i.octets || 0) + ' (' + i.chemin + ')';
       } catch (e) { /* on garde le texte simple */ }
     }
     info.textContent = texte;
