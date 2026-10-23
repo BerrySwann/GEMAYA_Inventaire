@@ -53,15 +53,15 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);col
 .correction-actions button.danger{background:var(--blanc);color:var(--rouge);border-color:var(--rouge)}
 .correction-actions button.annuler{background:var(--blanc);color:var(--bleu-700);border-color:var(--bord-fort)}
 .conf-bloc{background:var(--blanc);border:1px solid var(--bord);border-radius:10px;padding:12px;margin-bottom:12px}
-.conf-bloc h5{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--bleu-700);font-weight:600;margin-bottom:9px;display:flex;justify-content:space-between;gap:8px;align-items:center}
-.conf-ligne{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--fond)}
+.conf-bloc h5{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--bleu-700);font-weight:600;margin-bottom:9px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.conf-ligne{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--fond)}
 .conf-ligne:last-of-type{border-bottom:0}
-.conf-ligne .nom{font-size:13px;color:var(--encre)}
-.conf-ligne .usage{font-size:10.5px;color:var(--muet);display:block}
+.conf-ligne .nom{font-size:11.5px;color:var(--encre)}
+.conf-ligne .usage{font-size:9.5px;color:var(--muet);display:block}
 .conf-actions{display:flex;gap:5px;flex-shrink:0}
-.conf-actions button{font:inherit;font-size:10.5px;font-weight:600;padding:6px 9px;border-radius:7px;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--bleu-700);cursor:pointer}
+.conf-actions button{font:inherit;font-size:9.5px;font-weight:600;padding:5px 7px;border-radius:7px;border:1px solid var(--bord-fort);background:var(--blanc);color:var(--bleu-700);cursor:pointer}
 .conf-actions button.danger{color:var(--rouge);border-color:var(--rouge)}
-.conf-ligne input.edition{flex:1;font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--bleu-500);border-radius:8px;min-height:38px}
+.conf-ligne input.edition{flex:1;font:inherit;font-size:12px;padding:7px 9px;border:1px solid var(--bleu-500);border-radius:8px;min-height:38px}
 .conf-ajout{display:flex;gap:6px;margin-top:10px}
 .conf-ajout input{flex:1;font:inherit;font-size:13px;padding:9px 11px;border:1px solid var(--bord-fort);border-radius:9px;min-height:40px}
 .conf-ajout button{font:inherit;font-size:12px;font-weight:600;padding:9px 12px;border-radius:9px;border:1px solid var(--bleu-700);background:var(--bleu-700);color:#fff;cursor:pointer}
@@ -114,6 +114,16 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);col
 #e-fiche .aide,#e-fiche .explique{font-size:10.5px}
 #e-fiche .champ{margin-bottom:11px}
 #e-fiche .sous-titre{font-size:11px}
+#e-config .champ label{font-size:11px}
+#e-config .champ input,#e-config .champ select{font-size:12.5px;min-height:38px;padding:8px 10px;padding-right:32px}
+#e-config .aide{font-size:10px}
+#e-config .conf-bloc{padding:10px;margin-bottom:10px}
+#e-config .conf-actions button{font-size:9.5px;padding:5px 7px;min-height:0}
+#e-config .ligne-select select,#e-config select{font-size:12.5px;min-height:38px;padding:8px 32px 8px 10px}
+#e-config .conf-ligne{padding:5px 0}
+#e-config .conf-ligne .nom{font-size:11px}
+#e-config .conf-ligne .usage{font-size:9px}
+#e-config .conf-ajout input,#e-config .conf-ajout button{font-size:11px;min-height:36px}
 .liste-recherche{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .liste-recherche button{font:inherit;font-size:11.5px;text-align:left;padding:9px 11px;border:1px solid var(--bord-fort);border-radius:8px;background:var(--blanc);cursor:pointer;color:var(--encre)}
 .liste-recherche button b{color:var(--bleu-700)}
