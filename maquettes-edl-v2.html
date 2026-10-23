@@ -135,6 +135,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--fond);col
 .etat-bouton[aria-pressed="true"][data-etat="correct"]{border-color:var(--bleu-500);background:var(--bleu-050);color:var(--bleu-700)}
 .etat-bouton[aria-pressed="true"][data-etat="vetuste"]{border-color:var(--ambre);background:var(--ambre-fond);color:var(--ambre)}
 .etat-bouton[aria-pressed="true"][data-etat="hors"]{border-color:var(--rouge);background:var(--rouge-fond);color:var(--rouge)}
+.etat-bouton[aria-pressed="true"][data-etat="remplacer"]{border-color:var(--ambre);background:var(--ambre-fond);color:var(--ambre)}
 .etat-bouton[aria-pressed="true"][data-etat="nonteste"]{border-color:var(--violet);background:var(--violet-fond);color:var(--violet)}
 .etat-bouton[aria-pressed="true"][data-etat="neuf"]{border-color:var(--vert);background:var(--vert-fond);color:var(--vert)}
 .etat-bouton[aria-pressed="true"][data-etat="saison"]{border-color:var(--ambre);background:var(--ambre-fond);color:var(--ambre)}
@@ -688,6 +689,7 @@ tbody tr:hover{background:var(--bleu-050)}
                 <button class="etat-bouton" data-etat="correct" aria-pressed="false" onclick="etatEquipement('correct', this)">Correct</button>
                 <button class="etat-bouton" data-etat="vetuste" aria-pressed="false" onclick="etatEquipement('vetuste', this)">Vetuste</button>
                 <button class="etat-bouton" data-etat="hors" aria-pressed="false" onclick="etatEquipement('hors', this)">Hors service</button>
+                <button class="etat-bouton" data-etat="remplacer" aria-pressed="false" onclick="etatEquipement('remplacer', this)">A remplacer</button>
                 <button class="etat-bouton" data-etat="nonteste" aria-pressed="false" onclick="etatEquipement('nonteste', this)">Non teste / inaccessible</button>
                 <button class="etat-bouton" data-etat="neuf" aria-pressed="false" onclick="etatEquipement('neuf', this)">Neuf ou recent</button>
                 <button class="etat-bouton" data-etat="saison" aria-pressed="false" onclick="etatEquipement('saison', this)">Arret saisonnier</button>
@@ -1226,7 +1228,7 @@ let indexEdition = -1;
 
 /* --- Etat du materiel : constat, independant du delai d'anomalie --- */
 const LIBELLES_ETAT = {
-  bon: 'Bon', correct: 'Correct', vetuste: 'Vetuste', hors: 'Hors service',
+  bon: 'Bon', correct: 'Correct', vetuste: 'Vetuste', hors: 'Hors service', remplacer: 'A remplacer',
   nonteste: 'Non teste', neuf: 'Neuf ou recent', saison: 'Arret saisonnier', travaux: 'Remplacement prevu'
 };
 const AIDE_ETAT_DEFAUT = "L'etat decrit le materiel lui-meme. Le niveau d'anomalie fixe le delai d'intervention : les deux sont independants.";
@@ -1259,6 +1261,14 @@ function etatEquipement(cle, bouton){
   document.querySelectorAll('.etat-bouton').forEach(b => b.setAttribute('aria-pressed', 'false'));
   bouton.setAttribute('aria-pressed', 'true');
   etatChoisi = cle;
+  /* un materiel a remplacer part par defaut en echeance d'un mois : le geste
+     courant sur un filtre, sans avoir a choisir le delai a chaque fois */
+  if(cle === 'remplacer'){
+    const delai = document.querySelector('.anomalie[data-niv="B"]');
+    if(delai && delai.getAttribute('aria-pressed') !== 'true'){
+      niveau('B', delai);
+    }
+  }
   majBadgeEtat();
 }
 
