@@ -93,13 +93,34 @@ def lire(chemin):
     return lignes
 
 
+def numeroter_localisations(lignes):
+    """Numérote les localisations 01, 02... dans l'ordre du fichier, secteur par secteur.
+
+    Sans cela les listes se retrouvent dans l'ordre alphabétique, où « Acceuil »
+    précède « Entrée » alors que le client visite l'entrée en premier.
+    """
+    rangs = {}
+    ordre = {}
+    for ligne in lignes:
+        localisation = ligne[3]
+        if not localisation:
+            continue
+        secteur = ligne[1]
+        cle = (secteur, localisation)
+        if cle not in rangs:
+            ordre[secteur] = ordre.get(secteur, 0) + 1
+            rangs[cle] = ordre[secteur]
+        ligne[3] = "%02d - %s" % (rangs[cle], localisation)
+    return lignes
+
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__)
         raise SystemExit(2)
     source = sys.argv[1]
     sortie = sys.argv[2] if len(sys.argv) > 2 else "inventaire.csv"
-    lignes = lire(source)
+    lignes = numeroter_localisations(lire(source))
     with open(sortie, "w", encoding="utf-8-sig", newline="") as f:
         ecrivain = csv.writer(f, delimiter=";", quoting=csv.QUOTE_MINIMAL)
         ecrivain.writerow(ENTETES)
