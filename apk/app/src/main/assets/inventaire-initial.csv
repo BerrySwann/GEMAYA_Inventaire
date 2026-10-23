@@ -83,13 +83,13 @@ PALAIS NIKAÎA;ADMINISTRATION;;04 - Bureau 4;NIVEAU 0 / RDC;ELEC;8;PC (Qt ~ appr
 PALAIS NIKAÎA;ADMINISTRATION;;04 - Bureau 4;NIVEAU 0 / RDC;AMENAGEMENT INTERIEUR;5;Stores vénitiens;;;;;;;;;;;;;;
 PALAIS NIKAÎA;ADMINISTRATION;;05 - Bureau 4 salle réunion;NIVEAU 0 / RDC;CVC;2;cassette plafonnière;AERMEC;Série FCX;;;;5,5 kW;;;;;;2001;;2026-10
 PALAIS NIKAÎA;ADMINISTRATION;;05 - Bureau 4 salle réunion;NIVEAU 0 / RDC;ECL;3;boitier x4 néons 18w;;;;;216;;;;;;;;;2026-10
-PALAIS NIKAÎA;ADMINISTRATION;;06 - Circulation et hall;;CVC;6;convecteur électrique;AERMEC;Série FCX;;;;5,75 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;ADMINISTRATION;;07 - billeterie;;CVC;1;ventilo convecteur;AERMEC;Série FCX;;;;0,87 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;ADMINISTRATION;;08 - Sanitaire personnel + local entretien;;CVC;1;radiateur électrique;Atlantic Electronic;;;;;1 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;ADMINISTRATION;;09 - ADMINITRATION;;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;ADMINISTRATION;;06 - Circulation et hall;NIVEAU 0 / RDC;CVC;6;convecteur électrique;AERMEC;Série FCX;;;;5,75 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;ADMINISTRATION;;07 - billeterie;NIVEAU 0 / RDC;CVC;1;ventilo convecteur;AERMEC;Série FCX;;;;0,87 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;ADMINISTRATION;;08 - Sanitaire personnel + local entretien;NIVEAU 0 / RDC;CVC;1;radiateur électrique;Atlantic Electronic;;;;;1 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;ADMINISTRATION;;09 - ADMINITRATION;NIVEAU 0 / RDC;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
 PALAIS NIKAÎA;ADMINISTRATION;;10 - Hall administration;NIVEAU 0 / RDC;ECL;8;spot 50w;;;;;400;;;;;;;;;2026-10
 PALAIS NIKAÎA;ADMINISTRATION;;10 - Hall administration;NIVEAU 0 / RDC;ECL;17;lampe 40w;;;;;680;;;;;;;;;2026-10
-PALAIS NIKAÎA;ADMINISTRATION;;11 - Petit bureau privé;;ECL;2;boitier x4 néons 18w;;;;;144;;;;;;;;;2026-10
+PALAIS NIKAÎA;ADMINISTRATION;;11 - Petit bureau privé;NIVEAU 0 / RDC;ECL;2;boitier x4 néons 18w;;;;;144;;;;;;;;;2026-10
 PALAIS NIKAÎA;ADMINISTRATION;;12 - Administration;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire VDI administration;;;2026-10
 PALAIS NIKAÎA;ADMINISTRATION;;13 - Billetterie;NIVEAU 0 / RDC;CVC;2;Gainable (avec filtre + télécommande + soufflage/reprise);;;;;;;;;;;;;;
 PALAIS NIKAÎA;ADMINISTRATION;;13 - Billetterie;NIVEAU 0 / RDC;CVC;1;Bouche VMC;;;;;;;;;;;;;;
@@ -182,8 +182,8 @@ PALAIS NIKAÎA;LOCAL TECHNIQUE CTA NORD;;01 - Local technique R1;NiVEAU 1;CVC;1;
 PALAIS NIKAÎA;LOCAL TECHNIQUE CTA NORD;;01 - Local technique R1;NIVEAU 1;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
 PALAIS NIKAÎA;LOCAL TECHNIQUE CTA SUD;;01 - Local technique R1;NiVEAU 1;CVC;1;CTA 02 Salle 8000 uniquement;;;;;28500;;2 vitesses : 30 500 / 71 000 m3/h;;;;CTA AERMEC NCT P ventilateur : 28,5 kW;2001;;2026-10
 PALAIS NIKAÎA;LOCAL TECHNIQUE CTA SUD;;01 - Local technique R1;NiVEAU 1;CVC;1;CTA 04 Débit d’air «orientable» par jeux de registres motorisés vers salle 8000 et / ou hall et / ou salle 700;;;;;14000;;30 000 m3/h;;;;CTA AERMEC NCT P ventilateur : 14 kW;2001;;2026-10
-PALAIS NIKAÎA;LOCAL TECHNIQUE CTA SUD;;02 - LT SUD;;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;LOCAL TECHNIQUE CTA SUD;;02 - LT SUD;;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;LOCAL TECHNIQUE CTA SUD;;02 - LT SUD;NiVEAU 1;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;LOCAL TECHNIQUE CTA SUD;;02 - LT SUD;NiVEAU 1;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
 PALAIS NIKAÎA;LOGES / BACKSTAGE;;01 - Prod 1;NIVEAU 0 / RDC;CVC;1;Gainable (avec filtre + télécommande + soufflage/reprise);;;;;;;;;;;;;;
 PALAIS NIKAÎA;LOGES / BACKSTAGE;;01 - Prod 1;NIVEAU 0 / RDC;ECL;1;Pavé LED 600x600;;;;;;;;;;;;;;
 PALAIS NIKAÎA;LOGES / BACKSTAGE;;01 - Prod 1;NIVEAU 0 / RDC;ELEC;1;Interrupteur;LEGRAND;MOSAÏC;;;;;;;;;;;;
@@ -244,215 +244,215 @@ PALAIS NIKAÎA;LOGES / BACKSTAGE;;11 - Espace détente;NIVEAU 0 / RDC;ECL;4;Lumi
 PALAIS NIKAÎA;LOGES / BACKSTAGE;;11 - Espace détente;NIVEAU 0 / RDC;ELEC;2;Interrupteur;LEGRAND;MOSAÏC;;;;;;;;;;;;
 PALAIS NIKAÎA;LOGES / BACKSTAGE;;11 - Espace détente;NIVEAU 0 / RDC;ELEC;2;BP (bouton-poussoir);LEGRAND;MOSAÏC;;;;;;;;;;;;
 PALAIS NIKAÎA;LOGES / BACKSTAGE;;11 - Espace détente;NIVEAU 0 / RDC;ELEC;3;PC (Qt ~ approximatif);LEGRAND;MOSAÏC;;;;;;;;;;;;
-PALAIS NIKAÎA;;;;;CVC;1;Extraction bureau;;;;;260;;650 m3/h;;;;Espace ventil CL 500;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Extraction diverse;;;;;292;;730 m3/h;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Extraction générale administration;;;;;1112;;2 780 m3/h;;;;CL 3300;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Extraction Loge et sanitaire S700;;;;;108;;270 m3/h;;;;systemair;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Extraction sanitaires et loges;;;;;600;;1500 m3/h;;;;Espace ventil CL1400;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;2;Chaudière (fonctionnelle mais utilisée à la marge depuis mise en service des pompes à chaleurs);;;;;;584 kW;;;;;Hoval Cosmo 585;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;2;Pompe charge chaudière;;;;;550;;26 m3/h;;;;Grundfoss LM 65.125/133;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Compensation cuisine;;;;;600;;1500 m3/h;;;;Espace ventil CL1400;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Compensation hotte cuisine;;;;;800;;2000 m3/h;;;;Espace ventil CL 1 800;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Insufflation locaux intérieur divers (régie, PC…);;;;;252;;630 m3/h;;;;Espace ventil CL 500;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Insufflation patio;;;;;140;;350 m3/h;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Insufflation Vestiaires et petits locaux (régisseur, PC);;;;;156;;390 m3/h;;;;Espace ventil ?;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Locaux techniques machinerie;;;;;360;;900 m3/h;;;;Systemair KV315L;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Pompe réseau chaud;;;;;18500;;126 m3/h;;;;2 x grundfoss NK 125.250;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;Régulateur;;;;;150;;;;;;Hoval;2001;;2026-10
-PALAIS NIKAÎA;;;;;CVC;1;VE transfo;;;;;4800;;12 000 m3/h;;;;Refroidissement transfo;2001;;2026-10
-PALAIS NIKAÎA;;;;;PB;1;Adoucisseur;;;;;50;;;;;;permo SC9000;2001;;2026-10
-PALAIS NIKAÎA;;;;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire JDB 400 A (départ spectacle extérieur);;;2026-10
-PALAIS NIKAÎA;;;;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD05;;;2026-10
-PALAIS NIKAÎA;;;;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire CT03;;;2026-10
-PALAIS NIKAÎA;;;;;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire éclairage sécurité;;;2026-10
-PALAIS NIKAÎA;;;;;PB;1;Ballon ECS élec;;;;;1600;;;;;;50 litres (bar s700);2001;;2026-10
-PALAIS NIKAÎA;;;;;PB;1;Ballon ECS élec;;;;;1800;;;;;;200 litres (sanit s700);2001;;2026-10
-PALAIS NIKAÎA;;;;;PB;1;cordon chauffant boucle ECS;;;;;2400;;;;;;raychem;2001;;2026-10
-PALAIS NIKAÎA;;;;;PB;1;mitigeur;;;;;0;;;;;;trubert eurotherm;2001;;2026-10
-PALAIS NIKAÎA;;;;;PB;1;préparateur ECS gaz (cuisine et locaux divers);;;;;400;;;;;;charot genergaz G70 + pompe;2001;;2026-10
-PALAIS NIKAÎA;;;;;PB;1;traceur électrique;;;;;2400;;;;;;réseau ECS;2001;;2026-10
-PALAIS NIKAÎA;;;01 - Catering / restaurant;;CVC;2;Unité gainable;;;;;;36 kW;;;;;CTA AERMEC UTF;2001;;2026-10
-PALAIS NIKAÎA;;;02 - patio;;CVC;1;unité gainable;;;;;;18 kW;;;;;CTA AERMEC UTF;2001;;2026-10
-PALAIS NIKAÎA;;;03 - Production 1 / 2;;CVC;2;ventilo convecteur;AERMEC;Série FCX;;;;2,7 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;04 - Sanitaire homme / femme;;CVC;2;convecteur électrique;Atlantic Electronic;;;;;1 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;04 - Sanitaire homme / femme;;ECL;4x2 salles;plafonnier 50w;;;;;400;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;05 - SDB loge 2/3;NIVEAU 0 / RDC;CVC;2;convecteur électrique;Atlantic Electronic;;;;;1 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;06 - échauffement;;CVC;2;ventilo convecteur;AERMEC;Série FCX;;;;5,4 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;07 - recette;;CVC;1;ventilo convecteur;AERMEC;Série FCX;;;;0,55 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;08 - Accueil guichet;;CVC;1;cassette plafonnière;AERMEC;Série FCX;;;;1,46 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;08 - Accueil guichet;;ECL;3;spot 50w;;;;;150;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;08 - Accueil guichet;;ECL;1;boitier x4 néons 18w;;;;;72;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;09 - vestiaire;;CVC;1;radiateur électrique;Atlantic Electronic;;;;;1,5 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;09 - vestiaire;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;09 - vestiaire;;ECL;2;plafonnier 50w;;;;;100;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;10 - vestiaire transformé en débarras;;CVC;1;radiateur électrique;Atlantic Electronic;;;;;1,5 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;10 - vestiaire transformé en débarras;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;10 - vestiaire transformé en débarras;;ECL;2;plafonnier 50w;;;;;100;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;11 - loge collective;;CVC;1;ventilo convecteur;AERMEC;Série FCX;;;;4,64 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;12 - Circulation loge R+1;NIVEAU 1;CVC;1;radiateur électrique;Atlantic Electronic;;;;;2 kW;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;12 - Circulation loge R+1;NIVEAU 1;ECL;4;hublot 40w;;;;;160;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;12 - Circulation loge R+1;NIVEAU 1;ECL;17;petit néon;;;;;187;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;13 - Loge S700;;CVC;1;Split System;;;;;960;2,5 kW;;;;;réversible;2001;;2026-10
-PALAIS NIKAÎA;;;13 - Loge S700;;CVC;1;Split System;;;;;960;2,5 kW;;;;;réversible;2001;;2026-10
-PALAIS NIKAÎA;;;14 - cuisine (préparation froide);;CVC;1;Split System;;;;;960;2,5 kW;;;;;froid seul;2001;;2026-10
-PALAIS NIKAÎA;;;15 - cuisine (local poubelle);;CVC;1;Split System;;;;;960;2,5 kW;;;;;froid seul;2001;;2026-10
-PALAIS NIKAÎA;;;16 - Local technique R1;NiVEAU 1;CVC;1;Extracteurs des CTA;;;;;54000;;3 extracteurs à 2 vitesses 35 000/70 000 m3/h;;;;3 x AERMEC 18 kW;2001;;2026-10
-PALAIS NIKAÎA;;;17 - LT exploitation;;CVC;1;Supervision;;;;;;;;;;;;2023;;2026-10
-PALAIS NIKAÎA;;;18 - CHAUFFERIE;;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;19 - SALLE A MANGER;;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;20 - Patio circulation;;ECL;16;spot 50w;;;;;800;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;20 - Patio circulation;;ECL;29;lampe 40w;;;;;1160;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;21 - Catering;;ECL;60;lampe 40w;;;;;2400;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;22 - Espace détente;;ECL;28;lampe éco 18w;;;;;504;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;23 - Vestiaire douche homme / femme;;ECL;4x2 salles;spot 50w;;;;;400;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;23 - Vestiaire douche homme / femme;;ECL;2 salles;boitier 2 néons 54w;;;;;216;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;24 - Circulation;;ECL;6;hublot 40w;;;;;240;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;24 - Circulation;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;25 - Escalier vers R+1 et circulation;NIVEAU 1;ECL;7;hublot 40w;;;;;280;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;26 - Sanitaire personnel + local entretien;;ECL;1+1+1;hublot 40w;;;;;120;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;27 - Bureau accueil + hall entrée;;ECL;4;boitier x4 néons 18w;;;;;288;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;27 - Bureau accueil + hall entrée;;ECL;6 entrée;lampe 40w;;;;;240;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;27 - Bureau accueil + hall entrée;;ECL;1;signal sortie;;;;;8;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;28 - Circulation cuisine;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;29 - Local plonge - laverie;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;30 - Local poubelle;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;31 - Cuisine - cuisson;;ECL;3;néon 54w;;;;;162;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;31 - Cuisine - cuisson;;ECL;3 hotte;b;;;;;162;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;32 - local plonge - batterie;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;33 - local plonge - légumerie;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;34 - local réfrigérateur - réserve;;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;35 - loge 1 salle 700;;ECL;2;boitier 2x18w;;;;;72;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;36 - loge 2 salle 700;;ECL;2;boitier 2x18w;;;;;72;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;37 - sanitaire 1 salle 700;;ECL;6;hublot 40w;;;;;240;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;38 - sanitaire 2 salle 700;;ECL;6;hublot 40w;;;;;240;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;39 - circulation;;ECL;13;lampe 40w;;;;;520;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;40 - salle 700+bar;;ECL;8;spot 50w;;;;;400;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;40 - salle 700+bar;;ECL;1;néon2x54w;;;;;108;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;40 - salle 700+bar;;ECL;25;lampe 2;;;;;1250;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;40 - salle 700+bar;;ECL;36;lampe 40w;;;;;1440;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;41 - sas S700;;ECL;8;spot 50w;;;;;400;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;42 - infirmerie;;ECL;5;boitier x4 néons 18w;;;;;360;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;43 - lt/ transfo/ sas;;ECL;10;néon 2 x 54w;;;;;1080;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;44 - dépôt;;ECL;13;néon 2 x 54w;;;;;1404;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;45 - sas/circul dépôt;;ECL;6;néon 2 x 54w;;;;;648;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;46 - boutique hall;;ECL;18;spot 50w;;;;;900;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;46 - boutique hall;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD 03 bou 2;;;2026-10
-PALAIS NIKAÎA;;;46 - boutique hall;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD Bou 1;;;2026-10
-PALAIS NIKAÎA;;;47 - éclairage façade;;ECL;20;projecteur;;;;;8000;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;48 - circulation arrière hall;;ECL;74;lampe 40w;;;;;2960;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;49 - 4 sanitaires hall;;ECL;22;hublot 40w;;;;;880;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;49 - 4 sanitaires hall;;ECL;16;néon 2 x 54w;;;;;1728;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;50 - locaux annexes hall;;ECL;7;néon 2 x 54w;;;;;756;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;51 - hall partie haute;;ECL;239;lampe 40w;;;;;9560;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;52 - circulation vers étage hall;;ECL;16;lampe 40w;;;;;640;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;53 - vide sanitaire et galerie technique;NIVEAU -1;ECL;49;néon 2 x 54w;;;;;5292;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;54 - salle 8000;;ECL;112;projecteur;;;;;84000;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;55 - salle 8000 (périphérie tec);;ECL;36;néon 2 x 54w;;;;;1944;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;56 - éclairage passerelle salle 8000;;ECL;74;spot 50w;;;;;3700;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;57 - local tec 1;;ECL;21;néon 2 x 54w;;;;;2268;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;58 - local tec 2;;ECL;19;néon 2 x 54w;;;;;2052;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;59 - Poste central sécurité incendie;;ECL;1;spot 50w;;;;;50;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;60 - Eclairage périphérique bâtiment;;ECL;10;"éclairage ""boules"" avec ampoule éco";;;;;160;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;60 - Eclairage périphérique bâtiment;;ECL;8;éclairage halogène;;;;;800;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;61 - local transfo;;CFO;1;Disjoncteur principal;;;;;;;;;;;3P3D 2000 A M20N1;2001;;2026-10
-PALAIS NIKAÎA;;;61 - local transfo;;CFO;1;permuteur source alimen GE;;;;;;;;;;;PASA;2001;;2026-10
-PALAIS NIKAÎA;;;61 - local transfo;;CFO;1;Transformateur;;;;;;;;;;;3P33D 1600 A M16N1;2001;;2026-10
-PALAIS NIKAÎA;;;61 - local transfo;;CFO;1;"Transformateur ""bâtiment""";;;;;;;;;;;Transformateur sec Harmony 1000 kVA;2001;;2026-10
-PALAIS NIKAÎA;;;61 - local transfo;;CFO;1;"Transformateur ""tournée""";;;;;;;;;;;Transformateur sec Harmony 1250 kVA;2001;;2026-10
-PALAIS NIKAÎA;;;62 - local éclairge de sécurité;;CFO;;A.E.S.;;;;;;;;;;;;2001;;2026-10
-PALAIS NIKAÎA;;;62 - local éclairge de sécurité;;CFO;1;TGBT Secours;;;;;;;;;;;Voir schéma en annexe;2001;;2026-10
-PALAIS NIKAÎA;;;62 - local éclairge de sécurité;;CFO;1;Transformateur;;;;;;;;;;;Transformateur sec Harmony 500 kVA;2001;;2026-10
-PALAIS NIKAÎA;;;63 - local T.G.B.T.;;CFO;;Batterie condensateur;;;;;;;;;;;Voir DOE en annexe;2001;;2026-10
-PALAIS NIKAÎA;;;63 - local T.G.B.T.;;CFO;1;TGBT Bâtiment;;;;;;;;;;;Voir schéma en annexe;2001;;2026-10
-PALAIS NIKAÎA;;;63 - local T.G.B.T.;;CFO;1;TGBT Désenfumage;;;;;;;;;;;Voir DOE en annexe;2001;;2026-10
-PALAIS NIKAÎA;;;63 - local T.G.B.T.;;CFO;1;TGBT tournée;;;;;;;;;;;Voir schéma en annexe;2001;;2026-10
-PALAIS NIKAÎA;;;63 - local T.G.B.T.;;CFO;1;Transfo sonorisation;;;;;;;;;;;Voir DOE en annexe;2001;;2026-10
-PALAIS NIKAÎA;;;64 - cuisine;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD06;;;2026-10
-PALAIS NIKAÎA;;;65 - Bar 2;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD 04 Bar 2;;;2026-10
-PALAIS NIKAÎA;;;66 - Hall;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AG 01 hall;;;2026-10
-PALAIS NIKAÎA;;;66 - Hall;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire VDI hall;;;2026-10
-PALAIS NIKAÎA;;;66 - Hall;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire CT 01;;;2026-10
-PALAIS NIKAÎA;;;66 - Hall;;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Sono hall;;;2026-10
-PALAIS NIKAÎA;;;66 - Hall;;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Sono VDI;;;2026-10
-PALAIS NIKAÎA;;;66 - Hall;;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Ascenseur hand.;;;2026-10
-PALAIS NIKAÎA;;;67 - bar 1;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD Bar 1;;;2026-10
-PALAIS NIKAÎA;;;68 - salle 700;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire GD 700;;;2026-10
-PALAIS NIKAÎA;;;68 - salle 700;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire VDI 700;;;2026-10
-PALAIS NIKAÎA;;;68 - salle 700;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AG 700;;;2026-10
-PALAIS NIKAÎA;;;68 - salle 700;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire CT 02;;;2026-10
-PALAIS NIKAÎA;;;68 - salle 700;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire SC 700;;;2026-10
-PALAIS NIKAÎA;;;69 - Passerelle;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire Gradateur gauche;;;2026-10
-PALAIS NIKAÎA;;;69 - Passerelle;;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire gradateur droite;;;2026-10
-PALAIS NIKAÎA;;;69 - Passerelle;;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 06;;;2026-10
-PALAIS NIKAÎA;;;69 - Passerelle;;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 08;;;2026-10
-PALAIS NIKAÎA;;;69 - Passerelle;;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 07;;;2026-10
-PALAIS NIKAÎA;;;69 - Passerelle;;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 09;;;2026-10
-PALAIS NIKAÎA;;;69 - Passerelle;;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 11;;;2026-10
-PALAIS NIKAÎA;;;70 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 13;;;2026-10
-PALAIS NIKAÎA;;;70 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 13 bis;;;2026-10
-PALAIS NIKAÎA;;;70 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 14;;;2026-10
-PALAIS NIKAÎA;;;70 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 04;;;2026-10
-PALAIS NIKAÎA;;;70 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 02;;;2026-10
-PALAIS NIKAÎA;;;70 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 01;;;2026-10
-PALAIS NIKAÎA;;;70 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 12;;;2026-10
-PALAIS NIKAÎA;;;71 - galerie technique;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire Scen galerie;;;2026-10
-PALAIS NIKAÎA;;;72 - Passerelle / Niv 12,30;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 07;;;2026-10
-PALAIS NIKAÎA;;;72 - Passerelle / Niv 12,30;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 06;;;2026-10
-PALAIS NIKAÎA;;;72 - Passerelle / Niv 12,30;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 08;;;2026-10
-PALAIS NIKAÎA;;;72 - Passerelle / Niv 12,30;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 09;;;2026-10
-PALAIS NIKAÎA;;;72 - Passerelle / Niv 12,30;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 10;;;2026-10
-PALAIS NIKAÎA;;;72 - Passerelle / Niv 12,30;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 11;;;2026-10
-PALAIS NIKAÎA;;;72 - Passerelle / Niv 12,30;;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire SC PASS et rail canalis;;;2026-10
-PALAIS NIKAÎA;;;73 - Salle 700;;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire sono 700;;;2026-10
-PALAIS NIKAÎA;;;74 - local auto com;;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Auto Com;;;2026-10
-PALAIS NIKAÎA;;;75 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire sono salle;;;2026-10
-PALAIS NIKAÎA;;;75 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 01;;;2026-10
-PALAIS NIKAÎA;;;75 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 12;;;2026-10
-PALAIS NIKAÎA;;;75 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 12 bis;;;2026-10
-PALAIS NIKAÎA;;;75 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 13;;;2026-10
-PALAIS NIKAÎA;;;75 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire son 700;;;2026-10
-PALAIS NIKAÎA;;;76 - régie;;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 05;;;2026-10
-PALAIS NIKAÎA;;;77 - Niv 1;NIVEAU 1;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 03;;;2026-10
-PALAIS NIKAÎA;;;78 - Niv 2;NIVEAU 2;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 04;;;2026-10
-PALAIS NIKAÎA;;;79 - Niv 3;NIVEAU 3;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 02;;;2026-10
-PALAIS NIKAÎA;;;80 - Niv 4;NIVEAU 4;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire son galerie;;;2026-10
-PALAIS NIKAÎA;;;81 - divers;;CFO;Ens.;Rail Canalis;;;;;;;;;;;rail canalis;;;2026-10
-PALAIS NIKAÎA;;;82 - passerelle;;SSI;3;détecteur de fumée par aspiration;;;;;;;;;;;VESDA LASER PLUS;2001;;2026-10
-PALAIS NIKAÎA;;;83 - Hall déambulatoire;;SSI;3;détecteur de fumée par aspiration;;;;;;;;;;;VESDA LASER PLUS;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;2;A.E.S. Alimentation d'énergie secourue;;;;;;;;;;;AES 24 V;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;20;avertisseurs sonore;;;;;;;;;;;Universal DET FAVERTBC24/48;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Centrale de détection;;;;;;;;;;;EUROPA 3000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Centrale de mise en sécurité incendie;;;;;;;;;;;TABCMSII10;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;35;Clapets coupe feu;;;;;;;;;;;divers;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;64;Déclencheurs manuel;;;;;;;;;;;Universal DET DM 3001;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;190;détecteur de fumée;;;;;;;;;;;détecteur ionique Universal DET EI 3000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;21;détecteur de fumée;;;;;;;;;;;détecteur thermovelocimétrique LT;;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;63;détecteur de fumée;;;;;;;;;;;détecteur optique Universal DET EO 3000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;9;détecteur de fumée;;;;;;;;;;;détecteur thermique;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;20;indicateur d'action;;;;;;;;;;;Universal DET FAVERTBC24/48;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;RIA;10;Robinet d'Incendie Armé;;;;;;;;;;;EUR5H TYPE P;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;3;Sonorisation de sécurité;;;;;;;;;;;Amplificateur QSC 2 x 1100 W;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Amplificateur QSC Bittner XV 400;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;2;Sonorisation de sécurité;;;;;;;;;;;Equaliser graphique Yamaha Q2015;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;51;Sonorisation de sécurité;;;;;;;;;;;Enceinte terminale 100 Volts;2001;;2026-10
-PALAIS NIKAÎA;;;84 - général;;SSI;Ens.;Ventouse issue de secours;;;;;;;;;;;Universal DET Kit Ventis;2001;;2026-10
-PALAIS NIKAÎA;;;85 - Extérieur;;DIVERS;1;séparateur d'hydrocarbures;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;86 - intérieur sous sol;;DIVERS;1;pompe relevage;;;;;;;;;;;modèle ?;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;22;Projecteur eclairage sécurité;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;38;Bloc de secours batterie centrale, ambiance;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;7;Projecteur 150W Hall;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;1;Projecteur 400W Hall;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;20;Projecteur 400W Hall;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;21;Projecteur 70W-12° Hall;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;12;Projecteur Hall avec filtre 400W;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;20;Projecteur Hall avec fitre 150W;;;;;;;;;;;;;;2026-10
-PALAIS NIKAÎA;;;87 - Général Interieur;;ELC;112;Projecteur IDE 1000W GDE. Salle;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Extraction bureau;;;;;260;;650 m3/h;;;;Espace ventil CL 500;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Extraction diverse;;;;;292;;730 m3/h;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Extraction générale administration;;;;;1112;;2 780 m3/h;;;;CL 3300;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Extraction Loge et sanitaire S700;;;;;108;;270 m3/h;;;;systemair;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Extraction sanitaires et loges;;;;;600;;1500 m3/h;;;;Espace ventil CL1400;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;2;Chaudière (fonctionnelle mais utilisée à la marge depuis mise en service des pompes à chaleurs);;;;;;584 kW;;;;;Hoval Cosmo 585;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;2;Pompe charge chaudière;;;;;550;;26 m3/h;;;;Grundfoss LM 65.125/133;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Compensation cuisine;;;;;600;;1500 m3/h;;;;Espace ventil CL1400;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Compensation hotte cuisine;;;;;800;;2000 m3/h;;;;Espace ventil CL 1 800;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Insufflation locaux intérieur divers (régie, PC…);;;;;252;;630 m3/h;;;;Espace ventil CL 500;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Insufflation patio;;;;;140;;350 m3/h;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Insufflation Vestiaires et petits locaux (régisseur, PC);;;;;156;;390 m3/h;;;;Espace ventil ?;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Locaux techniques machinerie;;;;;360;;900 m3/h;;;;Systemair KV315L;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Pompe réseau chaud;;;;;18500;;126 m3/h;;;;2 x grundfoss NK 125.250;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;Régulateur;;;;;150;;;;;;Hoval;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CVC;1;VE transfo;;;;;4800;;12 000 m3/h;;;;Refroidissement transfo;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;PB;1;Adoucisseur;;;;;50;;;;;;permo SC9000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire JDB 400 A (départ spectacle extérieur);;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD05;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire CT03;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire éclairage sécurité;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;PB;1;Ballon ECS élec;;;;;1600;;;;;;50 litres (bar s700);2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;PB;1;Ballon ECS élec;;;;;1800;;;;;;200 litres (sanit s700);2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;PB;1;cordon chauffant boucle ECS;;;;;2400;;;;;;raychem;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;PB;1;mitigeur;;;;;0;;;;;;trubert eurotherm;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;PB;1;préparateur ECS gaz (cuisine et locaux divers);;;;;400;;;;;;charot genergaz G70 + pompe;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;01 - Localisation non precise;NIVEAU 0 / RDC;PB;1;traceur électrique;;;;;2400;;;;;;réseau ECS;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;02 - Catering / restaurant;NIVEAU 0 / RDC;CVC;2;Unité gainable;;;;;;36 kW;;;;;CTA AERMEC UTF;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;03 - patio;NIVEAU 0 / RDC;CVC;1;unité gainable;;;;;;18 kW;;;;;CTA AERMEC UTF;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;04 - Production 1 / 2;NIVEAU 0 / RDC;CVC;2;ventilo convecteur;AERMEC;Série FCX;;;;2,7 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;05 - Sanitaire homme / femme;NIVEAU 0 / RDC;CVC;2;convecteur électrique;Atlantic Electronic;;;;;1 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;05 - Sanitaire homme / femme;NIVEAU 0 / RDC;ECL;4x2 salles;plafonnier 50w;;;;;400;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;06 - SDB loge 2/3;NIVEAU 0 / RDC;CVC;2;convecteur électrique;Atlantic Electronic;;;;;1 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;07 - échauffement;NIVEAU 0 / RDC;CVC;2;ventilo convecteur;AERMEC;Série FCX;;;;5,4 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;08 - recette;NIVEAU 0 / RDC;CVC;1;ventilo convecteur;AERMEC;Série FCX;;;;0,55 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;09 - Accueil guichet;NIVEAU 0 / RDC;CVC;1;cassette plafonnière;AERMEC;Série FCX;;;;1,46 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;09 - Accueil guichet;NIVEAU 0 / RDC;ECL;3;spot 50w;;;;;150;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;09 - Accueil guichet;NIVEAU 0 / RDC;ECL;1;boitier x4 néons 18w;;;;;72;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;10 - vestiaire;NIVEAU 0 / RDC;CVC;1;radiateur électrique;Atlantic Electronic;;;;;1,5 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;10 - vestiaire;NIVEAU 0 / RDC;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;10 - vestiaire;NIVEAU 0 / RDC;ECL;2;plafonnier 50w;;;;;100;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;11 - vestiaire transformé en débarras;NIVEAU 0 / RDC;CVC;1;radiateur électrique;Atlantic Electronic;;;;;1,5 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;11 - vestiaire transformé en débarras;NIVEAU 0 / RDC;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;11 - vestiaire transformé en débarras;NIVEAU 0 / RDC;ECL;2;plafonnier 50w;;;;;100;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;12 - loge collective;NIVEAU 0 / RDC;CVC;1;ventilo convecteur;AERMEC;Série FCX;;;;4,64 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;13 - Circulation loge R+1;NIVEAU 1;CVC;1;radiateur électrique;Atlantic Electronic;;;;;2 kW;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;13 - Circulation loge R+1;NIVEAU 1;ECL;4;hublot 40w;;;;;160;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;13 - Circulation loge R+1;NIVEAU 1;ECL;17;petit néon;;;;;187;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;14 - Loge S700;NIVEAU 1;CVC;1;Split System;;;;;960;2,5 kW;;;;;réversible;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;14 - Loge S700;NIVEAU 1;CVC;1;Split System;;;;;960;2,5 kW;;;;;réversible;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;15 - cuisine (préparation froide);NIVEAU 1;CVC;1;Split System;;;;;960;2,5 kW;;;;;froid seul;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;16 - cuisine (local poubelle);NIVEAU 1;CVC;1;Split System;;;;;960;2,5 kW;;;;;froid seul;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;17 - Local technique R1;NiVEAU 1;CVC;1;Extracteurs des CTA;;;;;54000;;3 extracteurs à 2 vitesses 35 000/70 000 m3/h;;;;3 x AERMEC 18 kW;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;18 - LT exploitation;NiVEAU 1;CVC;1;Supervision;;;;;;;;;;;;2023;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;19 - CHAUFFERIE;NiVEAU 1;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;20 - SALLE A MANGER;NiVEAU 1;CVC;1;Armoire électrique CVC;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;21 - Patio circulation;NiVEAU 1;ECL;16;spot 50w;;;;;800;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;21 - Patio circulation;NiVEAU 1;ECL;29;lampe 40w;;;;;1160;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;22 - Catering;NiVEAU 1;ECL;60;lampe 40w;;;;;2400;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;23 - Espace détente;NiVEAU 1;ECL;28;lampe éco 18w;;;;;504;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;24 - Vestiaire douche homme / femme;NiVEAU 1;ECL;4x2 salles;spot 50w;;;;;400;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;24 - Vestiaire douche homme / femme;NiVEAU 1;ECL;2 salles;boitier 2 néons 54w;;;;;216;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;25 - Circulation;NiVEAU 1;ECL;6;hublot 40w;;;;;240;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;25 - Circulation;NiVEAU 1;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;26 - Escalier vers R+1 et circulation;NIVEAU 1;ECL;7;hublot 40w;;;;;280;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;27 - Sanitaire personnel + local entretien;NIVEAU 1;ECL;1+1+1;hublot 40w;;;;;120;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;28 - Bureau accueil + hall entrée;NIVEAU 1;ECL;4;boitier x4 néons 18w;;;;;288;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;28 - Bureau accueil + hall entrée;NIVEAU 1;ECL;6 entrée;lampe 40w;;;;;240;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;28 - Bureau accueil + hall entrée;NIVEAU 1;ECL;1;signal sortie;;;;;8;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;29 - Circulation cuisine;NIVEAU 1;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;30 - Local plonge - laverie;NIVEAU 1;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;31 - Local poubelle;NIVEAU 1;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;32 - Cuisine - cuisson;NIVEAU 1;ECL;3;néon 54w;;;;;162;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;32 - Cuisine - cuisson;NIVEAU 1;ECL;3 hotte;b;;;;;162;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;33 - local plonge - batterie;NIVEAU 1;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;34 - local plonge - légumerie;NIVEAU 1;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;35 - local réfrigérateur - réserve;NIVEAU 1;ECL;1;néon 54w;;;;;54;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;36 - loge 1 salle 700;NIVEAU 1;ECL;2;boitier 2x18w;;;;;72;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;37 - loge 2 salle 700;NIVEAU 1;ECL;2;boitier 2x18w;;;;;72;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;38 - sanitaire 1 salle 700;NIVEAU 1;ECL;6;hublot 40w;;;;;240;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;39 - sanitaire 2 salle 700;NIVEAU 1;ECL;6;hublot 40w;;;;;240;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;40 - circulation;NIVEAU 1;ECL;13;lampe 40w;;;;;520;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;41 - salle 700+bar;NIVEAU 1;ECL;8;spot 50w;;;;;400;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;41 - salle 700+bar;NIVEAU 1;ECL;1;néon2x54w;;;;;108;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;41 - salle 700+bar;NIVEAU 1;ECL;25;lampe 2;;;;;1250;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;41 - salle 700+bar;NIVEAU 1;ECL;36;lampe 40w;;;;;1440;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;42 - sas S700;NIVEAU 1;ECL;8;spot 50w;;;;;400;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;43 - infirmerie;NIVEAU 1;ECL;5;boitier x4 néons 18w;;;;;360;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;44 - lt/ transfo/ sas;NIVEAU 1;ECL;10;néon 2 x 54w;;;;;1080;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;45 - dépôt;NIVEAU 1;ECL;13;néon 2 x 54w;;;;;1404;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;46 - sas/circul dépôt;NIVEAU 1;ECL;6;néon 2 x 54w;;;;;648;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;47 - boutique hall;NIVEAU 1;ECL;18;spot 50w;;;;;900;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;47 - boutique hall;NIVEAU 1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD 03 bou 2;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;47 - boutique hall;NIVEAU 1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD Bou 1;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;48 - éclairage façade;NIVEAU 1;ECL;20;projecteur;;;;;8000;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;49 - circulation arrière hall;NIVEAU 1;ECL;74;lampe 40w;;;;;2960;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;50 - 4 sanitaires hall;NIVEAU 1;ECL;22;hublot 40w;;;;;880;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;50 - 4 sanitaires hall;NIVEAU 1;ECL;16;néon 2 x 54w;;;;;1728;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;51 - locaux annexes hall;NIVEAU 1;ECL;7;néon 2 x 54w;;;;;756;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;52 - hall partie haute;NIVEAU 1;ECL;239;lampe 40w;;;;;9560;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;53 - circulation vers étage hall;NIVEAU 1;ECL;16;lampe 40w;;;;;640;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;54 - vide sanitaire et galerie technique;NIVEAU -1;ECL;49;néon 2 x 54w;;;;;5292;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;55 - salle 8000;NIVEAU -1;ECL;112;projecteur;;;;;84000;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;56 - salle 8000 (périphérie tec);NIVEAU -1;ECL;36;néon 2 x 54w;;;;;1944;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;57 - éclairage passerelle salle 8000;NIVEAU -1;ECL;74;spot 50w;;;;;3700;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;58 - local tec 1;NIVEAU -1;ECL;21;néon 2 x 54w;;;;;2268;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;59 - local tec 2;NIVEAU -1;ECL;19;néon 2 x 54w;;;;;2052;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;60 - Poste central sécurité incendie;NIVEAU -1;ECL;1;spot 50w;;;;;50;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;61 - Eclairage périphérique bâtiment;NIVEAU -1;ECL;10;"éclairage ""boules"" avec ampoule éco";;;;;160;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;61 - Eclairage périphérique bâtiment;NIVEAU -1;ECL;8;éclairage halogène;;;;;800;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;62 - local transfo;NIVEAU -1;CFO;1;Disjoncteur principal;;;;;;;;;;;3P3D 2000 A M20N1;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;62 - local transfo;NIVEAU -1;CFO;1;permuteur source alimen GE;;;;;;;;;;;PASA;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;62 - local transfo;NIVEAU -1;CFO;1;Transformateur;;;;;;;;;;;3P33D 1600 A M16N1;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;62 - local transfo;NIVEAU -1;CFO;1;"Transformateur ""bâtiment""";;;;;;;;;;;Transformateur sec Harmony 1000 kVA;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;62 - local transfo;NIVEAU -1;CFO;1;"Transformateur ""tournée""";;;;;;;;;;;Transformateur sec Harmony 1250 kVA;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;63 - local éclairge de sécurité;NIVEAU -1;CFO;;A.E.S.;;;;;;;;;;;;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;63 - local éclairge de sécurité;NIVEAU -1;CFO;1;TGBT Secours;;;;;;;;;;;Voir schéma en annexe;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;63 - local éclairge de sécurité;NIVEAU -1;CFO;1;Transformateur;;;;;;;;;;;Transformateur sec Harmony 500 kVA;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;64 - local T.G.B.T.;NIVEAU -1;CFO;;Batterie condensateur;;;;;;;;;;;Voir DOE en annexe;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;64 - local T.G.B.T.;NIVEAU -1;CFO;1;TGBT Bâtiment;;;;;;;;;;;Voir schéma en annexe;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;64 - local T.G.B.T.;NIVEAU -1;CFO;1;TGBT Désenfumage;;;;;;;;;;;Voir DOE en annexe;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;64 - local T.G.B.T.;NIVEAU -1;CFO;1;TGBT tournée;;;;;;;;;;;Voir schéma en annexe;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;64 - local T.G.B.T.;NIVEAU -1;CFO;1;Transfo sonorisation;;;;;;;;;;;Voir DOE en annexe;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;65 - cuisine;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD06;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;66 - Bar 2;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD 04 Bar 2;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;67 - Hall;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AG 01 hall;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;67 - Hall;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire VDI hall;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;67 - Hall;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire CT 01;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;67 - Hall;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Sono hall;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;67 - Hall;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Sono VDI;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;67 - Hall;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Ascenseur hand.;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;68 - bar 1;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AD Bar 1;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;69 - salle 700;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire GD 700;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;69 - salle 700;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire VDI 700;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;69 - salle 700;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire AG 700;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;69 - salle 700;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire CT 02;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;69 - salle 700;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire SC 700;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;70 - Passerelle;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire Gradateur gauche;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;70 - Passerelle;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""bâtiment""";;;;;;;;;;;Armoire gradateur droite;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;70 - Passerelle;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 06;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;70 - Passerelle;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 08;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;70 - Passerelle;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 07;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;70 - Passerelle;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 09;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;70 - Passerelle;NIVEAU -1;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 11;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;71 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 13;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;71 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 13 bis;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;71 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 14;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;71 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 04;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;71 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 02;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;71 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 01;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;71 - Niveau 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 12;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;72 - galerie technique;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire Scen galerie;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;73 - Passerelle / Niv 12,30;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 07;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;73 - Passerelle / Niv 12,30;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 06;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;73 - Passerelle / Niv 12,30;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 08;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;73 - Passerelle / Niv 12,30;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 09;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;73 - Passerelle / Niv 12,30;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 10;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;73 - Passerelle / Niv 12,30;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire ESC 11;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;73 - Passerelle / Niv 12,30;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""scénique""";;;;;;;;;;;Armoire SC PASS et rail canalis;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;74 - Salle 700;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire sono 700;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;75 - local auto com;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire Auto Com;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;76 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""sécurité""";;;;;;;;;;;Armoire sono salle;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;76 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 01;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;76 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 12;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;76 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 12 bis;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;76 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 13;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;76 - Niv 0;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire son 700;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;77 - régie;NIVEAU 0 / RDC;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 05;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;78 - Niv 1;NIVEAU 1;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 03;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;79 - Niv 2;NIVEAU 2;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 04;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;80 - Niv 3;NIVEAU 3;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire EAV 02;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;81 - Niv 4;NIVEAU 4;CFO;1;"Armoire secondaire divisionnaire ""son""";;;;;;;;;;;Armoire son galerie;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;82 - divers;NIVEAU 4;CFO;Ens.;Rail Canalis;;;;;;;;;;;rail canalis;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;83 - passerelle;NIVEAU 4;SSI;3;détecteur de fumée par aspiration;;;;;;;;;;;VESDA LASER PLUS;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;84 - Hall déambulatoire;NIVEAU 4;SSI;3;détecteur de fumée par aspiration;;;;;;;;;;;VESDA LASER PLUS;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;2;A.E.S. Alimentation d'énergie secourue;;;;;;;;;;;AES 24 V;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;20;avertisseurs sonore;;;;;;;;;;;Universal DET FAVERTBC24/48;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Centrale de détection;;;;;;;;;;;EUROPA 3000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Centrale de mise en sécurité incendie;;;;;;;;;;;TABCMSII10;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;35;Clapets coupe feu;;;;;;;;;;;divers;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;64;Déclencheurs manuel;;;;;;;;;;;Universal DET DM 3001;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;190;détecteur de fumée;;;;;;;;;;;détecteur ionique Universal DET EI 3000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;21;détecteur de fumée;;;;;;;;;;;détecteur thermovelocimétrique LT;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;63;détecteur de fumée;;;;;;;;;;;détecteur optique Universal DET EO 3000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;9;détecteur de fumée;;;;;;;;;;;détecteur thermique;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;20;indicateur d'action;;;;;;;;;;;Universal DET FAVERTBC24/48;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;RIA;10;Robinet d'Incendie Armé;;;;;;;;;;;EUR5H TYPE P;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;3;Sonorisation de sécurité;;;;;;;;;;;Amplificateur QSC 2 x 1100 W;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Amplificateur QSC Bittner XV 400;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;2;Sonorisation de sécurité;;;;;;;;;;;Equaliser graphique Yamaha Q2015;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;1;Sonorisation de sécurité;;;;;;;;;;;Unité de gestion TOA SX 1000;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;51;Sonorisation de sécurité;;;;;;;;;;;Enceinte terminale 100 Volts;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;85 - général;NIVEAU 4;SSI;Ens.;Ventouse issue de secours;;;;;;;;;;;Universal DET Kit Ventis;2001;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;86 - Extérieur;NIVEAU 4;DIVERS;1;séparateur d'hydrocarbures;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;87 - intérieur sous sol;NIVEAU 4;DIVERS;1;pompe relevage;;;;;;;;;;;modèle ?;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;22;Projecteur eclairage sécurité;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;38;Bloc de secours batterie centrale, ambiance;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;7;Projecteur 150W Hall;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;1;Projecteur 400W Hall;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;20;Projecteur 400W Hall;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;21;Projecteur 70W-12° Hall;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;12;Projecteur Hall avec filtre 400W;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;20;Projecteur Hall avec fitre 150W;;;;;;;;;;;;;;2026-10
+PALAIS NIKAÎA;SECTEUR NON PRECISE;;88 - Général Interieur;NIVEAU 4;ELC;112;Projecteur IDE 1000W GDE. Salle;;;;;;;;;;;;;;2026-10
 PALAIS NIKAÏA;LOCAL TECHNIQUE CTA NORD;;01 - Local technique R1;NIVEAU 0 / RDC;CVC;1;Filtre G4 CTA 01 (amont);;;;;;;;;;;Taille et classe a relever sur le cadre;;;2026-10
 PALAIS NIKAÏA;LOCAL TECHNIQUE CTA NORD;;01 - Local technique R1;NIVEAU 0 / RDC;CVC;1;Filtre F7 CTA 01 (aval);;;;;;;;;;;Taille et classe a relever sur le cadre;;;2026-10
 PALAIS NIKAÏA;LOCAL TECHNIQUE CTA NORD;;01 - Local technique R1;NIVEAU 0 / RDC;CVC;1;Filtre G4 CTA 03 (amont);;;;;;;;;;;Taille et classe a relever sur le cadre;;;2026-10

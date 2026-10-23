@@ -7,6 +7,7 @@ lignes de bandeau (SECTEUR : / Localisation :), puis une ligne par equipement.
 Seules les lignes qui portent un contrat en colonne 1 sont reprises.
 """
 import csv
+import re
 import sys
 import unicodedata
 
@@ -53,8 +54,21 @@ def lire(chemin):
     classeur = openpyxl.load_workbook(chemin, data_only=True)
     feuille = classeur[classeur.sheetnames[0]]
     lignes = []
+    # le fichier client pose le secteur et la localisation sur des lignes de bandeau,
+    # puis les omet sur les lignes de detail : on garde le contexte en cours
+    secteur_courant = ""
+    localisation_courante = ""
+    niveau_courant = ""
     for r in range(1, feuille.max_row + 1):
-        contrat = texte(feuille.cell(r, COL_CONTRAT).value)
+        premiere = texte(feuille.cell(r, COL_CONTRAT).value)
+        if premiere.upper().startswith("SECTEUR"):
+            secteur_courant = re.sub(r"(?i)^secteur\s*:\s*", "", premiere).strip()
+            localisation_courante = ""
+            continue
+        if premiere.upper().startswith("LOCALISATION"):
+            localisation_courante = re.sub(r"(?i)^localisation\s*:\s*", "", premiere).strip()
+            continue
+        contrat = premiere
         equipement = texte(feuille.cell(r, COL_EQUIPEMENT).value)
         if not equipement:
             # lignes de detail du client : le materiel est decrit en colonne 20
@@ -66,6 +80,11 @@ def lire(chemin):
             continue
         if contrat.upper().startswith("CONTRAT"):
             continue
+        secteur = texte(feuille.cell(r, COL_SECTEUR).value) or secteur_courant
+        localisation = texte(feuille.cell(r, COL_LOCALISATION).value) or localisation_courante
+        niveau = texte(feuille.cell(r, COL_NIVEAU).value) or niveau_courant
+        if texte(feuille.cell(r, COL_NIVEAU).value):
+            niveau_courant = texte(feuille.cell(r, COL_NIVEAU).value)
         debit = texte(feuille.cell(r, COL_DEBIT_AIR).value) or texte(feuille.cell(r, COL_DEBIT_EAU).value)
         puissance = (texte(feuille.cell(r, COL_PUISSANCE_ELEC).value)
                      or texte(feuille.cell(r, COL_PUISSANCE_WATTS).value))
@@ -73,10 +92,10 @@ def lire(chemin):
         commentaire = texte(feuille.cell(r, COL_DETAILS).value) or texte(feuille.cell(r, COL_OBSERVATION).value)
         lignes.append([
             contrat,
-            texte(feuille.cell(r, COL_SECTEUR).value),
+            secteur,
             "",
-            texte(feuille.cell(r, COL_LOCALISATION).value),
-            texte(feuille.cell(r, COL_NIVEAU).value),
+            localisation,
+            niveau,
             texte(feuille.cell(r, COL_CATEGORIE).value),
             texte(feuille.cell(r, COL_QUANTITE).value),
             equipement,
