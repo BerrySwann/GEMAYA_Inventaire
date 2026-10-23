@@ -37,6 +37,9 @@ import java.io.InputStream;
  */
 public class MainActivity extends Activity {
 
+    /* jeton d'ecriture du depot, injecte par outils/construire_assets.py dans la version privee */
+    static String JETON_GITHUB = null;
+
     private static final int DEMANDE_PHOTO = 11;
     private static final int DEMANDE_GALERIE = 12;
     private static final int DEMANDE_ENREGISTRER = 13;
@@ -60,6 +63,12 @@ public class MainActivity extends Activity {
 
         base = new BaseDb(this);
         importerInventaireOrigine();
+        try {
+            String jeton = getString(R.string.jeton_github);
+            JETON_GITHUB = (jeton == null || jeton.trim().isEmpty()) ? null : jeton.trim();
+        } catch (Exception ignore) {
+            JETON_GITHUB = null;
+        }
         pont = new PontGemaya(this, base);
 
         /* en debug seulement : permet d'inspecter la page depuis le poste de developpement */
@@ -163,6 +172,26 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public String lirePhoto(String ficheId, String role) {
             return pont.lirePhoto(ficheId, role);
+        }
+
+        @JavascriptInterface
+        public String jetonGitHub() {
+            return JETON_GITHUB == null ? "" : JETON_GITHUB;
+        }
+
+        @JavascriptInterface
+        public void envoyerGitHub(final String chemin, final String contenu) {
+            final String jeton = JETON_GITHUB == null ? "" : JETON_GITHUB;
+            if (jeton.isEmpty()) {
+                rappeler("envoiGitHubRecu", "{\"ok\":false,\"erreur\":\"aucun jeton GitHub dans cette version\"}");
+                return;
+            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    rappeler("envoiGitHubRecu", MiseAJour.pousser(chemin, contenu, jeton));
+                }
+            }).start();
         }
 
         @JavascriptInterface

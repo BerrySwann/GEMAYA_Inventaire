@@ -131,6 +131,75 @@ final class MiseAJour {
         }
     }
 
+    /**
+     * Envoie un fichier texte dans le depot prive, pour controle depuis le poste de travail.
+     * Ecrase le fichier s'il existe deja (il faut alors son empreinte sha).
+     */
+    static String pousser(String chemin, String contenu, String jeton) {
+        try {
+            String adresse = "https://api.github.com/repos/BerrySwann/gemaya-maj/contents/" + chemin;
+            JSONObject charge = new JSONObject();
+            charge.put("message", "Releve envoye depuis le telephone");
+            charge.put("content", android.util.Base64.encodeToString(
+                    contenu.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                    android.util.Base64.NO_WRAP));
+
+            String sha = empreinte(adresse, jeton);
+            if (sha != null && !sha.isEmpty()) {
+                charge.put("sha", sha);
+            }
+
+            HttpURLConnection lien = (HttpURLConnection) new URL(adresse).openConnection();
+            lien.setRequestMethod("PUT");
+            lien.setConnectTimeout(20000);
+            lien.setReadTimeout(30000);
+            lien.setDoOutput(true);
+            lien.setRequestProperty("Authorization", "Bearer " + jeton);
+            lien.setRequestProperty("Accept", "application/vnd.github+json");
+            lien.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            java.io.OutputStream sortie = lien.getOutputStream();
+            sortie.write(charge.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            sortie.flush();
+            sortie.close();
+
+            int code = lien.getResponseCode();
+            if (code < 200 || code >= 300) {
+                return "{\"ok\":false,\"erreur\":\"le depot a refuse (" + code + ")\"}";
+            }
+            JSONObject r = new JSONObject();
+            r.put("ok", true);
+            r.put("chemin", chemin);
+            return r.toString();
+        } catch (Exception e) {
+            return "{\"ok\":false,\"erreur\":\"" + echapper("envoi impossible : " + e.getMessage()) + "\"}";
+        }
+    }
+
+    /** Empreinte du fichier deja present, ou null s'il n'existe pas encore. */
+    private static String empreinte(String adresse, String jeton) {
+        try {
+            HttpURLConnection lien = (HttpURLConnection) new URL(adresse).openConnection();
+            lien.setConnectTimeout(15000);
+            lien.setReadTimeout(15000);
+            lien.setRequestProperty("Authorization", "Bearer " + jeton);
+            lien.setRequestProperty("Accept", "application/vnd.github+json");
+            if (lien.getResponseCode() != 200) {
+                return null;
+            }
+            java.io.InputStream entree = lien.getInputStream();
+            java.io.ByteArrayOutputStream tampon = new java.io.ByteArrayOutputStream();
+            byte[] bloc = new byte[8192];
+            int lus;
+            while ((lus = entree.read(bloc)) > 0) {
+                tampon.write(bloc, 0, lus);
+            }
+            entree.close();
+            return new JSONObject(tampon.toString("UTF-8")).optString("sha", "");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /** Copie l'APK telecharge dans le dossier public Telechargements/gemaya. */
     private static void copierVersTelechargements(Context contexte, String nom, File source) {
         if (android.os.Build.VERSION.SDK_INT < 29) {

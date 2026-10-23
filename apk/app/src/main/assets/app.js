@@ -1183,6 +1183,29 @@ function chargerInventaireOrigine() {
   sauvegarder();
 }
 
+
+/* --------------------------------------- envoi du releve pour controle a distance */
+function pousserVersGitHub() {
+  if (!PONT || !PONT.envoyerGitHub) { toast("Envoi impossible sur cet appareil"); return; }
+  if (!equipements.length) { toast("Aucun equipement a envoyer"); return; }
+  const f = contenuCSV();
+  toast("Envoi du releve (" + f.nbLignes + " equipements)...");
+  PONT.envoyerGitHub("atelier/dernier-releve.csv", f.contenu);
+}
+
+window.envoiGitHubRecu = function (json) {
+  let r;
+  try { r = JSON.parse(json); } catch (e) { toast("Reponse illisible"); return; }
+  const etat = document.getElementById('maj-etat');
+  if (r.ok) {
+    if (etat) { etat.textContent = 'Releve envoye sur GitHub (' + r.chemin + ')'; }
+    toast("Releve envoye : " + r.chemin);
+    return;
+  }
+  if (etat) { etat.textContent = "Echec de l'envoi : " + (r.erreur || 'raison inconnue'); }
+  toast("Envoi impossible : " + (r.erreur || 'raison inconnue'));
+};
+
 /* --------------------------------------------- fichiers ranges dans la base */
 let documentsRanges = [];
 

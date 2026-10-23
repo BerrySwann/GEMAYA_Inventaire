@@ -72,7 +72,23 @@ def cle_api():
     return os.environ.get("CLE_API_DEFAUT", "")
 
 
+def jeton_github():
+    """Jeton d'ecriture du depot, lu dans ~/.hermes/.env."""
+    chemin = pathlib.Path.home() / ".hermes/.env"
+    if not chemin.exists():
+        return ""
+    for ligne in chemin.read_text(errors="ignore").splitlines():
+        if ligne.strip().startswith("GITHUB_TOKEN"):
+            valeur = ligne.split("=", 1)[1].strip().strip('"').strip("'")
+            if valeur.startswith("gh"):
+                return valeur
+    return ""
+
+
 def main():
+    # --sans-cle : pour l'APK publie sur un hebergement public, aucun secret ne doit y etre
+    cle = "" if "--sans-cle" in sys.argv else cle_api()
+    jeton = "" if "--sans-cle" in sys.argv else jeton_github()
     html = MAQUETTE.read_text(encoding="utf-8")
     polices = (ASSETS / "polices/polices.css").read_text(encoding="utf-8")
 
@@ -90,6 +106,13 @@ def main():
     # 3. le bouton retour
     html = html.replace("</body>", SCRIPT_MOBILE + "</body>", 1)
 
+    # 3 quater. le jeton d'envoi, lu par le code Java a l'execution
+    valeurs = RACINE / "app/src/main/res/values/jeton.xml"
+    valeurs.write_text(
+        '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
+        '    <string name="jeton_github">' + jeton + '</string>\n</resources>\n',
+        encoding="utf-8")
+
     # 3 ter. l'adresse de mise a jour, pour que « Verifier » marche sans configuration
     html = html.replace("</body>",
                         "<script>window.MAJ_URL_DEFAUT = "
@@ -105,7 +128,6 @@ def main():
 
     # 4. la couche application (base, photos, lecture de plaque), apres la maquette
     # --sans-cle : pour l'APK publie sur un hebergement public, la cle ne doit pas y etre
-    cle = "" if "--sans-cle" in sys.argv else cle_api()
     if cle:
         html = html.replace("</body>",
                             "<script>window.CLE_DEFAUT = " + json.dumps(cle) + ";</script>\n</body>", 1)
